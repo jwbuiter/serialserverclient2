@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+}
+
+button {
+  border: 0;
+  &:focus {
+    outline: 0;
+  }
+}
