@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { slide as Menu } from "react-burger-menu";
+import { push as Menu } from "react-burger-menu";
 import "../styles/sidebar.scss";
 
 class Sidebar extends Component {
@@ -10,7 +10,8 @@ class Sidebar extends Component {
 
   render() {
     return (
-      <Menu>
+      <Menu pageWrapId={"page-wrap"} outerContainerId={"outer-container"}>
+        <a className="menu-item">View logs</a>
         <a className="menu-item">View logs</a>
       </Menu>
     );
