@@ -1,0 +1,60 @@
+.outputList {
+  position: relative;
+  width: 300px;
+  left: 200px;
+  top: 200px;
+  margin: 20px;
+
+  border-radius: 5px;
+
+  text-transform: uppercase;
+  background-color: #c6c5d3;
+  padding-bottom: 5px;
+
+  &--title {
+    position: relative;
+    height: 50px;
+    border-radius: 5px 5px 0 0;
+
+    background-color: #1d99d5;
+
+    color: white;
+  }
+
+  &--list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &--item {
+      background-color: white;
+      margin: 5px 5px 0 5px;
+      border-radius: 2px;
+      padding: 10px 20px;
+      height: 30px;
+    }
+    &--indicator {
+      float: right;
+      width: 30px;
+      height: 30px;
+
+      border-radius: 5px;
+
+      &--on {
+        background-color: red;
+      }
+
+      &--off {
+        background-color: #3fd35d;
+      }
+
+      &--forcedon {
+        background-color: #cc66ff;
+      }
+
+      &--forcedoff {
+        background-color: #eebbee;
+      }
+    }
+  }
+}

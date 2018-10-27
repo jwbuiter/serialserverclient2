@@ -1,0 +1,38 @@
+.comElement {
+  position: relative;
+  display: block;
+  left: 200px;
+  top: 200px;
+  width: 200px;
+  height: 200px;
+  margin: 20px;
+
+  box-shadow: 10px 10px 20px;
+  border-radius: 20px;
+
+  font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  text-transform: uppercase;
+  &--title {
+    position: relative;
+    height: 30%;
+    text-align: center;
+
+    border-radius: 20px 20px 0 0;
+    background-color: red;
+
+    font-size: 20px;
+    color: white;
+  }
+
+  &--content {
+    position: relative;
+    height: 70%;
+    font-size: 40px;
+    &--unit {
+      font-size: 30px;
+    }
+    &--comment {
+      font-size: 20px;
+    }
+  }
+}
