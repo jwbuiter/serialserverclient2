@@ -1,11 +1,10 @@
+@import "constants";
+
 .comElement {
   position: relative;
-  display: block;
-  left: 200px;
-  top: 200px;
-  width: 200px;
-  height: 200px;
   margin: 20px;
+
+  height: 40%;
 
   box-shadow: 10px 10px 20px;
   border-radius: 20px;
@@ -18,7 +17,7 @@
     text-align: center;
 
     border-radius: 20px 20px 0 0;
-    background-color: red;
+    background-color: $focus-color;
 
     font-size: 20px;
     color: white;

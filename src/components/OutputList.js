@@ -9,27 +9,33 @@ class OutputList extends Component {
         { state: true, forced: false, name: "poort in" },
         { state: false, forced: false, name: "poort uit" },
         { state: true, forced: true, name: "separator" },
-        { state: false, forced: false, name: "separator" }
+        { state: false, forced: true, name: "separator" },
+        { state: true, forced: false, name: "poort in" },
+        { state: false, forced: false, name: "poort uit" },
+        { state: true, forced: true, name: "separator" },
+        { state: false, forced: true, name: "separator" },
+        { state: true, forced: false, name: "poort in" },
+        { state: false, forced: false, name: "poort uit" }
       ]
     };
   }
   render() {
     return (
-      <div className="outputList">
-        <div className="outputList--title">
-          <div className="center">uitgangen voor poorten</div>
+      <div className="buttonList outputList">
+        <div className="buttonList--title">
+          <div className="center-vertical">uitgangen voor poorten</div>
         </div>
-        <ul className="outputList--list">
+        <ul className="buttonList--list">
           {this.state.ports.map(port => {
-            let indicator = "outputList--list--indicator--";
-            if (port.forced) indicator += "forced";
+            let indicator = "buttonList--list--indicator--output";
+            if (port.forced) indicator += "Forced";
 
-            indicator += port.state ? "on" : "off";
+            indicator += port.state ? "On" : "Off";
 
             return (
-              <li className="outputList--list--item">
-                {port.name}
-                <div className={"outputList--list--indicator " + indicator} />
+              <li className="buttonList--list--item">
+                <div className="center-vertical"> {port.name}</div>
+                <div className={"buttonList--list--indicator " + indicator} />
               </li>
             );
           })}

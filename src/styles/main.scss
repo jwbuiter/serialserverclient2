@@ -1,0 +1,27 @@
+.main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 10vh 90vh;
+  grid-template-areas:
+    "head head head ports"
+    "coms table table ports";
+}
+
+.head {
+  grid-area: head;
+  display: grid;
+  grid-template-columns: 80px 5fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.coms {
+  grid-area: coms;
+}
+
+.table {
+  grid-area: table;
+}
+
+.ports {
+  grid-area: ports;
+}

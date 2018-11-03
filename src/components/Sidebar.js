@@ -11,8 +11,10 @@ class Sidebar extends Component {
   render() {
     return (
       <Menu pageWrapId={"page-wrap"} outerContainerId={"outer-container"}>
-        <a className="menu-item">View logs</a>
-        <a className="menu-item">View logs</a>
+        <span className="menu-item">Access settings</span>
+        <span className="menu-item">Reboot unit</span>
+        <span className="menu-item">Upload data</span>
+        <span className="menu-item">Shutdown unit</span>
       </Menu>
     );
   }
