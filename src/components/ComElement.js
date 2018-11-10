@@ -10,13 +10,14 @@ const ComElement = props => {
       <div className="comElement--content">
         <div className="center">
           {props.content.value}
-          <span className="comElement--content--unit">
+          {/*<span className="comElement--content--unit">
             {props.content.unit}
           </span>
           <br />
           <span className="comElement--content--comment">
             {props.content.comment}
           </span>
+          */}
         </div>
       </div>
     </div>

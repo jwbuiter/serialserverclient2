@@ -2,11 +2,11 @@
 
 .comElement {
   position: relative;
-  margin: 20px;
 
-  height: 40%;
+  height: 100%;
 
-  box-shadow: 10px 10px 20px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  background-color: white;
   border-radius: 20px;
 
   font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
@@ -19,19 +19,19 @@
     border-radius: 20px 20px 0 0;
     background-color: $focus-color;
 
-    font-size: 20px;
+    font-size: 4vh;
     color: white;
   }
 
   &--content {
     position: relative;
     height: 70%;
-    font-size: 40px;
+    font-size: 8vh;
     &--unit {
-      font-size: 30px;
+      font-size: 6vh;
     }
     &--comment {
-      font-size: 20px;
+      font-size: 4vh;
     }
   }
 }

@@ -10,9 +10,7 @@ class Infobar extends Component {
     return (
       <div className="infobar">
         <div className="infobar--item">
-          <div className="center">
-            naam | ip adress | tijd | datum | id teamviewer
-          </div>
+          <div className="center">naam | ip adress | tijd | datums</div>
         </div>
       </div>
     );

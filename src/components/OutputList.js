@@ -21,25 +21,23 @@ class OutputList extends Component {
   }
   render() {
     return (
-      <div className="buttonList outputList">
+      <div className="buttonList">
         <div className="buttonList--title">
           <div className="center-vertical">uitgangen voor poorten</div>
         </div>
-        <ul className="buttonList--list">
-          {this.state.ports.map(port => {
-            let indicator = "buttonList--list--indicator--output";
-            if (port.forced) indicator += "Forced";
+        {this.state.ports.map(port => {
+          let indicator = "buttonList--list--indicator--output";
+          if (port.forced) indicator += "Forced";
 
-            indicator += port.state ? "On" : "Off";
+          indicator += port.state ? "On" : "Off";
 
-            return (
-              <li className="buttonList--list--item">
-                <div className="center-vertical"> {port.name}</div>
-                <div className={"buttonList--list--indicator " + indicator} />
-              </li>
-            );
-          })}
-        </ul>
+          return (
+            <div className="buttonList--list--item">
+              <div className="center-vertical"> {port.name}</div>
+              <div className={"buttonList--list--indicator " + indicator} />
+            </div>
+          );
+        })}
       </div>
     );
   }

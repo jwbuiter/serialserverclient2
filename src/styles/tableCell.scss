@@ -1,0 +1,24 @@
+@import "constants";
+
+.tableCell {
+  position: relative;
+
+  text-transform: uppercase;
+  color: white;
+
+  &--title {
+    position: relative;
+    background-color: $primary-color;
+    height: 40%;
+    border-radius: 20px 20px 0 0;
+    font-size: 4vh;
+  }
+
+  &--content {
+    position: relative;
+    background-color: $secondary-color;
+    height: 60%;
+    border-radius: 0 0 20px 20px;
+    font-size: 5vh;
+  }
+}

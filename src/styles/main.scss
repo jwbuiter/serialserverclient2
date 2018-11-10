@@ -1,27 +1,52 @@
 .main {
+  margin: 2vh;
+  height: 96vh;
+
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 10vh 90vh;
+  grid-template-columns: 1fr 5fr 2fr;
+  grid-template-rows: 1fr 5fr 6fr;
   grid-template-areas:
-    "head head head ports"
-    "coms table table ports";
+    "info info ports"
+    "logos coms ports"
+    "table table ports";
+
+  grid-gap: 5vh;
 }
 
-.head {
-  grid-area: head;
+.infobar {
+  grid-area: info;
+  margin-left: 8vw;
+}
+
+.logos {
+  grid-area: logos;
   display: grid;
-  grid-template-columns: 80px 5fr 1fr 1fr;
-  grid-gap: 20px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 5vh;
 }
 
 .coms {
   grid-area: coms;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 5vh;
 }
 
 .table {
   grid-area: table;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 1vh;
 }
 
 .ports {
   grid-area: ports;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 11fr 6fr;
+  grid-gap: 1vh;
 }
