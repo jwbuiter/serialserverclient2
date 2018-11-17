@@ -7,6 +7,7 @@ function stringMapFromArray(array) {
 }
 
 const actionTypes = [
+  "RECEIVE_IP",
   "RECEIVE_CONFIG",
   "RECEIVE_STATIC",
   "INPUT_PORT_STATE",
