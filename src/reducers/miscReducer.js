@@ -5,7 +5,7 @@ const initialState = {
   time: new Date().getTime()
 };
 
-module.exports = function(state = initialState, action) {
+export default (state = initialState, action) => {
   switch (action.type) {
     case RECEIVE_IP: {
       return {

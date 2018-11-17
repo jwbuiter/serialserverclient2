@@ -20,9 +20,9 @@ class InputList extends Component {
         <div className="buttonList--title">
           <div className="center-vertical">ingangen</div>
         </div>
-        {this.state.ports.map(port => {
+        {this.props.inputs.map(port => {
           let indicator = "buttonList--list--indicator--input";
-          if (port.forced) indicator += "Forced";
+          if (port.isForced) indicator += "Forced";
 
           indicator += port.state ? "On" : "Off";
 

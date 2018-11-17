@@ -1,11 +1,13 @@
 const { RECEIVE_STATIC } = require("../actions/types");
 
-module.exports = function(state = {}, action) {
+const initialState = { loaded: false };
+
+export default function(state = initialState, action) {
   switch (action.type) {
     case RECEIVE_STATIC: {
-      return action.payload;
+      return { loaded: true, ...action.payload };
     }
     default:
       return state;
   }
-};
+}

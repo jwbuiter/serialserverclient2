@@ -2,34 +2,23 @@ import React, { Component } from "react";
 import "../styles/outputList.scss";
 
 class OutputList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ports: [
-        { state: true, forced: false, name: "poort in" },
-        { state: false, forced: false, name: "poort uit" },
-        { state: true, forced: true, name: "separator" },
-        { state: false, forced: true, name: "separator" },
-        { state: true, forced: false, name: "poort in" },
-        { state: false, forced: false, name: "poort uit" },
-        { state: true, forced: true, name: "separator" },
-        { state: false, forced: true, name: "separator" },
-        { state: true, forced: false, name: "poort in" },
-        { state: false, forced: false, name: "poort uit" }
-      ]
-    };
-  }
   render() {
     return (
       <div className="buttonList">
         <div className="buttonList--title">
           <div className="center-vertical">uitgangen voor poorten</div>
         </div>
-        {this.state.ports.map(port => {
+        {this.props.outputs.map(port => {
           let indicator = "buttonList--list--indicator--output";
-          if (port.forced) indicator += "Forced";
+          if (port.isForced) indicator += "Forced";
 
-          indicator += port.state ? "On" : "Off";
+          if (port.state) {
+            indicator += "On";
+          } else if (port.result) {
+            indicator += "Execute";
+          } else {
+            indicator += "Off";
+          }
 
           return (
             <div className="buttonList--list--item">

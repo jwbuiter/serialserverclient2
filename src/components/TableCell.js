@@ -8,7 +8,7 @@ const TableCell = props => {
         <div className="center">{props.name}</div>
       </div>
       <div className="tableCell--content">
-        <div className="center">{props.content}</div>
+        <div className="center">{props.value}</div>
       </div>
     </div>
   );

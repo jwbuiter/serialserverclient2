@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import "../styles/infobar.scss";
 
 class Infobar extends Component {
@@ -10,11 +12,21 @@ class Infobar extends Component {
     return (
       <div className="infobar">
         <div className="infobar--item">
-          <div className="center">naam | ip adress | tijd | datums</div>
+          <div className="center">
+            {this.props.name} | {this.props.ip}{" "}
+          </div>
         </div>
       </div>
     );
   }
 }
 
-export default Infobar;
+function mapStateToProps(state) {
+  return {
+    name: state.static.name,
+    ip: state.misc.ip,
+    time: state.misc.time
+  };
+}
+
+export default connect(mapStateToProps)(Infobar);

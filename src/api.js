@@ -6,11 +6,13 @@ import {
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
   TABLE_CELL_STATE,
-  RECEIVED_IP,
-  RECEIVED_TIME
+  RECEIVE_IP,
+  RECEIVE_TIME,
+  RECEIVE_CONFIG,
+  RECEIVE_STATIC
 } from "./actions/types";
 
-const APIendPoint = "http://127.0.0.1:5000";
+const APIendPoint = "http://192.168.1.67";
 
 function api(store) {
   const socket = socketIOClient(APIendPoint);
@@ -19,9 +21,9 @@ function api(store) {
     input: INPUT_PORT_STATE,
     output: OUTPUT_PORT_STATE,
     table: TABLE_CELL_STATE,
-    serial: SERIAL_COM_STATE,
-    ip: RECEIVED_IP,
-    time: RECEIVED_TIME
+    entry: SERIAL_COM_STATE,
+    ip: RECEIVE_IP,
+    time: RECEIVE_TIME
   };
 
   for (let message in messageTypes) {
@@ -29,6 +31,18 @@ function api(store) {
       store.dispatch({ type: messageTypes[message], payload })
     );
   }
+
+  axios
+    .get(APIendPoint + "/config")
+    .then(result =>
+      store.dispatch({ type: RECEIVE_CONFIG, payload: result.data })
+    );
+
+  axios
+    .get(APIendPoint + "/static")
+    .then(result =>
+      store.dispatch({ type: RECEIVE_STATIC, payload: result.data })
+    );
 
   function forceInput(index) {
     socket.emit("forceInput", index);

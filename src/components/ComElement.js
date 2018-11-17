@@ -5,11 +5,11 @@ const ComElement = props => {
   return (
     <div className="comElement">
       <div className="comElement--title">
-        <div className="center">{props.title}</div>
+        <div className="center">{props.name}</div>
       </div>
       <div className="comElement--content">
         <div className="center">
-          {props.content.value}
+          {props.entry}
           {/*<span className="comElement--content--unit">
             {props.content.unit}
           </span>
