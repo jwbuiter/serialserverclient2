@@ -23,17 +23,31 @@ class Main extends Component {
       <div id="page-wrap" className="main">
         <Infobar />
         <div className="logos">
-          <Logo image={allflex} />
-          <Logo image={MBDC} />
+          <Logo image={allflex} alt={"Allflex"} />
+          <Logo image={MBDC} alt={"MBDC"} />
         </div>
         <div className="coms">
-          {this.props.coms.map(com => (
-            <ComElement name={com.name} entry={com.entry} time={com.time} />
-          ))}
+          {this.props.coms.map(com => {
+            return (
+              <ComElement
+                name={com.name}
+                entry={com.entry}
+                time={com.time}
+                average={com.average}
+                entries={com.entries}
+              />
+            );
+          })}
         </div>
         <div className="ports">
-          <OutputList outputs={this.props.outputs} />
-          <InputList inputs={this.props.inputs} />
+          <OutputList
+            outputs={this.props.outputs}
+            clickFunction={this.props.api.forceOutput}
+          />
+          <InputList
+            inputs={this.props.inputs}
+            clickFunction={this.props.api.forceInput}
+          />
         </div>
         <div className="table">
           {this.props.cells.map(cell => (
@@ -56,7 +70,7 @@ function mapStateToProps(state) {
 
   const coms = state.internal.coms.map((com, index) => ({
     ...com,
-    name: state.config.serial.coms[index].name
+    ...state.config.serial.coms[index]
   }));
 
   const inputs = state.internal.inputs.map((input, index) => ({

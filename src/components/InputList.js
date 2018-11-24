@@ -20,14 +20,17 @@ class InputList extends Component {
         <div className="buttonList--title">
           <div className="center-vertical">ingangen</div>
         </div>
-        {this.props.inputs.map(port => {
+        {this.props.inputs.map((port, index) => {
           let indicator = "buttonList--list--indicator--input";
           if (port.isForced) indicator += "Forced";
 
           indicator += port.state ? "On" : "Off";
 
           return (
-            <div className="buttonList--list--item">
+            <div
+              className="buttonList--list--item"
+              onClick={() => this.props.clickFunction(index)}
+            >
               <div className="center-vertical"> {port.name}</div>
               <div className={"buttonList--list--indicator " + indicator} />
             </div>
