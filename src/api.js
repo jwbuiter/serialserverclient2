@@ -12,7 +12,8 @@ import {
   RECEIVE_STATIC
 } from "./actions/types";
 
-const APIendPoint = "http://192.168.1.67";
+const APIendPoint = window.location.hostname + ":80";
+console.log(APIendPoint);
 
 function api(store) {
   const socket = socketIOClient(APIendPoint);
