@@ -5,9 +5,9 @@ import ComElement from "./ComElement";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
 import TableCell from "./TableCell";
+import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
 
-import allflex from "../assets/Logo-Allflex.png";
 import MBDC from "../assets/Logo-MBDC.jpg";
 import Infobar from "./Infobar";
 
@@ -23,8 +23,8 @@ class Main extends Component {
       <div id="page-wrap" className="main">
         <Infobar />
         <div className="logos">
-          <Logo image={allflex} alt={"Allflex"} />
           <Logo image={MBDC} alt={"MBDC"} />
+          <SelfLearning state={this.props.selfLearning} />
         </div>
         <div className="coms">
           {this.props.coms.map(com => {
@@ -88,12 +88,15 @@ function mapStateToProps(state) {
     name: state.config.table.cells[index].name
   }));
 
+  const selfLearning = state.internal.selfLearning;
+
   return {
     loaded: true,
     coms,
     inputs,
     outputs,
-    cells
+    cells,
+    selfLearning
   };
 }
 

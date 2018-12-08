@@ -1,6 +1,6 @@
 @import "constants";
 
-.comElement {
+.selfLearning {
   position: relative;
 
   height: 100%;
@@ -17,7 +17,7 @@
     text-align: center;
 
     border-radius: 2vh 2vh 0 0;
-    background-color: $focus-color;
+    background-color: $primary-color;
 
     color: white;
   }
@@ -25,5 +25,29 @@
   &--content {
     position: relative;
     height: 70%;
+
+    font-size: 3vh;
+
+    padding: 0 2vh;
+  }
+
+  &--indicator {
+    height: 3vh;
+    width: 3vh;
+    right: 2vh;
+
+    border-radius: 1vh;
+
+    &--inProgress {
+      background-color: yellow;
+    }
+
+    &--success {
+      background-color: #3fd35d;
+    }
+
+    &--warning {
+      background-color: #ffc000;
+    }
   }
 }
