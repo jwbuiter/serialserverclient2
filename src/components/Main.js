@@ -24,7 +24,7 @@ class Main extends Component {
         <Infobar />
         <div className="logos">
           <Logo image={MBDC} alt={"MBDC"} />
-          <SelfLearning state={this.props.selfLearning} />
+          {/*<SelfLearning state={this.props.selfLearning} />*/}
         </div>
         <div className="coms">
           {this.props.coms.map(com => {
