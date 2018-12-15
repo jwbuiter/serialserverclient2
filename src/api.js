@@ -12,7 +12,8 @@ import {
   RECEIVE_STATIC
 } from "./actions/types";
 
-const APIendPoint = window.location.hostname + ":80";
+const APIendPoint = "http://" + window.location.hostname + ":80";
+//const APIendPoint = "http://192.168.1.67:80";
 console.log(APIendPoint);
 
 function api(store) {
@@ -35,15 +36,16 @@ function api(store) {
 
   axios
     .get(APIendPoint + "/config")
-    .then(result =>
-      store.dispatch({ type: RECEIVE_CONFIG, payload: result.data })
-    );
+    .then(result => {
+      console.log("Got config");
+      store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
+    })
+    .catch(err => console.log(APIendPoint + "/config", err));
 
-  axios
-    .get(APIendPoint + "/static")
-    .then(result =>
-      store.dispatch({ type: RECEIVE_STATIC, payload: result.data })
-    );
+  axios.get(APIendPoint + "/static").then(result => {
+    console.log("Got static");
+    store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
+  });
 
   function forceInput(index) {
     socket.emit("forceInput", index);

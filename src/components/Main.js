@@ -5,7 +5,7 @@ import ComElement from "./ComElement";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
 import TableCell from "./TableCell";
-import SelfLearning from "./SelfLearning";
+//import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
 
 import MBDC from "../assets/Logo-MBDC.jpg";
