@@ -6,6 +6,7 @@ import {
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
   TABLE_CELL_STATE,
+  SELFLEARNING_STATE,
   RECEIVE_IP,
   RECEIVE_TIME,
   RECEIVE_CONFIG,
@@ -24,6 +25,7 @@ function api(store) {
     output: OUTPUT_PORT_STATE,
     table: TABLE_CELL_STATE,
     entry: SERIAL_COM_STATE,
+    selfLearning: SELFLEARNING_STATE,
     ip: RECEIVE_IP,
     time: RECEIVE_TIME
   };

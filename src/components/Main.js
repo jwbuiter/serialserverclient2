@@ -5,7 +5,7 @@ import ComElement from "./ComElement";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
 import TableCell from "./TableCell";
-//import SelfLearning from "./SelfLearning";
+import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
 
 import MBDC from "../assets/Logo-MBDC.jpg";
@@ -24,7 +24,7 @@ class Main extends Component {
         <Infobar />
         <div className="logos">
           <Logo image={MBDC} alt={"MBDC"} />
-          {/*<SelfLearning state={this.props.selfLearning} />*/}
+          {this.props.selfLearningEnabled && <SelfLearning />}
         </div>
         <div className="coms">
           {this.props.coms.map(com => {
@@ -88,7 +88,7 @@ function mapStateToProps(state) {
     name: state.config.table.cells[index].name
   }));
 
-  const selfLearning = state.internal.selfLearning;
+  const selfLearningEnabled = state.internal.selfLearning.enabled;
 
   return {
     loaded: true,
@@ -96,7 +96,7 @@ function mapStateToProps(state) {
     inputs,
     outputs,
     cells,
-    selfLearning
+    selfLearningEnabled
   };
 }
 

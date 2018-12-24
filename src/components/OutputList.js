@@ -9,7 +9,6 @@ class OutputList extends Component {
           <div className="center-vertical">uitgangen voor poorten</div>
         </div>
         {this.props.outputs.map((port, index) => {
-          if (index === 0) console.log(port);
           let indicator = "buttonList--list--indicator--output";
           if (port.isForced) indicator += "Forced";
 

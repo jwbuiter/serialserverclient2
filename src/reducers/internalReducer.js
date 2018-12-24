@@ -2,14 +2,18 @@ const {
   INPUT_PORT_STATE,
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
-  TABLE_CELL_STATE
+  TABLE_CELL_STATE,
+  SELFLEARNING_STATE
 } = require("../actions/types");
 
 const initialState = {
   coms: [],
   outputs: [],
   inputs: [],
-  cells: []
+  cells: [],
+  selfLearning: {
+    enabled: false
+  }
 };
 
 export default function(fullState = initialState, action) {
@@ -45,6 +49,13 @@ export default function(fullState = initialState, action) {
       newCells[index] = { value, manual };
 
       return { ...fullState, cells: newCells };
+    }
+    case SELFLEARNING_STATE: {
+      console.log(action.payload);
+      return {
+        ...fullState,
+        selfLearning: { enabled: true, ...action.payload }
+      };
     }
     default:
       return fullState;

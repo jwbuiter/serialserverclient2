@@ -14,7 +14,8 @@ const actionTypes = [
   "INPUT_PORT_STATE",
   "OUTPUT_PORT_STATE",
   "SERIAL_COM_STATE",
-  "TABLE_CELL_STATE"
+  "TABLE_CELL_STATE",
+  "SELFLEARNING_STATE"
 ];
 
 module.exports = stringMapFromArray(actionTypes);

@@ -32,9 +32,9 @@
   }
 
   &--indicator {
-    height: 3vh;
-    width: 3vh;
-    right: 2vh;
+    height: 2vh;
+    width: 2vh;
+    right: 1vh;
 
     border-radius: 1vh;
 
@@ -49,5 +49,10 @@
     &--warning {
       background-color: #ffc000;
     }
+  }
+
+  &--modal {
+    display: grid;
+    grid-template-columns: 1fr 3fr 3fr;
   }
 }
