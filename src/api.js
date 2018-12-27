@@ -13,8 +13,8 @@ import {
   RECEIVE_STATIC
 } from "./actions/types";
 
-const APIendPoint = "http://" + window.location.hostname + ":80";
-//const APIendPoint = "http://192.168.1.67:80";
+//const APIendPoint = "http://" + window.location.hostname + ":80";
+const APIendPoint = "http://192.168.1.67:80";
 console.log(APIendPoint);
 
 function api(store) {
@@ -31,9 +31,9 @@ function api(store) {
   };
 
   for (let message in messageTypes) {
-    socket.on(message, payload =>
-      store.dispatch({ type: messageTypes[message], payload })
-    );
+    socket.on(message, payload => {
+      store.dispatch({ type: messageTypes[message], payload });
+    });
   }
 
   axios
@@ -57,7 +57,22 @@ function api(store) {
     socket.emit("forceOutput", index);
   }
 
-  return { forceInput, forceOutput };
+  function getLog() {
+    return axios.get(APIendPoint + "/comlog");
+  }
+
+  function getUniqueLog() {
+    return axios.get(APIendPoint + "/comlogu");
+  }
+
+  function reboot() {
+    axios.get(APIendPoint + "/restart");
+  }
+
+  function shutdown() {
+    axios.get(APIendPoint + "/shutdown");
+  }
+  return { forceInput, forceOutput, getLog, getUniqueLog, reboot, shutdown };
 }
 
 export default api;

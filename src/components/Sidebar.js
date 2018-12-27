@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { push as Menu } from "react-burger-menu";
+import Toggle from "react-toggle";
+
 import "../styles/sidebar.scss";
 
 class Sidebar extends Component {
@@ -11,10 +13,30 @@ class Sidebar extends Component {
   render() {
     return (
       <Menu pageWrapId={"page-wrap"} outerContainerId={"outer-container"}>
-        <span className="menu-item">Access settings</span>
-        <span className="menu-item">Reboot unit</span>
+        <span className="menu-item">
+          Unlock settings <Toggle />
+        </span>
+        <a
+          className="menu-item"
+          href=""
+          onClick={() => {
+            if (window.confirm("Are you sure you want to reboot?"))
+              this.props.api.reboot();
+          }}
+        >
+          Reboot unit
+        </a>
         <span className="menu-item">Upload data</span>
-        <span className="menu-item">Shutdown unit</span>
+        <a
+          className="menu-item"
+          href=""
+          onClick={() => {
+            if (window.confirm("Are you sure you want to shutdown?"))
+              this.props.api.shutdown();
+          }}
+        >
+          Shutdown unit
+        </a>
       </Menu>
     );
   }

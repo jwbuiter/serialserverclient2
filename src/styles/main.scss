@@ -1,3 +1,5 @@
+@import "constants";
+
 .main {
   margin: 2vh;
   height: 96vh;
@@ -11,6 +13,13 @@
     "table table ports";
 
   grid-gap: 5vh;
+  &--logModal {
+    &--title {
+      width: 100%;
+      text-align: center;
+      background-color: $tertiary-color;
+    }
+  }
 }
 
 .infobar {

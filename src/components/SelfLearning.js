@@ -11,32 +11,56 @@ const generalTableColumns = [
   {
     Header: "Com0",
     accessor: row => row.entries[0],
-    id: 1
+    id: 1,
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "-1",
     accessor: row => row.entries[1],
-    id: 2
+    id: 2,
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "-2",
     accessor: row => row.entries[2],
-    id: 3
+    id: 3,
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "-3",
     accessor: row => row.entries[3],
-    id: 4
+    id: 4,
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "-4",
     accessor: row => row.entries[4],
-    id: 5
+    id: 5,
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "Com1",
     accessor: "key",
-    width: 300
+    style: { textAlign: "center" },
+    width: 200
+  },
+  {
+    Header: () => <input type="text" />,
+    accessor: "calibration",
+    style: { textAlign: "center" },
+    width: 70
+  },
+  {
+    Header: props => <button>Delete</button>,
+    Cell: props => <button>Delete</button>,
+    id: 1,
+    style: { textAlign: "center" },
+    width: 70
   }
 ];
 
@@ -46,11 +70,21 @@ const textColors = ["black", "white", "black", "black", "white"];
 const individualTableColumns = [
   {
     Header: "Com0",
-    accessor: "calibration"
+    accessor: "calibration",
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "Com1",
-    accessor: "key"
+    accessor: "key",
+    style: { textAlign: "center" },
+    width: 200
+  },
+  {
+    Header: () => <input type="text" />,
+    accessor: "calibration",
+    style: { textAlign: "center" },
+    width: 70
   },
   {
     Header: "Tol",
@@ -67,55 +101,22 @@ const individualTableColumns = [
           {props.value}
         </div>
       );
-    }
+    },
+    style: { textAlign: "center" },
+    width: 50
   },
   {
     Header: "Num",
-    accessor: "numUpdates"
+    accessor: "numUpdates",
+    style: { textAlign: "center" },
+    width: 50
   },
   {
     Header: props => <button>Delete</button>,
     Cell: props => <button>Delete</button>,
-    id: 1
-  }
-];
-
-const data = [{ entries: [23, 24, 342, 3545, 1231], key: 543210987654321 }];
-const data2 = [
-  {
-    calibration: 25.5,
-    key: 543210987654321,
-    tolerance: 9,
-    increments: 4,
-    numUpdates: 0
-  },
-  {
-    calibration: 25.5,
-    key: 543210987654321,
-    tolerance: 8,
-    increments: 3,
-    numUpdates: 0
-  },
-  {
-    calibration: 25.5,
-    key: 543210987654321,
-    tolerance: 7,
-    increments: 2,
-    numUpdates: 0
-  },
-  {
-    calibration: 25.5,
-    key: 543210987654321,
-    tolerance: 6,
-    increments: 1,
-    numUpdates: 0
-  },
-  {
-    calibration: 25.5,
-    key: 543210987654321,
-    tolerance: 5,
-    increments: 0,
-    numUpdates: 0
+    id: 1,
+    style: { textAlign: "center" },
+    width: 70
   }
 ];
 
@@ -131,10 +132,6 @@ class SelfLearning extends Component {
     this.setState({ modalIsOpen: true });
   };
 
-  afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-  };
-
   closeModal = () => {
     this.setState({ modalIsOpen: false });
   };
@@ -144,29 +141,41 @@ class SelfLearning extends Component {
       "selfLearning--indicator--success",
       "selfLearning--indicator--warning"
     ];
+
+    const individualEntries = [];
+    const generalEntries = [];
+
+    for (let key in this.props.generalEntries) {
+      generalEntries.push({ key, entries: this.props.generalEntries[key] });
+    }
+    for (let key in this.props.individualEntries) {
+      console.log(this.props.individualEntries[key]);
+      individualEntries.push({ key, ...this.props.individualEntries[key] });
+    }
+
     return (
       <>
         <Modal
           isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           overlayClassName="modalOverlay"
           className="modalContent"
-          contentLabel="Example Modal"
+          contentLabel="SelfLearning Modal"
         >
+          <div>SL: Ind COM0</div>
           <div className="selfLearning--modal">
-            <div>SL: Ind COM0</div>
             <div>
-              <span> SL-list </span>
+              <div className="selfLearning--modal--title"> SL-list </div>
               <ReactTable
-                data={data || Object.entries(this.props.generalEntries)}
+                style={{ textAlign: "center" }}
+                data={generalEntries}
                 columns={generalTableColumns}
               />
             </div>
             <div>
-              <span> UN-list </span>
+              <div className="selfLearning--modal--title"> UN-list </div>
               <ReactTable
-                data={data2 || Object.entries(this.props.individualEntries)}
+                data={individualEntries}
                 columns={individualTableColumns}
               />
             </div>

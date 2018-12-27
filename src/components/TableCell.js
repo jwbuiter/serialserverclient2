@@ -20,7 +20,7 @@ const TableCell = props => {
   }
 
   return (
-    <div className="tableCell">
+    <div className="tableCell" onClick={props.openLog}>
       <div className="tableCell--title">
         <FitText>
           <div className="center">{props.name}</div>
