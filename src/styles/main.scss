@@ -1,14 +1,14 @@
 @import "constants";
 
 .main {
-  margin: 2vh;
+  margin: 0vh 2vh;
   height: 96vh;
 
   display: grid;
   grid-template-columns: 1fr 5fr 2fr;
   grid-template-rows: 1fr 5fr 6fr;
   grid-template-areas:
-    "info info ports"
+    "logos info ports"
     "logos coms ports"
     "table table ports";
 
@@ -24,7 +24,8 @@
 
 .infobar {
   grid-area: info;
-  margin-left: 8vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .logos {
@@ -45,10 +46,6 @@
 
 .table {
   grid-area: table;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  grid-gap: 1vh;
 }
 
 .ports {

@@ -21,21 +21,28 @@
     border-radius: 0 0 20px 20px;
     font-size: 5vh;
 
-    input {
+    &--input {
       border: none;
-      width: 55%;
       font-size: 100%;
       text-align: center;
 
-      .numeric {
-        width: 0%;
+      &--numeric {
+        width: 70%;
+      }
+
+      &--text {
+        width: 90%;
+      }
+
+      &--select {
+        width: 90%;
       }
     }
 
     button {
       background-color: $focus-color;
       font-size: 100%;
-      width: 18%;
+      width: 15%;
       padding: 1px 0;
     }
   }

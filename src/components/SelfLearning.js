@@ -135,6 +135,7 @@ class SelfLearning extends Component {
   closeModal = () => {
     this.setState({ modalIsOpen: false });
   };
+
   render() {
     const indicators = [
       "selfLearning--indicator--inProgress",

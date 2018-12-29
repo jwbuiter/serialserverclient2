@@ -13,14 +13,30 @@ class Infobar extends Component {
   render() {
     return (
       <div className="infobar">
-        <div className="infobar--item">
-          <FitText compressor={4}>
+        <FitText>
+          <div className="infobar--item">
+            <div className="center">{this.props.name}</div>
+          </div>
+        </FitText>
+        <FitText>
+          <div className="infobar--item">
+            <div className="center">{this.props.ip}</div>
+          </div>
+        </FitText>
+        <FitText>
+          <div className="infobar--item">
             <div className="center">
-              {this.props.name} | {this.props.ip} |
-              {moment(this.props.time).format(" HH:mm:ss | MMMM Do YYYY")}
+              {moment(this.props.time).format("HH:mm:ss")}
             </div>
-          </FitText>
-        </div>
+          </div>
+        </FitText>
+        <FitText>
+          <div className="infobar--item">
+            <div className="center">
+              {moment(this.props.time).format("DD-MM-YYYY")}
+            </div>
+          </div>
+        </FitText>
       </div>
     );
   }

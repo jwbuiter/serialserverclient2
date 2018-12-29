@@ -1,8 +1,9 @@
-const { RECEIVE_IP, RECEIVE_TIME } = require("../actions/types");
+const { RECEIVE_IP, RECEIVE_TIME, TOGGLE_MENU } = require("../actions/types");
 
 const initialState = {
   ip: "",
-  time: new Date().getTime()
+  time: new Date().getTime(),
+  isMenuOpen: false
 };
 
 export default (state = initialState, action) => {
@@ -17,6 +18,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         time: action.payload
+      };
+    }
+    case TOGGLE_MENU: {
+      return {
+        ...state,
+        isMenuOpen: !state.isMenuOpen
       };
     }
     default:

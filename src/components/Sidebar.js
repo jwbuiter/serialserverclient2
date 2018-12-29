@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { push as Menu } from "react-burger-menu";
+import { connect } from "react-redux";
+import { slide as Menu } from "react-burger-menu";
 import Toggle from "react-toggle";
 
 import "../styles/sidebar.scss";
@@ -10,11 +11,24 @@ class Sidebar extends Component {
     this.state = {};
   }
 
+  toggleConfigLock = e => {
+    if (e.target.checked) {
+      this.props.api.unlockConfig();
+    } else {
+      this.props.api.saveConfig();
+    }
+  };
+
   render() {
     return (
-      <Menu pageWrapId={"page-wrap"} outerContainerId={"outer-container"}>
+      <Menu
+        customBurgerIcon={false}
+        pageWrapId="page-wrap"
+        outerContainerId="outer-container"
+        isOpen={this.props.isMenuOpen}
+      >
         <span className="menu-item">
-          Unlock settings <Toggle />
+          Unlock settings <Toggle onChange={this.toggleConfigLock} />
         </span>
         <a
           className="menu-item"
@@ -42,4 +56,10 @@ class Sidebar extends Component {
   }
 }
 
-export default Sidebar;
+function mapStateToProps(state) {
+  return {
+    isMenuOpen: state.misc.isMenuOpen
+  };
+}
+
+export default connect(mapStateToProps)(Sidebar);

@@ -9,6 +9,10 @@ import {
   SELFLEARNING_STATE,
   RECEIVE_IP,
   RECEIVE_TIME,
+  TOGGLE_MENU,
+  CONFIG_UNLOCK,
+  CONFIG_LOCK,
+  CONFIG_CHANGE,
   RECEIVE_CONFIG,
   RECEIVE_STATIC
 } from "./actions/types";
@@ -57,6 +61,10 @@ function api(store) {
     socket.emit("forceOutput", index);
   }
 
+  function tableManual(index, value) {
+    socket.emit("manual", { index, value });
+  }
+
   function getLog() {
     return axios.get(APIendPoint + "/comlog");
   }
@@ -72,7 +80,53 @@ function api(store) {
   function shutdown() {
     axios.get(APIendPoint + "/shutdown");
   }
-  return { forceInput, forceOutput, getLog, getUniqueLog, reboot, shutdown };
+
+  async function getLogo() {
+    let logo = false;
+    try {
+      await axios.get(APIendPoint + "/logo");
+      logo = APIendPoint + "/logo";
+    } finally {
+      return logo;
+    }
+  }
+
+  function toggleMenu() {
+    store.dispatch({ type: TOGGLE_MENU });
+  }
+
+  function unlockConfig() {
+    store.dispatch({ type: CONFIG_UNLOCK });
+  }
+
+  function saveConfig() {
+    if (store.getState().config.hasChanged) {
+      if (window.confirm("Are you sure you want to save these changes?")) {
+        //save config
+        store.dispatch({ type: CONFIG_LOCK });
+        //reload page after some seconds
+      }
+    } else {
+      store.dispatch({ type: CONFIG_LOCK });
+    }
+  }
+
+  function changeConfig(changes) {}
+
+  return {
+    forceInput,
+    forceOutput,
+    tableManual,
+    getLog,
+    getUniqueLog,
+    reboot,
+    shutdown,
+    getLogo,
+    toggleMenu,
+    unlockConfig,
+    saveConfig,
+    changeConfig
+  };
 }
 
 export default api;

@@ -9,13 +9,17 @@ function stringMapFromArray(array) {
 const actionTypes = [
   "RECEIVE_TIME",
   "RECEIVE_IP",
+  "TOGGLE_MENU",
   "RECEIVE_CONFIG",
   "RECEIVE_STATIC",
   "INPUT_PORT_STATE",
   "OUTPUT_PORT_STATE",
   "SERIAL_COM_STATE",
   "TABLE_CELL_STATE",
-  "SELFLEARNING_STATE"
+  "SELFLEARNING_STATE",
+  "CONFIG_UNLOCK",
+  "CONFIG_LOCK",
+  "CONFIG_CHANGE"
 ];
 
 module.exports = stringMapFromArray(actionTypes);

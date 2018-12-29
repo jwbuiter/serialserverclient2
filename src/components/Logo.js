@@ -3,7 +3,7 @@ import "../styles/logo.scss";
 
 const Logo = props => {
   return (
-    <div className="logo">
+    <div className="logo" onClick={props.onClick}>
       <img className="center" src={props.image} alt={props.alt} />
     </div>
   );

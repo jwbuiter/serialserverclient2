@@ -1,44 +1,56 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import "../styles/inputList.scss";
 
 class InputList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ports: [
-        { state: false, forced: false, name: "blokkering" },
-        { state: false, forced: false, name: "ingang 1" },
-        { state: false, forced: false, name: "ingang 2" },
-        { state: false, forced: false, name: "ingang 2" },
-        { state: false, forced: false, name: "opslaan" }
-      ]
-    };
+    this.state = {};
   }
   render() {
     return (
       <div className="buttonList inputList">
         <div className="buttonList--title">
-          <div className="center-vertical">ingangen</div>
+          <div className="center-vertical">inputs</div>
         </div>
-        {this.props.inputs.map((port, index) => {
-          let indicator = "buttonList--list--indicator--input";
-          if (port.isForced) indicator += "Forced";
+        {this.props.inputs
+          .filter((port, index) => {
+            return this.props.portsEnabled[index] || port.name !== "";
+          })
+          .map((port, index) => {
+            let indicator = "buttonList--list--indicator--input";
+            if (port.isForced) indicator += "Forced";
 
-          indicator += port.state ? "On" : "Off";
+            indicator += port.state ? "On" : "Off";
 
-          return (
-            <div
-              className="buttonList--list--item"
-              onClick={() => this.props.clickFunction(index)}
-            >
-              <div className="center-vertical"> {port.name}</div>
-              <div className={"buttonList--list--indicator " + indicator} />
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={index}
+                className="buttonList--list--item"
+                onClick={() => this.props.clickFunction(index)}
+              >
+                <div className="center-vertical"> {port.name}</div>
+                <div className={"buttonList--list--indicator " + indicator} />
+              </div>
+            );
+          })}
       </div>
     );
   }
 }
 
-export default InputList;
+function mapStateToProps(state) {
+  const configLocked = state.config.locked;
+
+  const portsEnabled = state.config.input.ports.map(
+    port => port.formula !== ""
+  );
+
+  return {
+    configLocked,
+    portsEnabled
+  };
+}
+
+export default connect(mapStateToProps)(InputList);

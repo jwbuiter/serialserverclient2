@@ -7,7 +7,7 @@ import Toggle from "react-toggle";
 import ComElement from "./ComElement";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
-import TableCell from "./TableCell";
+import Table from "./Table";
 import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
 
@@ -32,11 +32,19 @@ const getColumnWidth = (rows, accessor) => {
 class Main extends Component {
   constructor(props) {
     super(props);
+
+    props.api.getLogo().then(result => {
+      if (result) {
+        this.setState({ logo: result });
+      }
+    });
+
     this.state = {
       logModalIsOpen: false,
       logModalUnique: false,
       logEntries: [],
-      logTableColumns: []
+      logTableColumns: [],
+      logo: MBDC
     };
   }
 
@@ -75,66 +83,75 @@ class Main extends Component {
     }
 
     return (
-      <div id="page-wrap" className="main">
-        <Modal
-          isOpen={this.state.logModalIsOpen}
-          onRequestClose={this.closeLogModal}
-          overlayClassName="modalOverlay"
-          className="modalContent"
-          contentLabel="Log Modal"
-        >
-          <Toggle onChange={this.reloadLogEntries} />
-          Only show unique entries
-          <div className="main--logModal">
-            <div>
-              <div className="main--logModal--title">
-                {this.state.logModalUnique ? "Unique Log" : "Normal Log"}{" "}
+      <div id="page-wrap">
+        .
+        <div className="main">
+          <Modal
+            isOpen={this.state.logModalIsOpen}
+            onRequestClose={this.closeLogModal}
+            overlayClassName="modalOverlay"
+            className="modalContent"
+            contentLabel="Log Modal"
+          >
+            {this.props.uniqueLogEnabled && (
+              <span>
+                <Toggle onChange={this.reloadLogEntries} />
+                Only show unique entries
+              </span>
+            )}
+            <div className="main--logModal">
+              <div>
+                <div className="main--logModal--title">
+                  {this.state.logModalUnique ? "Unique Log" : "Normal Log"}{" "}
+                </div>
+                <ReactTable
+                  style={{ fontSize: 13 }}
+                  data={this.state.logEntries}
+                  columns={this.state.logTableColumns}
+                />
               </div>
-              <ReactTable
-                style={{ fontSize: 13 }}
-                data={this.state.logEntries}
-                columns={this.state.logTableColumns}
-              />
             </div>
+          </Modal>
+          <Infobar />
+          <div className="logos">
+            <Logo
+              image={this.state.logo}
+              alt="LOGO"
+              onClick={this.props.api.toggleMenu}
+            />
+            {this.props.selfLearningEnabled && <SelfLearning />}
           </div>
-        </Modal>
-        <Infobar />
-        <div className="logos">
-          <Logo image={MBDC} alt={"MBDC"} />
-          {this.props.selfLearningEnabled && <SelfLearning />}
-        </div>
-        <div className="coms">
-          {this.props.coms.map(com => {
-            return (
-              <ComElement
-                name={com.name}
-                entry={com.entry}
-                time={com.time}
-                average={com.average}
-                entries={com.entries}
-              />
-            );
-          })}
-        </div>
-        <div className="ports">
-          <OutputList
-            outputs={this.props.outputs}
-            clickFunction={this.props.api.forceOutput}
-          />
-          <InputList
-            inputs={this.props.inputs}
-            clickFunction={this.props.api.forceInput}
-          />
-        </div>
-        <div className="table">
-          {this.props.cells.map(cell => (
-            <TableCell
-              name={cell.name}
-              value={cell.value}
-              manual={cell.manual}
+          <div className="coms">
+            {this.props.coms.map((com, index) => {
+              return (
+                <ComElement
+                  key={index}
+                  name={com.name}
+                  entry={com.entry}
+                  time={com.time}
+                  average={com.average}
+                  entries={com.entries}
+                />
+              );
+            })}
+          </div>
+          <div className="ports">
+            <OutputList
+              outputs={this.props.outputs}
+              clickFunction={this.props.api.forceOutput}
+            />
+            <InputList
+              inputs={this.props.inputs}
+              clickFunction={this.props.api.forceInput}
+            />
+          </div>
+          <div className="table">
+            <Table
+              api={this.props.api}
+              cells={this.props.cells}
               openLog={this.openLogModal}
             />
-          ))}
+          </div>
         </div>
       </div>
     );
@@ -168,13 +185,19 @@ function mapStateToProps(state) {
 
   const selfLearningEnabled = state.internal.selfLearning.enabled;
 
+  const configLocked = state.config.locked;
+
+  const uniqueLogEnabled = state.config.logger.unique !== "off";
+
   return {
     loaded: true,
     coms,
     inputs,
     outputs,
     cells,
-    selfLearningEnabled
+    selfLearningEnabled,
+    configLocked,
+    uniqueLogEnabled
   };
 }
 
