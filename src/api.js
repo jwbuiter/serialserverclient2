@@ -17,8 +17,8 @@ import {
   RECEIVE_STATIC
 } from "./actions/types";
 
-//const APIendPoint = "http://" + window.location.hostname + ":80";
-const APIendPoint = "http://192.168.1.67:80";
+const APIendPoint = "http://" + window.location.hostname + ":80";
+//const APIendPoint = "http://192.168.1.67:80";
 console.log(APIendPoint);
 
 function api(store) {
@@ -54,10 +54,12 @@ function api(store) {
   });
 
   function forceInput(index) {
+    console.log("forceinput", index);
     socket.emit("forceInput", index);
   }
 
   function forceOutput(index) {
+    console.log("forceoutput", index);
     socket.emit("forceOutput", index);
   }
 
