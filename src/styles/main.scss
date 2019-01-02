@@ -5,7 +5,7 @@
   height: 96vh;
 
   display: grid;
-  grid-template-columns: 1fr 5fr 2fr;
+  grid-template-columns: 2fr 6fr 2fr;
   grid-template-rows: 1fr 5fr 6fr;
   grid-template-areas:
     "logos info ports"
@@ -13,6 +13,15 @@
     "table table ports";
 
   grid-gap: 5vh;
+
+  &--noports {
+    grid-template-columns: 1fr 3fr;
+  }
+
+  &--notable {
+    grid-template-rows: 1fr 5fr;
+  }
+
   &--logModal {
     &--title {
       width: 100%;

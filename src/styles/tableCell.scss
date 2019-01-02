@@ -3,7 +3,6 @@
 .tableCell {
   position: relative;
 
-  text-transform: uppercase;
   color: white;
 
   &--title {
@@ -40,7 +39,7 @@
     }
 
     button {
-      background-color: $focus-color;
+      background-color: $tertiary-color;
       font-size: 100%;
       width: 15%;
       padding: 1px 0;

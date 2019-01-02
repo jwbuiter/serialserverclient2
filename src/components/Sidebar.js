@@ -32,7 +32,7 @@ class Sidebar extends Component {
         </span>
         <a
           className="menu-item"
-          href=""
+          href="/"
           onClick={() => {
             if (window.confirm("Are you sure you want to reboot?"))
               this.props.api.reboot();
@@ -43,7 +43,7 @@ class Sidebar extends Component {
         <span className="menu-item">Upload data</span>
         <a
           className="menu-item"
-          href=""
+          href="/"
           onClick={() => {
             if (window.confirm("Are you sure you want to shutdown?"))
               this.props.api.shutdown();
@@ -51,6 +51,8 @@ class Sidebar extends Component {
         >
           Shutdown unit
         </a>
+        <span className="menu-item" />
+        <span className="menu-item">QS code: {this.props.QS}</span>
       </Menu>
     );
   }
@@ -58,7 +60,8 @@ class Sidebar extends Component {
 
 function mapStateToProps(state) {
   return {
-    isMenuOpen: state.misc.isMenuOpen
+    isMenuOpen: state.misc.isMenuOpen,
+    QS: state.static.QS
   };
 }
 

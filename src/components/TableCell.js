@@ -93,8 +93,7 @@ const TableCell = props => {
       );
       break;
     }
-    case "text":
-    case "numeric": {
+    default: {
       content = props.value;
       break;
     }
@@ -102,7 +101,7 @@ const TableCell = props => {
 
   return (
     <div className="tableCell">
-      <div className="tableCell--title" onClick={props.openLog}>
+      <div className="tableCell--title" onClick={props.openModal}>
         <FitText>
           <div className="center">{props.name}</div>
         </FitText>

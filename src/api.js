@@ -111,7 +111,9 @@ function api(store) {
     }
   }
 
-  function changeConfig(changes) {}
+  function changeConfig(changes) {
+    store.dispatch({ type: CONFIG_CHANGE, payload: changes });
+  }
 
   return {
     forceInput,

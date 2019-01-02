@@ -138,9 +138,9 @@ class SelfLearning extends Component {
 
   render() {
     const indicators = [
-      "selfLearning--indicator--inProgress",
-      "selfLearning--indicator--success",
-      "selfLearning--indicator--warning"
+      "selfLearning--title--inProgress",
+      "selfLearning--title--success",
+      "selfLearning--title--warning"
     ];
 
     const individualEntries = [];
@@ -183,29 +183,33 @@ class SelfLearning extends Component {
           </div>
         </Modal>
         <div className="selfLearning" onClick={this.openModal}>
-          <div className="selfLearning--title">
+          <div
+            className={"selfLearning--title " + indicators[this.props.success]}
+          >
             <div className="center">
               <FitText>
                 <div>Self Learning</div>
               </FitText>
-              <div
-                className={
-                  "center-vertical selfLearning--indicator " +
-                  indicators[this.props.success]
-                }
-              />
             </div>
           </div>
           <div className="selfLearning--content">
             {this.props.individual ? (
-              <div className="center-vertical">
-                {this.props.calibration} ±{" "}
-                {(this.props.tolerance * 100).toFixed(1)} %
+              <div className="center">
+                <FitText>
+                  <div>
+                    {this.props.calibration} ±{" "}
+                    {(this.props.tolerance * 100).toFixed(1)} %
+                  </div>
+                </FitText>
               </div>
             ) : (
-              <div className="center-vertical">
-                {this.props.calibration} ±{" "}
-                {(this.props.matchedTolerance * 100).toFixed(1)} %
+              <div className="center">
+                <FitText>
+                  <div>
+                    {this.props.calibration} ±{" "}
+                    {(this.props.matchedTolerance * 100).toFixed(1)} %
+                  </div>
+                </FitText>
               </div>
             )}
           </div>

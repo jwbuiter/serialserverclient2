@@ -8,7 +8,7 @@ class OutputList extends Component {
     return (
       <div className="buttonList">
         <div className="buttonList--title">
-          <div className="center-vertical">outputs</div>
+          <div className="center">Outputs</div>
         </div>
         {this.props.outputs
           .filter((port, index) => {

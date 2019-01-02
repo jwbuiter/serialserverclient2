@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import ReactTable from "react-table";
 import Toggle from "react-toggle";
+import classNames from "classnames";
 
 import ComElement from "./ComElement";
 import OutputList from "./OutputList";
@@ -49,8 +50,8 @@ class Main extends Component {
   }
 
   openLogModal = () => {
-    this.setState({ logModalIsOpen: true, logModalUnique: false });
-    this.reloadLogEntries({ target: { checked: false } });
+    this.setState({ logModalIsOpen: true });
+    this.reloadLogEntries({ target: { checked: this.state.logModalUnique } });
   };
 
   reloadLogEntries = e => {
@@ -82,10 +83,27 @@ class Main extends Component {
       return <div>Loading</div>;
     }
 
+    const showTable = this.props.cells.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
+    const showInputs = this.props.outputs.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
+    const showOutputs = this.props.outputs.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
+    const showPorts = showInputs || showOutputs;
+
     return (
       <div id="page-wrap">
         .
-        <div className="main">
+        <div
+          className={classNames(
+            "main",
+            { "main--noports": !showPorts },
+            { "main--notable": !showTable }
+          )}
+        >
           <Modal
             isOpen={this.state.logModalIsOpen}
             onRequestClose={this.closeLogModal}
@@ -95,14 +113,17 @@ class Main extends Component {
           >
             {this.props.uniqueLogEnabled && (
               <span>
-                <Toggle onChange={this.reloadLogEntries} />
+                <Toggle
+                  checked={this.state.logModalUnique}
+                  onChange={this.reloadLogEntries}
+                />
                 Only show unique entries
               </span>
             )}
             <div className="main--logModal">
               <div>
                 <div className="main--logModal--title">
-                  {this.state.logModalUnique ? "Unique Log" : "Normal Log"}{" "}
+                  {this.state.logModalUnique ? "Unique Log" : "Normal Log"}
                 </div>
                 <ReactTable
                   style={{ fontSize: 13 }}
@@ -135,23 +156,31 @@ class Main extends Component {
               );
             })}
           </div>
-          <div className="ports">
-            <OutputList
-              outputs={this.props.outputs}
-              clickFunction={this.props.api.forceOutput}
-            />
-            <InputList
-              inputs={this.props.inputs}
-              clickFunction={this.props.api.forceInput}
-            />
-          </div>
-          <div className="table">
-            <Table
-              api={this.props.api}
-              cells={this.props.cells}
-              openLog={this.openLogModal}
-            />
-          </div>
+          {showPorts && (
+            <div className="ports">
+              {showOutputs && (
+                <OutputList
+                  outputs={this.props.outputs}
+                  clickFunction={this.props.api.forceOutput}
+                />
+              )}
+              {showInputs && (
+                <InputList
+                  inputs={this.props.inputs}
+                  clickFunction={this.props.api.forceInput}
+                />
+              )}
+            </div>
+          )}
+          {showTable && (
+            <div className="table">
+              <Table
+                api={this.props.api}
+                cells={this.props.cells}
+                openLog={this.openLogModal}
+              />
+            </div>
+          )}
         </div>
       </div>
     );

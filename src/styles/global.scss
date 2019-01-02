@@ -11,6 +11,18 @@ button {
   }
 }
 
+form {
+  width: 60vw;
+  line-height: 1.6;
+  input {
+    float: right;
+  }
+
+  select {
+    float: right;
+  }
+}
+
 .center {
   position: absolute;
   text-align: center;

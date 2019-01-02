@@ -12,7 +12,7 @@ class InputList extends Component {
     return (
       <div className="buttonList inputList">
         <div className="buttonList--title">
-          <div className="center-vertical">inputs</div>
+          <div className="center">Inputs</div>
         </div>
         {this.props.inputs
           .filter((port, index) => {

@@ -5,6 +5,7 @@
   "dependencies": {
     "@kennethormandy/react-fittext": "^0.5.1",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
     "moment": "^2.22.2",
     "node-sass": "^4.9.4",
     "react": "^16.5.2",

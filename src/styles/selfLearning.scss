@@ -10,33 +10,13 @@
   border-radius: 2vh;
 
   font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  text-transform: uppercase;
   &--title {
     position: relative;
     height: 30%;
     text-align: center;
 
     border-radius: 2vh 2vh 0 0;
-    background-color: $primary-color;
-
-    color: white;
-  }
-
-  &--content {
-    position: relative;
-    height: 70%;
-
-    font-size: 3vh;
-
-    padding: 0 2vh;
-  }
-
-  &--indicator {
-    height: 2vh;
-    width: 2vh;
-    right: 1vh;
-
-    border-radius: 1vh;
+    color: black;
 
     &--inProgress {
       background-color: yellow;
@@ -49,6 +29,15 @@
     &--warning {
       background-color: #ffc000;
     }
+  }
+
+  &--content {
+    position: relative;
+    height: 70%;
+
+    font-size: 3vh;
+
+    padding: 0 2vh;
   }
 
   &--modal {
