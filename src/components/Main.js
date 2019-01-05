@@ -5,7 +5,7 @@ import ReactTable from "react-table";
 import Toggle from "react-toggle";
 import classNames from "classnames";
 
-import ComElement from "./ComElement";
+import ComList from "./ComList";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
 import Table from "./Table";
@@ -80,19 +80,8 @@ class Main extends Component {
 
   render() {
     if (!this.props.loaded) {
-      return <div>Loading</div>;
+      return <div className="loadingScreen">Loading</div>;
     }
-
-    const showTable = this.props.cells.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
-    const showInputs = this.props.outputs.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
-    const showOutputs = this.props.outputs.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
-    const showPorts = showInputs || showOutputs;
 
     return (
       <div id="page-wrap">
@@ -100,8 +89,8 @@ class Main extends Component {
         <div
           className={classNames(
             "main",
-            { "main--noports": !showPorts },
-            { "main--notable": !showTable }
+            { "main--noports": !this.props.showPorts },
+            { "main--notable": !this.props.showTable }
           )}
         >
           <Modal
@@ -133,52 +122,29 @@ class Main extends Component {
               </div>
             </div>
           </Modal>
-          <Infobar />
+          <Infobar api={this.props.api} />
           <div className="logos">
             <Logo
               image={this.state.logo}
               alt="LOGO"
               onClick={this.props.api.toggleMenu}
             />
-            {this.props.selfLearningEnabled && <SelfLearning />}
+            {this.props.selfLearningEnabled && (
+              <SelfLearning api={this.props.api} />
+            )}
           </div>
           <div className="coms">
-            {this.props.coms.map((com, index) => {
-              return (
-                <ComElement
-                  key={index}
-                  name={com.name}
-                  entry={com.entry}
-                  time={com.time}
-                  average={com.average}
-                  entries={com.entries}
-                />
-              );
-            })}
+            <ComList api={this.props.api} />
           </div>
-          {showPorts && (
+          {this.props.showPorts && (
             <div className="ports">
-              {showOutputs && (
-                <OutputList
-                  outputs={this.props.outputs}
-                  clickFunction={this.props.api.forceOutput}
-                />
-              )}
-              {showInputs && (
-                <InputList
-                  inputs={this.props.inputs}
-                  clickFunction={this.props.api.forceInput}
-                />
-              )}
+              {this.props.showOutputs && <OutputList api={this.props.api} />}
+              {this.props.showInputs && <InputList api={this.props.api} />}
             </div>
           )}
-          {showTable && (
+          {this.props.showTable && (
             <div className="table">
-              <Table
-                api={this.props.api}
-                cells={this.props.cells}
-                openLog={this.openLogModal}
-              />
+              <Table api={this.props.api} openLog={this.openLogModal} />
             </div>
           )}
         </div>
@@ -192,25 +158,19 @@ function mapStateToProps(state) {
     return { loaded: false };
   }
 
-  const coms = state.internal.coms.map((com, index) => ({
-    ...com,
-    ...state.config.serial.coms[index]
-  }));
+  const showTable = state.config.table.cells.reduce((acc, cur) => {
+    return acc || cur.name;
+  }, false);
 
-  const inputs = state.internal.inputs.map((input, index) => ({
-    ...input,
-    name: state.config.input.ports[index].name
-  }));
+  const showInputs = state.config.input.ports.reduce((acc, cur) => {
+    return acc || cur.name;
+  }, false);
 
-  const outputs = state.internal.outputs.map((output, index) => ({
-    ...output,
-    name: state.config.output.ports[index].name
-  }));
+  const showOutputs = state.config.output.ports.reduce((acc, cur) => {
+    return acc || cur.name;
+  }, false);
 
-  const cells = state.internal.cells.map((cell, index) => ({
-    ...cell,
-    name: state.config.table.cells[index].name
-  }));
+  const showPorts = showInputs || showOutputs;
 
   const selfLearningEnabled = state.internal.selfLearning.enabled;
 
@@ -220,10 +180,10 @@ function mapStateToProps(state) {
 
   return {
     loaded: true,
-    coms,
-    inputs,
-    outputs,
-    cells,
+    showTable,
+    showInputs,
+    showOutputs,
+    showPorts,
     selfLearningEnabled,
     configLocked,
     uniqueLogEnabled

@@ -5,6 +5,8 @@ const {
   CONFIG_CHANGE
 } = require("../actions/types");
 
+const { set } = require("../configHelper");
+
 const initialState = { loaded: false, locked: true, hasChanged: false };
 
 export default function(state = initialState, action) {
@@ -21,7 +23,11 @@ export default function(state = initialState, action) {
     case CONFIG_CHANGE: {
       if (state.locked) return state;
 
-      return { ...state, hasChanged: true, ...state };
+      const { address, value } = action.payload;
+
+      set(state, address, value);
+
+      return { ...state, hasChanged: true };
     }
     default:
       return state;

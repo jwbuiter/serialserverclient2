@@ -4,8 +4,67 @@ import Modal from "react-modal";
 import ReactTable from "react-table";
 import FitText from "react-fittext";
 
+import { makeForm } from "../configHelper";
 import "../styles/selfLearning.scss";
 import "react-table/react-table.css";
+
+const configurationValues = {
+  selfLearning: {
+    enabled: {
+      name: "Enabled type",
+      type: "select",
+      options: {
+        off: "Off",
+        com0: "Com 0",
+        com1: "Com 1",
+        com0ind: "Com 0 Individual",
+        com1ind: "Com 1 Individual"
+      }
+    },
+    number: {
+      name: "Number",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    startCalibration: {
+      name: "Calibration",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    tolerance: {
+      name: "Tolerance",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    startTolerance: {
+      name: "Additional tolerance during learning",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    individualTolerance: {
+      name: "Individual tolerance",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    individualToleranceIncrement: {
+      name: "Individual tolerance increment",
+      type: "number",
+      min: 0,
+      step: 1
+    },
+    individualToleranceLimit: {
+      name: "Individual tolerance limit",
+      type: "number",
+      min: 0,
+      step: 1
+    }
+  }
+};
 
 const generalTableColumns = [
   {
@@ -125,15 +184,23 @@ Modal.setAppElement("#root");
 class SelfLearning extends Component {
   constructor(props) {
     super(props);
-    this.state = { modalIsOpen: false };
+    this.state = { SLModalIsOpen: false, configModalIsOpen: false };
   }
 
-  openModal = () => {
-    this.setState({ modalIsOpen: true });
+  openSLModal = () => {
+    this.setState({ SLModalIsOpen: true });
   };
 
-  closeModal = () => {
-    this.setState({ modalIsOpen: false });
+  closeSLModal = () => {
+    this.setState({ SLModalIsOpen: false });
+  };
+
+  openConfigModal = () => {
+    this.setState({ configModalIsOpen: true });
+  };
+
+  closeConfigModal = () => {
+    this.setState({ configModalIsOpen: false });
   };
 
   render() {
@@ -157,8 +224,20 @@ class SelfLearning extends Component {
     return (
       <>
         <Modal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal}
+          isOpen={this.state.configModalIsOpen}
+          onRequestClose={this.closeConfigModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="SelfLearning Configuration Modal"
+        >
+          <form onChange={this.props.api.changeConfig}>
+            <h2>Configuration for SelfLearning</h2>
+            {makeForm(configurationValues, this.props.config)}
+          </form>
+        </Modal>
+        <Modal
+          isOpen={this.state.SLModalIsOpen}
+          onRequestClose={this.closeSLModal}
           overlayClassName="modalOverlay"
           className="modalContent"
           contentLabel="SelfLearning Modal"
@@ -182,7 +261,12 @@ class SelfLearning extends Component {
             </div>
           </div>
         </Modal>
-        <div className="selfLearning" onClick={this.openModal}>
+        <div
+          className="selfLearning"
+          onClick={
+            this.props.configLocked ? this.openSLModal : this.openConfigModal
+          }
+        >
           <div
             className={"selfLearning--title " + indicators[this.props.success]}
           >
@@ -197,7 +281,7 @@ class SelfLearning extends Component {
               <div className="center">
                 <FitText>
                   <div>
-                    {this.props.calibration} ±{" "}
+                    {this.props.calibration}{" "}
                     {(this.props.tolerance * 100).toFixed(1)} %
                   </div>
                 </FitText>
@@ -206,7 +290,7 @@ class SelfLearning extends Component {
               <div className="center">
                 <FitText>
                   <div>
-                    {this.props.calibration} ±{" "}
+                    {this.props.calibration}{" "}
                     {(this.props.matchedTolerance * 100).toFixed(1)} %
                   </div>
                 </FitText>
@@ -219,7 +303,10 @@ class SelfLearning extends Component {
   }
 }
 function mapStateToProps(state) {
-  return { ...state.internal.selfLearning };
+  const configLocked = state.config.locked;
+  const config = state.config;
+
+  return { ...state.internal.selfLearning, configLocked, config };
 }
 
 export default connect(mapStateToProps)(SelfLearning);

@@ -40,18 +40,22 @@ function api(store) {
     });
   }
 
-  axios
-    .get(APIendPoint + "/config")
-    .then(result => {
-      console.log("Got config");
-      store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
-    })
-    .catch(err => console.log(APIendPoint + "/config", err));
+  function loadConfig() {
+    axios
+      .get(APIendPoint + "/config")
+      .then(result => {
+        console.log("Got config");
+        store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
+      })
+      .catch(err => console.log(APIendPoint + "/config", err));
+  }
 
-  axios.get(APIendPoint + "/static").then(result => {
-    console.log("Got static");
-    store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
-  });
+  function loadStatic() {
+    axios.get(APIendPoint + "/static").then(result => {
+      console.log("Got static");
+      store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
+    });
+  }
 
   function forceInput(index) {
     console.log("forceinput", index);
@@ -104,18 +108,39 @@ function api(store) {
   function saveConfig() {
     if (store.getState().config.hasChanged) {
       if (window.confirm("Are you sure you want to save these changes?")) {
-        //save config
+        const newConfig = store.getState().config;
+        delete newConfig.loaded;
+        delete newConfig.locked;
+        delete newConfig.hasChanged;
+        socket.emit("settings", newConfig);
         store.dispatch({ type: CONFIG_LOCK });
-        //reload page after some seconds
+        setTimeout(() => {
+          loadConfig();
+        }, 5000);
       }
     } else {
       store.dispatch({ type: CONFIG_LOCK });
     }
   }
 
-  function changeConfig(changes) {
-    store.dispatch({ type: CONFIG_CHANGE, payload: changes });
+  function changeConfig(event) {
+    const address = event.target.name;
+    let value;
+
+    if (event.target.type === "checkbox") {
+      value = event.target.checked;
+    } else if (!isNaN(Number(event.target.value))) {
+      value = Number(event.target.value);
+    } else {
+      value = event.target.value;
+    }
+    console.log({ address, value });
+
+    store.dispatch({ type: CONFIG_CHANGE, payload: { address, value } });
   }
+
+  loadConfig();
+  loadStatic();
 
   return {
     forceInput,
