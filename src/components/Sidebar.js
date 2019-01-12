@@ -53,6 +53,15 @@ class Sidebar extends Component {
         </span>
         <span className="menu-item" />
         <span className="menu-item">QS code: {this.props.QS}</span>
+        <a className="menu-item" href="/settings">
+          (OLD) serial settings
+        </a>
+        <a className="menu-item" href="/settings">
+          (OLD) other settings
+        </a>
+        <a className="menu-item" href="/settings">
+          (OLD) upload file
+        </a>
       </Menu>
     );
   }
