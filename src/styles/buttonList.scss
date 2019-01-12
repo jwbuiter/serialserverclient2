@@ -9,6 +9,7 @@
 
   font-size: 2vh;
   background-color: $tertiary-color;
+  height: 100%;
 
   &--title {
     position: relative;
@@ -34,11 +35,10 @@
       border-radius: 2px;
     }
     &--indicator {
-      float: right;
       height: 100%;
-      width: 5vh;
-
+      width: 100%;
       border-radius: 10px;
+      margin: 0;
     }
   }
 }

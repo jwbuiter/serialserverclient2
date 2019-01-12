@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Modal from "react-modal";
+import FitText from "react-fittext";
 
 import { makeForm } from "../configHelper";
 import "../styles/outputList.scss";
@@ -102,8 +103,13 @@ class OutputList extends Component {
                       : () => this.openConfigModal(port.index)
                   }
                 >
-                  <div className="center-vertical"> {port.name}</div>
-                  <div className={"buttonList--list--indicator " + indicator} />
+                  <div className={"buttonList--list--indicator " + indicator}>
+                    <div className="center">
+                      <FitText>
+                        <div>{port.name}</div>
+                      </FitText>
+                    </div>
+                  </div>
                 </div>
               );
             })}

@@ -17,12 +17,8 @@ import {
   RECEIVE_STATIC
 } from "./actions/types";
 
-const APIendPoint = "http://" + window.location.hostname + ":80";
-//const APIendPoint = "http://192.168.1.67:80";
-console.log(APIendPoint);
-
 function api(store) {
-  const socket = socketIOClient(APIendPoint);
+  const socket = socketIOClient();
 
   const messageTypes = {
     input: INPUT_PORT_STATE,
@@ -42,16 +38,16 @@ function api(store) {
 
   function loadConfig() {
     axios
-      .get(APIendPoint + "/config")
+      .get("/config")
       .then(result => {
         console.log("Got config");
         store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
       })
-      .catch(err => console.log(APIendPoint + "/config", err));
+      .catch(err => console.log("/config", err));
   }
 
   function loadStatic() {
-    axios.get(APIendPoint + "/static").then(result => {
+    axios.get("/static").then(result => {
       console.log("Got static");
       store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
     });
@@ -72,26 +68,26 @@ function api(store) {
   }
 
   function getLog() {
-    return axios.get(APIendPoint + "/comlog");
+    return axios.get("/comlog");
   }
 
   function getUniqueLog() {
-    return axios.get(APIendPoint + "/comlogu");
+    return axios.get("/comlogu");
   }
 
   function reboot() {
-    axios.get(APIendPoint + "/restart");
+    axios.get("/restart");
   }
 
   function shutdown() {
-    axios.get(APIendPoint + "/shutdown");
+    axios.get("/shutdown");
   }
 
   async function getLogo() {
     let logo = false;
     try {
-      await axios.get(APIendPoint + "/logo");
-      logo = APIendPoint + "/logo";
+      await axios.get("/logo");
+      logo = "/logo";
     } finally {
       return logo;
     }

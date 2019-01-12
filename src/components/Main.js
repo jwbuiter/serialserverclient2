@@ -89,8 +89,9 @@ class Main extends Component {
         <div
           className={classNames(
             "main",
-            { "main--noports": !this.props.showPorts },
-            { "main--notable": !this.props.showTable }
+            { "main--noinputs": !this.props.showInputs },
+            { "main--notable": !this.props.showTable },
+            { "main--nooutputs": !this.props.showOutputs }
           )}
         >
           <Modal
@@ -122,23 +123,36 @@ class Main extends Component {
               </div>
             </div>
           </Modal>
-          <Infobar api={this.props.api} />
-          <div className="logos">
+          <div className="info">
+            <Infobar api={this.props.api} />
+          </div>
+
+          <div className="logo">
             <Logo
               image={this.state.logo}
               alt="LOGO"
               onClick={this.props.api.toggleMenu}
             />
+          </div>
+
+          <div
+            className={classNames("coms", {
+              "coms--noselfLearning": !this.props.selfLearningEnabled
+            })}
+          >
             {this.props.selfLearningEnabled && (
               <SelfLearning api={this.props.api} />
             )}
-          </div>
-          <div className="coms">
             <ComList api={this.props.api} />
           </div>
-          {this.props.showPorts && (
-            <div className="ports">
-              {this.props.showOutputs && <OutputList api={this.props.api} />}
+
+          {this.props.showOutputs && (
+            <div className="outputs">
+              {this.props.showOutputs && <OutputList api={this.props.api} />}{" "}
+            </div>
+          )}
+          {this.props.showInputs && (
+            <div className="inputs">
               {this.props.showInputs && <InputList api={this.props.api} />}
             </div>
           )}

@@ -22,6 +22,7 @@ class Sidebar extends Component {
   render() {
     return (
       <Menu
+        right
         customBurgerIcon={false}
         pageWrapId="page-wrap"
         outerContainerId="outer-container"

@@ -2,7 +2,8 @@
 
 .infobar {
   position: relative;
-
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   height: 100%;
 
   border-radius: 10px;
