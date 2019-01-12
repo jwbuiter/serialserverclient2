@@ -56,10 +56,10 @@ class Sidebar extends Component {
         <a className="menu-item" href="/settings">
           (OLD) serial settings
         </a>
-        <a className="menu-item" href="/settings">
+        <a className="menu-item" href="/filesettings">
           (OLD) other settings
         </a>
-        <a className="menu-item" href="/settings">
+        <a className="menu-item" href="/fileupload">
           (OLD) upload file
         </a>
       </Menu>
