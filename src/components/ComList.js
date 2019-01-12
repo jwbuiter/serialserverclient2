@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import FitText from "react-fittext";
 import Modal from "react-modal";
+import classNames from "classnames";
 
 import { makeForm } from "../configHelper";
 import "../styles/comElement.scss";
@@ -157,7 +158,11 @@ class ComList extends Component {
                 </FitText>
               </div>
             </div>
-            <div className="comElement--content">
+            <div
+              className={classNames("comElement--content", {
+                "comElement--content--testMode": this.props.testMode
+              })}
+            >
               <div className="center">
                 <FitText compressor={0.9}>
                   <div>{com.entry}</div>
@@ -180,7 +185,8 @@ function mapStateToProps(state) {
   return {
     coms,
     configLocked: state.config.locked,
-    config: state.config
+    config: state.config,
+    testMode: state.config.serial.testMode
   };
 }
 

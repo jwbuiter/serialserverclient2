@@ -50,6 +50,7 @@ function api(store) {
     axios.get("/static").then(result => {
       console.log("Got static");
       store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
+      document.title = result.data.name;
     });
   }
 

@@ -45,17 +45,21 @@ class Main extends Component {
       logModalUnique: false,
       logEntries: [],
       logTableColumns: [],
-      logo: MBDC
+      logo: MBDC,
+      reloadInterval: null
     };
   }
 
   openLogModal = () => {
-    this.setState({ logModalIsOpen: true });
-    this.reloadLogEntries({ target: { checked: this.state.logModalUnique } });
+    this.setState({
+      logModalIsOpen: true,
+      reloadInterval: setInterval(this.reloadLogEntries, 1000)
+    });
+    this.reloadLogEntries();
   };
 
   reloadLogEntries = e => {
-    const unique = e.target.checked;
+    const unique = e ? e.target.checked : this.state.logModalUnique;
     const getFunction = unique
       ? this.props.api.getUniqueLog
       : this.props.api.getLog;
@@ -75,6 +79,7 @@ class Main extends Component {
   };
 
   closeLogModal = () => {
+    clearInterval(this.state.reloadInterval);
     this.setState({ logModalIsOpen: false });
   };
 
@@ -137,10 +142,10 @@ class Main extends Component {
 
           <div
             className={classNames("coms", {
-              "coms--noselfLearning": !this.props.selfLearningEnabled
+              "coms--noselfLearning": !this.props.showSelfLearning
             })}
           >
-            {this.props.selfLearningEnabled && (
+            {this.props.showSelfLearning && (
               <SelfLearning api={this.props.api} />
             )}
             <ComList api={this.props.api} />
@@ -168,27 +173,35 @@ class Main extends Component {
 }
 
 function mapStateToProps(state) {
+  const configLocked = state.config.locked;
+
   if (!state.config.loaded || !state.static.loaded) {
     return { loaded: false };
   }
 
-  const showTable = state.config.table.cells.reduce((acc, cur) => {
-    return acc || cur.name;
-  }, false);
+  const showTable =
+    !configLocked ||
+    state.config.table.cells.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
 
-  const showInputs = state.config.input.ports.reduce((acc, cur) => {
-    return acc || cur.name;
-  }, false);
+  const showInputs =
+    !configLocked ||
+    state.config.input.ports.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
 
-  const showOutputs = state.config.output.ports.reduce((acc, cur) => {
-    return acc || cur.name;
-  }, false);
+  const showOutputs =
+    !configLocked ||
+    state.config.output.ports.reduce((acc, cur) => {
+      return acc || cur.name;
+    }, false);
 
-  const showPorts = showInputs || showOutputs;
+  const showPorts = !configLocked || showInputs || showOutputs;
 
-  const selfLearningEnabled = state.internal.selfLearning.enabled;
-
-  const configLocked = state.config.locked;
+  const showSelfLearning =
+    state.static.enabledModules.selfLearning &&
+    (!configLocked || state.internal.selfLearning.enabled);
 
   const uniqueLogEnabled = state.config.logger.unique !== "off";
 
@@ -198,7 +211,7 @@ function mapStateToProps(state) {
     showInputs,
     showOutputs,
     showPorts,
-    selfLearningEnabled,
+    showSelfLearning,
     configLocked,
     uniqueLogEnabled
   };

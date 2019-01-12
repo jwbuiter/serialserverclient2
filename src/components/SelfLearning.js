@@ -224,12 +224,14 @@ class SelfLearning extends Component {
 
     const cells = [
       "Self Learning:",
-      this.props.calibration,
+      this.props.calibration || 0,
       ...(this.props.individual
         ? [this.props.tolerance * 100 + "%"]
         : [
-            this.props.tolerance * 100 + "%",
-            (this.props.tolerance - this.props.matchedTolerance) * 100 + "%"
+            (this.props.tolerance || 0) * 100 + "%",
+            (this.props.tolerance || 0 - this.props.matchedTolerance || 0) *
+              100 +
+              "%"
           ])
     ];
 
@@ -274,7 +276,10 @@ class SelfLearning extends Component {
           </div>
         </Modal>
         <div
-          className={classNames("selfLearning", indicators[this.props.success])}
+          className={classNames(
+            "selfLearning",
+            indicators[this.props.success || 0]
+          )}
           onClick={
             this.props.configLocked ? this.openSLModal : this.openConfigModal
           }

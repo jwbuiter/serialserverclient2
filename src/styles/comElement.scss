@@ -25,5 +25,10 @@
   &--content {
     position: relative;
     height: 70%;
+
+    &--testMode {
+      background-color: #eebbee;
+      border-radius: 0 0 2vh 2vh;
+    }
   }
 }
