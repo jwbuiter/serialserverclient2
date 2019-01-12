@@ -107,7 +107,7 @@ const TableCell = props => {
         </FitText>
       </div>
       <div className="tableCell--content">
-        <FitText compressor={0.4}>
+        <FitText compressor={0.6}>
           <div className="center">{content}</div>
         </FitText>
       </div>

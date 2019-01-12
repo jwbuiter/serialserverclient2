@@ -28,22 +28,21 @@ class Sidebar extends Component {
         outerContainerId="outer-container"
         isOpen={this.props.isMenuOpen}
       >
-        <span className="menu-item">
+        <span className="menu-item menu-item--clickable">
           Unlock settings <Toggle onChange={this.toggleConfigLock} />
         </span>
-        <a
-          className="menu-item"
-          href="/"
+        <span
+          className="menu-item menu-item--clickable"
           onClick={() => {
             if (window.confirm("Are you sure you want to reboot?"))
               this.props.api.reboot();
           }}
         >
           Reboot unit
-        </a>
+        </span>
         <span className="menu-item">Upload data</span>
-        <a
-          className="menu-item"
+        <span
+          className="menu-item menu-item--clickable"
           href="/"
           onClick={() => {
             if (window.confirm("Are you sure you want to shutdown?"))
@@ -51,7 +50,7 @@ class Sidebar extends Component {
           }}
         >
           Shutdown unit
-        </a>
+        </span>
         <span className="menu-item" />
         <span className="menu-item">QS code: {this.props.QS}</span>
       </Menu>

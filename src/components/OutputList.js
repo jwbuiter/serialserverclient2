@@ -70,7 +70,11 @@ class OutputList extends Component {
         </Modal>
         <div className="buttonList">
           <div className="buttonList--title">
-            <div className="center">Outputs</div>
+            <div className="center">
+              <FitText>
+                <div>Outputs</div>
+              </FitText>
+            </div>
           </div>
           {this.props.outputs
             .map((port, index) => ({ ...port, index }))

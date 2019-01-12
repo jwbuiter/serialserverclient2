@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import ReactTable from "react-table";
 import FitText from "react-fittext";
+import classNames from "classnames";
 
 import { makeForm } from "../configHelper";
 import "../styles/selfLearning.scss";
@@ -205,9 +206,9 @@ class SelfLearning extends Component {
 
   render() {
     const indicators = [
-      "selfLearning--title--inProgress",
-      "selfLearning--title--success",
-      "selfLearning--title--warning"
+      "selfLearning--inProgress",
+      "selfLearning--success",
+      "selfLearning--warning"
     ];
 
     const individualEntries = [];
@@ -220,6 +221,17 @@ class SelfLearning extends Component {
       console.log(this.props.individualEntries[key]);
       individualEntries.push({ key, ...this.props.individualEntries[key] });
     }
+
+    const cells = [
+      "Self Learning:",
+      this.props.calibration,
+      ...(this.props.individual
+        ? [this.props.tolerance * 100 + "%"]
+        : [
+            this.props.tolerance * 100 + "%",
+            (this.props.tolerance - this.props.matchedTolerance) * 100 + "%"
+          ])
+    ];
 
     return (
       <>
@@ -262,41 +274,20 @@ class SelfLearning extends Component {
           </div>
         </Modal>
         <div
-          className="selfLearning"
+          className={classNames("selfLearning", indicators[this.props.success])}
           onClick={
             this.props.configLocked ? this.openSLModal : this.openConfigModal
           }
         >
-          <div
-            className={"selfLearning--title " + indicators[this.props.success]}
-          >
-            <div className="center">
-              <FitText>
-                <div>Self Learning</div>
-              </FitText>
+          {cells.map(cell => (
+            <div className={"selfLearning--cell"}>
+              <div className="center">
+                <FitText compressor={0.6}>
+                  <div>{cell}</div>
+                </FitText>
+              </div>
             </div>
-          </div>
-          <div className="selfLearning--content">
-            {this.props.individual ? (
-              <div className="center">
-                <FitText>
-                  <div>
-                    {this.props.calibration}{" "}
-                    {(this.props.tolerance * 100).toFixed(1)} %
-                  </div>
-                </FitText>
-              </div>
-            ) : (
-              <div className="center">
-                <FitText>
-                  <div>
-                    {this.props.calibration}{" "}
-                    {(this.props.matchedTolerance * 100).toFixed(1)} %
-                  </div>
-                </FitText>
-              </div>
-            )}
-          </div>
+          ))}
         </div>
       </>
     );

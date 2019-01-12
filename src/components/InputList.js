@@ -91,7 +91,11 @@ class InputList extends Component {
         </Modal>
         <div className="buttonList inputList">
           <div className="buttonList--title">
-            <div className="center">Inputs</div>
+            <div className="center">
+              <FitText>
+                <div>Inputs</div>
+              </FitText>
+            </div>
           </div>
           {this.props.inputs
             .map((port, index) => ({ ...port, index }))

@@ -158,9 +158,11 @@ class ComList extends Component {
               </div>
             </div>
             <div className="comElement--content">
-              <FitText>
-                <div className="center">{com.entry}</div>
-              </FitText>
+              <div className="center">
+                <FitText compressor={0.9}>
+                  <div>{com.entry}</div>
+                </FitText>
+              </div>
             </div>
           </div>
         ))}

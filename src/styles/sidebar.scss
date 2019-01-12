@@ -8,6 +8,10 @@
   transition: color 0.2s;
 }
 
+.menu-item--clickable {
+  cursor: pointer;
+}
+
 .bm-item:hover {
   color: white;
 }

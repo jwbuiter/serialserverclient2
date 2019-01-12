@@ -77,6 +77,10 @@ function api(store) {
 
   function reboot() {
     axios.get("/restart");
+    setTimeout(() => {
+      loadConfig();
+      console.log("test");
+    }, 5000);
   }
 
   function shutdown() {
@@ -108,11 +112,10 @@ function api(store) {
         delete newConfig.loaded;
         delete newConfig.locked;
         delete newConfig.hasChanged;
+        console.log(newConfig);
         socket.emit("settings", newConfig);
         store.dispatch({ type: CONFIG_LOCK });
-        setTimeout(() => {
-          loadConfig();
-        }, 5000);
+        reboot();
       }
     } else {
       store.dispatch({ type: CONFIG_LOCK });
@@ -125,7 +128,7 @@ function api(store) {
 
     if (event.target.type === "checkbox") {
       value = event.target.checked;
-    } else if (!isNaN(Number(event.target.value))) {
+    } else if (event.target.type === "number") {
       value = Number(event.target.value);
     } else {
       value = event.target.value;

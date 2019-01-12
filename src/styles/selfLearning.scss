@@ -14,33 +14,22 @@
   font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  &--title {
+  grid-template-columns: repeat(4, 1fr);
+
+  &--cell {
     position: relative;
-    text-align: center;
-
-    border-radius: 2vh 0 0 2vh;
-    color: black;
-
-    &--inProgress {
-      background-color: yellow;
-    }
-
-    &--success {
-      background-color: #3fd35d;
-    }
-
-    &--warning {
-      background-color: #ffc000;
-    }
   }
 
-  &--content {
-    position: relative;
+  &--inProgress {
+    background-color: yellow;
+  }
 
-    font-size: 3vh;
+  &--success {
+    background-color: #3fd35d;
+  }
 
-    padding: 0 2vh;
+  &--warning {
+    background-color: #ffc000;
   }
 
   &--modal {
