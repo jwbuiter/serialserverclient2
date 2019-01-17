@@ -132,17 +132,20 @@ class ComList extends Component {
           className="modalContent"
           contentLabel="Table Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            <h2>Configuration for com{this.state.configComIndex}</h2>
-            {makeForm(
-              configurationValues,
-              this.props.config,
-              this.state.configComIndex
-            )}
-          </form>
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>Configuration for com{this.state.configComIndex}</h2>
+              {makeForm(
+                configurationValues,
+                this.props.config,
+                this.state.configComIndex
+              )}
+            </form>
+          )}
         </Modal>
         {this.props.coms.map((com, index) => (
           <div
+            key={index}
             className="comElement"
             onClick={
               this.props.configLocked ? null : () => this.openConfigModal(index)

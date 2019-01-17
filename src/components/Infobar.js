@@ -11,9 +11,17 @@ import "../styles/infobar.scss";
 Modal.setAppElement("#root");
 
 const configurationValues = {
-  title: {
-    name: "General Configuration",
-    type: "title"
+  serial: {
+    title: {
+      name: "Serial",
+      type: "title"
+    },
+    testMode: { name: "Enable test mode", type: "checkbox" },
+    resetTrigger: {
+      name: "Reset on zero",
+      type: "select",
+      options: { off: "Off", on: "On", com0: "Com 0", com1: "Com 1" }
+    }
   },
   table: {
     title: {
@@ -99,9 +107,12 @@ class Infobar extends Component {
           className="modalContent"
           contentLabel="General Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            {makeForm(configurationValues, this.props.config)}
-          </form>
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>General configuration</h2>
+              {makeForm(configurationValues, this.props.config)}
+            </form>
+          )}
         </Modal>
         <div
           className="infobar"

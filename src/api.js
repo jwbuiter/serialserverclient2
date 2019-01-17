@@ -14,7 +14,8 @@ import {
   CONFIG_LOCK,
   CONFIG_CHANGE,
   RECEIVE_CONFIG,
-  RECEIVE_STATIC
+  RECEIVE_STATIC,
+  TABLE_FOUND_STATE
 } from "./actions/types";
 
 function api(store) {
@@ -27,7 +28,8 @@ function api(store) {
     entry: SERIAL_COM_STATE,
     selfLearning: SELFLEARNING_STATE,
     ip: RECEIVE_IP,
-    time: RECEIVE_TIME
+    time: RECEIVE_TIME,
+    notfound: TABLE_FOUND_STATE
   };
 
   for (let message in messageTypes) {
@@ -117,6 +119,8 @@ function api(store) {
         socket.emit("settings", newConfig);
         store.dispatch({ type: CONFIG_LOCK });
         reboot();
+      } else {
+        window.location.reload();
       }
     } else {
       store.dispatch({ type: CONFIG_LOCK });

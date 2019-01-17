@@ -20,6 +20,7 @@ const configurationValues = {
           name: "Command for input",
           type: "select",
           options: {
+            "": "",
             exe: "Execute",
             exebl: "Execute Block",
             teach: "SL Teach",
@@ -80,14 +81,16 @@ class InputList extends Component {
           className="modalContent"
           contentLabel="Input Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            <h2>Configuration for input {this.state.configPortIndex + 1}</h2>
-            {makeForm(
-              configurationValues,
-              this.props.config,
-              this.state.configPortIndex
-            )}
-          </form>
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>Configuration for input {this.state.configPortIndex + 1}</h2>
+              {makeForm(
+                configurationValues,
+                this.props.config,
+                this.state.configPortIndex
+              )}
+            </form>
+          )}
         </Modal>
         <div className="buttonList inputList">
           <div className="buttonList--title">
@@ -124,7 +127,7 @@ class InputList extends Component {
                 >
                   <div className={"buttonList--list--indicator " + indicator}>
                     <div className="center">
-                      <FitText>
+                      <FitText compressor={1.05}>
                         <div>{port.name}</div>
                       </FitText>
                     </div>

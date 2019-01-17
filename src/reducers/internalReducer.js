@@ -3,7 +3,8 @@ const {
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
   TABLE_CELL_STATE,
-  SELFLEARNING_STATE
+  SELFLEARNING_STATE,
+  TABLE_FOUND_STATE
 } = require("../actions/types");
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
   cells: [],
   selfLearning: {
     enabled: false
-  }
+  },
+  tableNotFound: false
 };
 
 export default function(fullState = initialState, action) {
@@ -51,10 +53,15 @@ export default function(fullState = initialState, action) {
       return { ...fullState, cells: newCells };
     }
     case SELFLEARNING_STATE: {
-      console.log(action.payload);
       return {
         ...fullState,
         selfLearning: { enabled: true, ...action.payload }
+      };
+    }
+    case TABLE_FOUND_STATE: {
+      return {
+        ...fullState,
+        tableNotFound: action.payload
       };
     }
     default:

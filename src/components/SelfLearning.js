@@ -244,10 +244,12 @@ class SelfLearning extends Component {
           className="modalContent"
           contentLabel="SelfLearning Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            <h2>Configuration for SelfLearning</h2>
-            {makeForm(configurationValues, this.props.config)}
-          </form>
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>Configuration for SelfLearning</h2>
+              {makeForm(configurationValues, this.props.config)}
+            </form>
+          )}
         </Modal>
         <Modal
           isOpen={this.state.SLModalIsOpen}
@@ -256,7 +258,6 @@ class SelfLearning extends Component {
           className="modalContent"
           contentLabel="SelfLearning Modal"
         >
-          <div>SL: Ind COM0</div>
           <div className="selfLearning--modal">
             <div>
               <div className="selfLearning--modal--title"> SL-list </div>
@@ -284,10 +285,10 @@ class SelfLearning extends Component {
             this.props.configLocked ? this.openSLModal : this.openConfigModal
           }
         >
-          {cells.map(cell => (
-            <div className={"selfLearning--cell"}>
+          {cells.map((cell, index) => (
+            <div key={index} className={"selfLearning--cell"}>
               <div className="center">
-                <FitText compressor={0.6}>
+                <FitText compressor={0.65}>
                   <div>{cell}</div>
                 </FitText>
               </div>

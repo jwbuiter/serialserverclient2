@@ -3,7 +3,15 @@
 .tableCell {
   position: relative;
 
+  border-radius: 20px;
+
   color: white;
+
+  background-color: $secondary-color;
+
+  &--notFound {
+    background-color: red;
+  }
 
   &--title {
     position: relative;
@@ -15,9 +23,7 @@
 
   &--content {
     position: relative;
-    background-color: $secondary-color;
     height: 60%;
-    border-radius: 0 0 20px 20px;
     font-size: 5vh;
     color: black;
 

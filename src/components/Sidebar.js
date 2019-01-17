@@ -12,8 +12,8 @@ class Sidebar extends Component {
     this.state = { uploadModalIsOpen: false };
   }
 
-  toggleConfigLock = e => {
-    if (e.target.checked) {
+  toggleConfigLock = () => {
+    if (this.props.configLocked) {
       this.props.api.unlockConfig();
     } else {
       this.props.api.saveConfig();
@@ -56,9 +56,16 @@ class Sidebar extends Component {
           pageWrapId="page-wrap"
           outerContainerId="outer-container"
           isOpen={this.props.isMenuOpen}
+          onStateChange={newState =>
+            !newState.isOpen && this.props.api.toggleMenu()
+          }
+          width={400}
         >
-          <span className="menu-item menu-item--clickable">
-            Unlock settings <Toggle onChange={this.toggleConfigLock} />
+          <span
+            onClick={this.toggleConfigLock}
+            className="menu-item menu-item--clickable"
+          >
+            Unlock settings <Toggle checked={!this.props.configLocked} />
           </span>
           <span
             className="menu-item menu-item--clickable"
@@ -85,7 +92,6 @@ class Sidebar extends Component {
           </span>
           <span
             className="menu-item menu-item--clickable"
-            href="/"
             onClick={() => {
               if (window.confirm("Are you sure you want to shutdown?"))
                 this.props.api.shutdown();
@@ -112,6 +118,7 @@ class Sidebar extends Component {
 
 function mapStateToProps(state) {
   return {
+    configLocked: state.config.locked,
     isMenuOpen: state.misc.isMenuOpen,
     QS: state.static.QS
   };

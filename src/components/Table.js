@@ -16,13 +16,23 @@ const configurationValues = {
           name: "Name of cell",
           type: "text"
         },
-        formula: {
-          name: "Formula for cell value",
-          type: "text"
+        type: {
+          name: "Type of content",
+          type: "select",
+          options: {
+            normal: "Normal",
+            date: "Date",
+            manual: "Input",
+            menu: "Menu"
+          }
         },
         numeric: {
           name: "Treat value as a number",
           type: "checkbox"
+        },
+        formula: {
+          name: "Formula for cell value",
+          type: "text"
         },
         digits: {
           name: "Number of digits",
@@ -54,9 +64,10 @@ class Table extends Component {
   };
 
   render() {
-    const filteredCells = this.props.cells.filter((cell, index) => {
-      return index < 10;
-    });
+    const cells = this.props.cells.map((cell, index) => ({
+      ...cell,
+      ...this.props.cellConfig[index]
+    }));
 
     return (
       <>
@@ -67,33 +78,30 @@ class Table extends Component {
           className="modalContent"
           contentLabel="Table Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            <h2>
-              Configuration for cell{" "}
-              {String.fromCharCode(
-                65 + Math.floor(this.state.configCellIndex / 5)
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>
+                Configuration for cell{" "}
+                {String.fromCharCode(
+                  65 + Math.floor(this.state.configCellIndex / 5)
+                )}
+                {(this.state.configCellIndex % 5) + 1}
+              </h2>
+              {makeForm(
+                configurationValues,
+                this.props.config,
+                this.state.configCellIndex
               )}
-              {(this.state.configCellIndex % 5) + 1}
-            </h2>
-            {makeForm(
-              configurationValues,
-              this.props.config,
-              this.state.configCellIndex
-            )}
-          </form>
+            </form>
+          )}
         </Modal>
-        <div className={`table--grid table--grid--${filteredCells.length}`}>
-          {filteredCells.map((cell, index) => (
+        <div className={`table--grid table--grid--${cells.length}`}>
+          {cells.map((cell, index) => (
             <TableCell
               key={index}
-              name={cell.name}
-              value={cell.value}
+              cell={cell}
               index={index}
-              type={cell.manual ? "menuNumeric" : "text"}
-              menuOptions={[
-                { value: 1, description: "smeeeeeeeeeeeall" },
-                { value: 3, description: "big" }
-              ]}
+              notFound={this.props.notFound}
               manualFunction={this.props.api.tableManual}
               openModal={
                 this.props.configLocked
@@ -117,7 +125,9 @@ function mapStateToProps(state) {
   return {
     cells,
     configLocked: state.config.locked,
-    config: state.config
+    config: state.config,
+    cellConfig: state.config.table.cells,
+    notFound: state.internal.tableNotFound
   };
 }
 

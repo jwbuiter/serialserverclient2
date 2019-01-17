@@ -19,7 +19,8 @@ const actionTypes = [
   "SELFLEARNING_STATE",
   "CONFIG_UNLOCK",
   "CONFIG_LOCK",
-  "CONFIG_CHANGE"
+  "CONFIG_CHANGE",
+  "TABLE_FOUND_STATE"
 ];
 
 module.exports = stringMapFromArray(actionTypes);

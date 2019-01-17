@@ -59,14 +59,16 @@ class OutputList extends Component {
           className="modalContent"
           contentLabel="Output Configuration Modal"
         >
-          <form onChange={this.props.api.changeConfig}>
-            <h2>Configuration for output {this.state.configPortIndex + 1}</h2>
-            {makeForm(
-              configurationValues,
-              this.props.config,
-              this.state.configPortIndex
-            )}
-          </form>
+          {this.state.configModalIsOpen && (
+            <form onChange={this.props.api.changeConfig}>
+              <h2>Configuration for output {this.state.configPortIndex + 1}</h2>
+              {makeForm(
+                configurationValues,
+                this.props.config,
+                this.state.configPortIndex
+              )}
+            </form>
+          )}
         </Modal>
         <div className="buttonList">
           <div className="buttonList--title">
@@ -109,7 +111,7 @@ class OutputList extends Component {
                 >
                   <div className={"buttonList--list--indicator " + indicator}>
                     <div className="center">
-                      <FitText>
+                      <FitText compressor={1.05}>
                         <div>{port.name}</div>
                       </FitText>
                     </div>

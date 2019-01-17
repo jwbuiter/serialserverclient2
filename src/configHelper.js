@@ -53,25 +53,39 @@ function makeForm(value, config, index, name = "") {
       }
     } else {
       return (
-        <div name={name}>
-          {Object.keys(value).map(key =>
-            makeForm(value[key], config, index, name + (name ? "." : "") + key)
-          )}
+        <div key={name} name={name}>
+          {Object.keys(value)
+            .filter(key => {
+              const { conditions } = value[key];
+              if (!conditions) return true;
+
+              return true;
+            })
+            .map(key =>
+              makeForm(
+                value[key],
+                config,
+                index,
+                name + (name ? "." : "") + key
+              )
+            )}
         </div>
       );
     }
   } else {
     switch (value.type) {
       case "title": {
-        return <h3>{value.name}</h3>;
+        return <h3 key={value.name}>{value.name}</h3>;
       }
       case "select": {
         return (
           <>
             {value.name}:
             <select name={name} value={get(config, name)}>
-              {Object.entries(value.options).map(entry => (
-                <option value={entry[0]}>{entry[1]}</option>
+              {Object.entries(value.options).map((entry, index) => (
+                <option key={index} value={entry[0]}>
+                  {entry[1]}
+                </option>
               ))}
             </select>
             <br />

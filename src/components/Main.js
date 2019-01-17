@@ -66,12 +66,14 @@ class Main extends Component {
 
     getFunction().then(result => {
       this.setState({
-        logTableColumns: result.data.legend.map((name, index) => ({
-          Header: () => <b>{name}</b>,
-          accessor: index + "",
-          width: getColumnWidth(result.data.entries, index + ""),
-          style: { textAlign: "center" }
-        })),
+        logTableColumns: result.data.legend
+          .map((name, index) => ({
+            Header: () => <b>{name}</b>,
+            accessor: index + "",
+            width: getColumnWidth(result.data.entries, index + ""),
+            style: { textAlign: "center" }
+          }))
+          .filter((name, index) => index >= 2),
         logEntries: result.data.entries,
         logModalUnique: unique
       });
