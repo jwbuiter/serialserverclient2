@@ -182,10 +182,11 @@ function mapStateToProps(state) {
   }
 
   const showTable =
-    !configLocked ||
-    state.config.table.cells.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
+    state.static.exposeUpload &&
+    (!configLocked ||
+      state.config.table.cells.reduce((acc, cur) => {
+        return acc || cur.name;
+      }, false));
 
   const showInputs =
     !configLocked ||
@@ -199,7 +200,8 @@ function mapStateToProps(state) {
       return acc || cur.name;
     }, false);
 
-  const showPorts = !configLocked || showInputs || showOutputs;
+  const showPorts =
+    state.static.exposeUpload && (!configLocked || showInputs || showOutputs);
 
   const showSelfLearning =
     state.static.enabledModules.selfLearning &&

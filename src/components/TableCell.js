@@ -6,7 +6,6 @@ import "../styles/tableCell.scss";
 
 const TableCell = props => {
   const { index, cell } = props;
-  console.log(cell.type);
   let content;
   switch (cell.type) {
     case "manual": {
@@ -41,15 +40,14 @@ const TableCell = props => {
       break;
     }
     case "menu": {
-      console.log(cell.formula);
-      const menuOptions = (cell.formula.match(/{[0-9\.]+:\w+}/g) || []).map(
-        str => {
+      const menuOptions = [{ value: "", description: "" }].concat(
+        (cell.formula.match(/{[0-9.]+:\w+}/g) || []).map(str => {
           const parts = str.split(":");
           return {
             value: Number(parts[0].slice(1)),
             description: parts[1].slice(0, -1)
           };
-        }
+        })
       );
 
       content = (
@@ -71,11 +69,9 @@ const TableCell = props => {
       if (cell.numeric) {
         const decrement = () => {
           let newMenuIndex =
-            props.menuOptions.findIndex(
-              option => option.value === props.value
-            ) - 1;
+            menuOptions.findIndex(option => option.value === cell.value) - 1;
 
-          if (newMenuIndex < 0) newMenuIndex = 0;
+          if (newMenuIndex < 0) newMenuIndex = menuOptions.length - 1;
 
           props.manualFunction(index, menuOptions[newMenuIndex].value);
         };
@@ -84,7 +80,7 @@ const TableCell = props => {
             menuOptions.findIndex(option => option.value === cell.value) + 1;
 
           if (newMenuIndex === 0 || newMenuIndex === menuOptions.length)
-            newMenuIndex = menuOptions.length - 1;
+            newMenuIndex = 0;
 
           props.manualFunction(index, menuOptions[newMenuIndex].value);
         };

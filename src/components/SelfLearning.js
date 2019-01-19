@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import ReactTable from "react-table";
 import FitText from "react-fittext";
 import classNames from "classnames";
+import Toggle from "react-toggle";
 
 import { makeForm } from "../configHelper";
 import "../styles/selfLearning.scss";
@@ -150,7 +151,6 @@ const individualTableColumns = [
     Header: "Tol",
     accessor: "tolerance",
     Cell: props => {
-      console.log(props);
       return (
         <div
           style={{
@@ -185,7 +185,11 @@ Modal.setAppElement("#root");
 class SelfLearning extends Component {
   constructor(props) {
     super(props);
-    this.state = { SLModalIsOpen: false, configModalIsOpen: false };
+    this.state = {
+      SLModalIsOpen: false,
+      configModalIsOpen: false,
+      showIndividualTable: false
+    };
   }
 
   openSLModal = () => {
@@ -204,6 +208,10 @@ class SelfLearning extends Component {
     this.setState({ configModalIsOpen: false });
   };
 
+  toggleIndividualTable = () => {
+    this.setState({ showIndividualTable: !this.state.showIndividualTable });
+  };
+
   render() {
     const indicators = [
       "selfLearning--inProgress",
@@ -218,22 +226,26 @@ class SelfLearning extends Component {
       generalEntries.push({ key, entries: this.props.generalEntries[key] });
     }
     for (let key in this.props.individualEntries) {
-      console.log(this.props.individualEntries[key]);
       individualEntries.push({ key, ...this.props.individualEntries[key] });
     }
 
     const cells = [
-      "Self Learning:",
-      this.props.calibration || 0,
-      ...(this.props.individual
-        ? [this.props.tolerance * 100 + "%"]
-        : [
-            (this.props.tolerance || 0) * 100 + "%",
-            (this.props.tolerance || 0 - this.props.matchedTolerance || 0) *
-              100 +
-              "%"
-          ])
+      "Self Learning",
+      (this.props.calibration || 0).toFixed(
+        this.props.config.serial.coms[this.props.comIndex || 0].digits
+      ) || 0,
+      Math.round((this.props.tolerance || 0) * 1000) / 10 + "%"
     ];
+
+    if (!this.props.individual && this.props.success) {
+      cells.push(
+        Math.round(
+          (this.props.tolerance || 0 - this.props.matchedTolerance || 0) * 1000
+        ) /
+          10 +
+          "%"
+      );
+    }
 
     return (
       <>
@@ -258,23 +270,31 @@ class SelfLearning extends Component {
           className="modalContent"
           contentLabel="SelfLearning Modal"
         >
-          <div className="selfLearning--modal">
-            <div>
+          <span>
+            <Toggle
+              checked={this.state.showIndividualTable}
+              onChange={this.toggleIndividualTable}
+            />
+            Show individual entries
+          </span>
+          {this.state.showIndividualTable ? (
+            <>
+              <div className="selfLearning--modal--title"> UN-list </div>
+              <ReactTable
+                data={individualEntries}
+                columns={individualTableColumns}
+              />
+            </>
+          ) : (
+            <>
               <div className="selfLearning--modal--title"> SL-list </div>
               <ReactTable
                 style={{ textAlign: "center" }}
                 data={generalEntries}
                 columns={generalTableColumns}
               />
-            </div>
-            <div>
-              <div className="selfLearning--modal--title"> UN-list </div>
-              <ReactTable
-                data={individualEntries}
-                columns={individualTableColumns}
-              />
-            </div>
-          </div>
+            </>
+          )}
         </Modal>
         <div
           className={classNames(

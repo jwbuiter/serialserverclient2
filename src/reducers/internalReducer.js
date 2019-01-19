@@ -40,7 +40,26 @@ export default function(fullState = initialState, action) {
       const { index, entry, entryTime } = action.payload;
 
       const newComs = Array.from(fullState.coms);
-      newComs[index] = { entry, entryTime };
+      let newHistory;
+      if (!fullState.coms[index]) {
+        newHistory = [];
+      } else if (!fullState.coms[index].entry) {
+        newHistory = fullState.coms[index].history;
+      } else {
+        newHistory = [
+          {
+            entry: fullState.coms[index].entry,
+            entryTime: fullState.coms[index].entryTime
+          },
+          ...fullState.coms[index].history
+        ];
+      }
+
+      newComs[index] = {
+        entry,
+        entryTime,
+        history: newHistory
+      };
 
       return { ...fullState, coms: newComs };
     }

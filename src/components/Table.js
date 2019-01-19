@@ -64,10 +64,12 @@ class Table extends Component {
   };
 
   render() {
-    const cells = this.props.cells.map((cell, index) => ({
-      ...cell,
-      ...this.props.cellConfig[index]
-    }));
+    const cells = this.props.cells
+      .filter(cell => !this.props.configLocked || cell.formula || cell.name)
+      .map((cell, index) => ({
+        ...cell,
+        ...this.props.cellConfig[index]
+      }));
 
     return (
       <>

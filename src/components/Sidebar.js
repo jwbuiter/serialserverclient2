@@ -13,6 +13,7 @@ class Sidebar extends Component {
   }
 
   toggleConfigLock = () => {
+    console.log("click");
     if (this.props.configLocked) {
       this.props.api.unlockConfig();
     } else {
@@ -61,12 +62,33 @@ class Sidebar extends Component {
           }
           width={400}
         >
-          <span
-            onClick={this.toggleConfigLock}
-            className="menu-item menu-item--clickable"
-          >
-            Unlock settings <Toggle checked={!this.props.configLocked} />
+          <span className="menu-item menu-item--clickable">
+            Unlock settings
+            <Toggle
+              onClick={event => {
+                console.log(event.target);
+                this.toggleConfigLock();
+              }}
+              readOnly
+              checked={!this.props.configLocked}
+            />
           </span>
+          {this.props.writeLogs && (
+            <span
+              className="menu-item menu-item--clickable"
+              onClick={this.openLogModal}
+            >
+              Log files
+            </span>
+          )}
+          {this.props.exposeUpload && (
+            <span
+              className="menu-item menu-item--clickable"
+              onClick={this.openUploadModal}
+            >
+              Import Excel
+            </span>
+          )}
           <span
             className="menu-item menu-item--clickable"
             onClick={() => {
@@ -78,28 +100,17 @@ class Sidebar extends Component {
           >
             Reboot unit
           </span>
-          <span
-            className="menu-item menu-item--clickable"
-            onClick={this.openUploadModal}
-          >
-            Upload data
-          </span>
-          <span
-            className="menu-item menu-item--clickable"
-            onClick={this.openLogModal}
-          >
-            Download log files
-          </span>
-          <span
-            className="menu-item menu-item--clickable"
-            onClick={() => {
-              if (window.confirm("Are you sure you want to shutdown?"))
-                this.props.api.shutdown();
-            }}
-          >
-            Shutdown unit
-          </span>
-          <span className="menu-item" />
+          {this.props.exposeShutdown && (
+            <span
+              className="menu-item menu-item--clickable"
+              onClick={() => {
+                if (window.confirm("Are you sure you want to shutdown?"))
+                  this.props.api.shutdown();
+              }}
+            >
+              Shutdown unit
+            </span>
+          )}
           <span className="menu-item">QS code: {this.props.QS}</span>
           <a className="menu-item" href="/settings">
             (OLD) serial settings
@@ -117,10 +128,23 @@ class Sidebar extends Component {
 }
 
 function mapStateToProps(state) {
+  if (!state.config.loaded || !state.static.loaded) {
+    return {
+      configLocked: false,
+      isMenuOpen: false,
+      QS: "null",
+      writeLogs: false,
+      exposeUpload: false,
+      exposeShutdown: false
+    };
+  }
   return {
     configLocked: state.config.locked,
     isMenuOpen: state.misc.isMenuOpen,
-    QS: state.static.QS
+    QS: state.static.QS,
+    writeLogs: state.config.logger.writeToFile,
+    exposeUpload: state.static.exposeUpload,
+    exposeShutdown: state.static.exposeShutdown
   };
 }
 

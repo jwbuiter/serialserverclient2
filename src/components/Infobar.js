@@ -110,10 +110,22 @@ class Infobar extends Component {
           {this.state.configModalIsOpen && (
             <form onChange={this.props.api.changeConfig}>
               <h2>General configuration</h2>
+              <div className="infobar--modalButtons">
+                <input
+                  type="button"
+                  value="Load default"
+                  onClick={() => {
+                    this.props.api.loadConfig("template.json");
+                  }}
+                />
+                <input type="button" value="Save config" onClick={() => {}} />
+                <input type="button" value="Load config" onClick={() => {}} />
+              </div>
               {makeForm(configurationValues, this.props.config)}
             </form>
           )}
         </Modal>
+
         <div
           className="infobar"
           onClick={this.props.configLocked ? null : this.openConfigModal}

@@ -38,14 +38,30 @@ function api(store) {
     });
   }
 
-  function loadConfig() {
-    axios
-      .get("/config")
-      .then(result => {
-        console.log("Got config");
-        store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
+  socket.on("clearserial", () => {
+    store.getState().internal.coms.forEach((com, index) =>
+      store.dispatch({
+        type: SERIAL_COM_STATE,
+        payload: { entry: "", entryTime: new Date().getTime(), index }
       })
-      .catch(err => console.log("/config", err));
+    );
+  });
+
+  function loadConfig(name) {
+    if (name) {
+      socket.emit("loadConfig", name, config => {
+        console.log(config);
+        store.dispatch({ type: RECEIVE_CONFIG, payload: JSON.parse(config) });
+      });
+    } else {
+      axios
+        .get("/config")
+        .then(result => {
+          console.log("Got config");
+          store.dispatch({ type: RECEIVE_CONFIG, payload: result.data });
+        })
+        .catch(err => console.log("/config", err));
+    }
   }
 
   function loadStatic() {
@@ -115,7 +131,6 @@ function api(store) {
         delete newConfig.loaded;
         delete newConfig.locked;
         delete newConfig.hasChanged;
-        console.log(newConfig);
         socket.emit("settings", newConfig);
         store.dispatch({ type: CONFIG_LOCK });
         reboot();
@@ -158,7 +173,8 @@ function api(store) {
     toggleMenu,
     unlockConfig,
     saveConfig,
-    changeConfig
+    changeConfig,
+    loadConfig
   };
 }
 

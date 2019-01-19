@@ -33,10 +33,6 @@
   }
 
   &--modal {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 2vw;
-
     &--title {
       width: 100%;
       text-align: center;
