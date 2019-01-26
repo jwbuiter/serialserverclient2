@@ -15,7 +15,8 @@ import {
   CONFIG_CHANGE,
   RECEIVE_CONFIG,
   RECEIVE_STATIC,
-  TABLE_FOUND_STATE
+  TABLE_FOUND_STATE,
+  RECEIVE_CONFIG_LIST
 } from "./actions/types";
 
 function api(store) {
@@ -124,13 +125,26 @@ function api(store) {
     store.dispatch({ type: CONFIG_UNLOCK });
   }
 
-  function saveConfig() {
+  function saveConfig(name) {
+    const newConfig = JSON.parse(JSON.stringify(store.getState().config));
+    delete newConfig.loaded;
+    delete newConfig.locked;
+    delete newConfig.hasChanged;
+
+    if (name) {
+      socket.emit("configExists", name, ({ result, name }) => {
+        if (
+          !result ||
+          window.confirm("File already exists, do you want to overwrite?")
+        ) {
+          socket.emit("saveConfig", { name: name, config: newConfig });
+        }
+      });
+      return;
+    }
+
     if (store.getState().config.hasChanged) {
       if (window.confirm("Are you sure you want to save these changes?")) {
-        const newConfig = store.getState().config;
-        delete newConfig.loaded;
-        delete newConfig.locked;
-        delete newConfig.hasChanged;
         socket.emit("settings", newConfig);
         store.dispatch({ type: CONFIG_LOCK });
         reboot();
@@ -158,6 +172,23 @@ function api(store) {
     store.dispatch({ type: CONFIG_CHANGE, payload: { address, value } });
   }
 
+  function getConfigList() {
+    socket.emit("getConfigList", null, list => {
+      store.dispatch({ type: RECEIVE_CONFIG_LIST, payload: list });
+    });
+  }
+
+  function deleteConfig(name) {
+    if (window.confirm("Do you really want to delete " + name + "?")) {
+      socket.emit("deleteConfig", name);
+      getConfigList();
+    }
+  }
+
+  function downloadConfig(name) {
+    window.location.href = "/downloadConfig?file=" + name;
+  }
+
   loadConfig();
   loadStatic();
 
@@ -174,7 +205,10 @@ function api(store) {
     unlockConfig,
     saveConfig,
     changeConfig,
-    loadConfig
+    loadConfig,
+    getConfigList,
+    deleteConfig,
+    downloadConfig
   };
 }
 

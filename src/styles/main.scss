@@ -1,5 +1,9 @@
 @import "constants";
 
+#page-wrap {
+  padding-top: 2vh;
+}
+
 .main {
   margin: 0vh 2vh;
   height: 96vh;
@@ -55,6 +59,9 @@
 
   &--noselfLearning {
     grid-template-rows: 1fr;
+  }
+  &--oneCom {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import FitText from "react-fittext";
 
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 import "../styles/inputList.scss";
 
 Modal.setAppElement("#root");
@@ -37,7 +37,16 @@ const configurationValues = {
           type: "select",
           options: {
             "-1": "None",
-            "0": "Follow 0"
+            "0": "Follow ouput 1",
+            "1": "Follow ouput 2",
+            "2": "Follow ouput 3",
+            "3": "Follow ouput 4",
+            "4": "Follow ouput 5",
+            "5": "Follow ouput 6",
+            "6": "Follow ouput 7",
+            "7": "Follow ouput 8",
+            "8": "Follow ouput 9",
+            "9": "Follow ouput 10"
           }
         },
         timeout: {

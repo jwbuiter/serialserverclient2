@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import FitText from "react-fittext";
 
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 import "../styles/outputList.scss";
 
 Modal.setAppElement("#root");

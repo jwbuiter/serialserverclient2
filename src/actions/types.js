@@ -21,7 +21,8 @@ const actionTypes = [
   "CONFIG_LOCK",
   "CONFIG_CHANGE",
   "TABLE_FOUND_STATE",
-  "SERIAL_CLEAR"
+  "SERIAL_CLEAR",
+  "RECEIVE_CONFIG_LIST"
 ];
 
 module.exports = stringMapFromArray(actionTypes);

@@ -6,7 +6,7 @@ import FitText from "react-fittext";
 import classNames from "classnames";
 import Toggle from "react-toggle";
 
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 import "../styles/selfLearning.scss";
 import "react-table/react-table.css";
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 
 import TableCell from "./TableCell";
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 import "../styles/table.scss";
 
 Modal.setAppElement("#root");
@@ -65,11 +65,12 @@ class Table extends Component {
 
   render() {
     const cells = this.props.cells
-      .filter(cell => !this.props.configLocked || cell.formula || cell.name)
       .map((cell, index) => ({
+        index,
         ...cell,
         ...this.props.cellConfig[index]
-      }));
+      }))
+      .filter(cell => !this.props.configLocked || cell.formula || cell.name);
 
     return (
       <>
@@ -98,17 +99,17 @@ class Table extends Component {
           )}
         </Modal>
         <div className={`table--grid table--grid--${cells.length}`}>
-          {cells.map((cell, index) => (
+          {cells.map(cell => (
             <TableCell
-              key={index}
+              key={cell.index}
               cell={cell}
-              index={index}
+              index={cell.index}
               notFound={this.props.notFound}
               manualFunction={this.props.api.tableManual}
               openModal={
                 this.props.configLocked
                   ? this.props.openLog
-                  : () => this.openConfigModal(index)
+                  : () => this.openConfigModal(cell.index)
               }
             />
           ))}

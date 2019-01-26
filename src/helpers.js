@@ -113,4 +113,14 @@ function makeForm(value, config, index, name = "") {
   }
 }
 
-export { get, set, makeForm };
+const getColumnWidth = (rows, accessor) => {
+  const maxWidth = 400;
+  const minWidth = 50;
+  const magicSpacing = 11;
+  const cellLength = Math.max(
+    ...rows.map(row => (`${row[accessor]}` || "").length)
+  );
+  return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
+};
+
+export { get, set, makeForm, getColumnWidth };

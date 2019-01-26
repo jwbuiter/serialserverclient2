@@ -40,14 +40,14 @@ const TableCell = props => {
       break;
     }
     case "menu": {
-      const menuOptions = [{ value: "", description: "" }].concat(
-        (cell.formula.match(/{[0-9.]+:\w+}/g) || []).map(str => {
+      const menuOptions = (cell.formula.match(/{[0-9.]+:\w+}/g) || []).map(
+        str => {
           const parts = str.split(":");
           return {
             value: Number(parts[0].slice(1)),
             description: parts[1].slice(0, -1)
           };
-        })
+        }
       );
 
       content = (

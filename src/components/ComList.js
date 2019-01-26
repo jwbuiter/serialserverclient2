@@ -4,7 +4,7 @@ import FitText from "react-fittext";
 import Modal from "react-modal";
 import classNames from "classnames";
 
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 import "../styles/comElement.scss";
 
 const configurationValues = {
@@ -13,7 +13,8 @@ const configurationValues = {
       {
         testMessage: {
           name: "Test value",
-          type: "text"
+          type: "text",
+          condition: config => config.serial.testMode
         },
         reader: {
           name: "MBDC Reader",
@@ -111,18 +112,30 @@ const configurationValues = {
 class ComList extends Component {
   constructor(props) {
     super(props);
-    this.state = { configModalIsOpen: false, configComIndex: -1 };
+    this.state = {
+      configModalIsOpen: false,
+      showHistory: false,
+      comIndex: -1
+    };
   }
 
   openConfigModal = index => {
-    this.setState({ configModalIsOpen: true, configComIndex: index });
+    this.setState({ configModalIsOpen: true, comIndex: index });
   };
 
   closeConfigModal = () => {
     this.setState({ configModalIsOpen: false });
   };
 
+  toggleShowHistory = () => {
+    this.setState({ showHistory: !this.state.showHistory });
+  };
+
   render() {
+    const coms = this.props.coms
+      .map((com, index) => ({ index, ...com }))
+      .filter(com => com.name || !this.props.configLocked);
+
     return (
       <>
         <Modal
@@ -130,25 +143,29 @@ class ComList extends Component {
           onRequestClose={this.closeConfigModal}
           overlayClassName="modalOverlay"
           className="modalContent"
-          contentLabel="Table Configuration Modal"
+          contentLabel="Serial Configuration Modal"
         >
           {this.state.configModalIsOpen && (
             <form onChange={this.props.api.changeConfig}>
-              <h2>Configuration for com{this.state.configComIndex}</h2>
+              <h2>Configuration for com{this.state.comIndex}</h2>
               {makeForm(
                 configurationValues,
                 this.props.config,
-                this.state.configComIndex
+                this.state.comIndex
               )}
             </form>
           )}
         </Modal>
-        {this.props.coms.map((com, index) => (
+        {coms.map(com => (
           <div
-            key={index}
-            className="comElement"
+            key={com.index}
+            className={classNames("comElement", {
+              "comElement--wide": coms.length === 1
+            })}
             onClick={
-              this.props.configLocked ? null : () => this.openConfigModal(index)
+              this.props.configLocked
+                ? () => this.toggleShowHistory()
+                : () => this.openConfigModal(com.index)
             }
           >
             <div className="comElement--title">
@@ -166,11 +183,24 @@ class ComList extends Component {
                 "comElement--content--testMode": this.props.testMode
               })}
             >
-              <div className="center">
-                <FitText compressor={0.9}>
-                  <div>{com.entry}</div>
-                </FitText>
-              </div>
+              {this.state.showHistory ? (
+                <div className="comElement--content--history">
+                  {com.history
+                    .slice(0, this.props.config.serial.coms[com.index].entries)
+                    .map(element => (
+                      <>
+                        <div>{element.timeString}</div>
+                        <div>{element.entry}</div>
+                      </>
+                    ))}
+                </div>
+              ) : (
+                <div className="center">
+                  <FitText compressor={0.9}>
+                    <div>{com.entry}</div>
+                  </FitText>
+                </div>
+              )}
             </div>
           </div>
         ))}

@@ -4,7 +4,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 
-import { makeForm } from "../configHelper";
+import { makeForm } from "../helpers";
 
 import "../styles/infobar.scss";
 
@@ -86,7 +86,8 @@ const configurationValues = {
 class Infobar extends Component {
   constructor(props) {
     super(props);
-    this.state = { configModalIsOpen: false };
+    this.uploadRef = React.createRef();
+    this.state = { configModalIsOpen: false, listModalIsOpen: false };
   }
 
   openConfigModal = () => {
@@ -97,9 +98,100 @@ class Infobar extends Component {
     this.setState({ configModalIsOpen: false });
   };
 
+  openListModal = () => {
+    this.setState({ listModalIsOpen: true });
+  };
+
+  closeListModal = () => {
+    this.setState({ listModalIsOpen: false });
+  };
+
   render() {
     return (
       <>
+        <Modal
+          isOpen={this.state.listModalIsOpen}
+          onRequestClose={this.closeListModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="List of loadable configurations"
+        >
+          <h2>List of saved configurations</h2>
+          <form>
+            {this.props.configList.map(config => {
+              return (
+                <>
+                  {config}
+                  <input
+                    type="button"
+                    value="Delete"
+                    onClick={() => this.props.api.deleteConfig(config)}
+                  />
+                  <input
+                    type="button"
+                    value="Load"
+                    onClick={() => this.props.api.loadConfig(config)}
+                  />
+                  <input
+                    type="button"
+                    value="Download"
+                    onClick={() => this.props.api.downloadConfig(config)}
+                  />
+                  <br />
+                </>
+              );
+            })}
+            <input
+              type="button"
+              value="Upload"
+              onClick={() => this.uploadRef.click()}
+            />
+            <input
+              type="button"
+              value="Load default"
+              onClick={() => {
+                this.props.api.loadConfig("template.json");
+              }}
+            />
+          </form>
+          <form
+            id="uploadForm"
+            action="uploadConfig"
+            method="post"
+            enctype="multipart/form-data"
+            onChange={event => {
+              const file = event.target.files[0];
+
+              const versionName = file.name.match(/V[0-9\.]+\.json$/);
+              if (!versionName) {
+                alert("Config does not have a valid name");
+                return;
+              }
+              const mayorVersion = versionName[0].slice(1, -3).split(".")[0];
+
+              const currentMayorVersion = this.props.config.version.split(
+                "."
+              )[0];
+
+              if (mayorVersion !== currentMayorVersion) {
+                alert("Version of new config does not match the current one");
+                return;
+              }
+
+              this.uploadRef.parentElement.submit();
+            }}
+          >
+            <input
+              style={{ display: "none" }}
+              type="file"
+              name="importConfig"
+              accept=".json"
+              ref={input => {
+                this.uploadRef = input;
+              }}
+            />
+          </form>
+        </Modal>
         <Modal
           isOpen={this.state.configModalIsOpen}
           onRequestClose={this.closeConfigModal}
@@ -113,13 +205,24 @@ class Infobar extends Component {
               <div className="infobar--modalButtons">
                 <input
                   type="button"
-                  value="Load default"
+                  value="Save config"
                   onClick={() => {
-                    this.props.api.loadConfig("template.json");
+                    const name = prompt(
+                      "Please enter the name for the new config file:",
+                      "config"
+                    );
+                    if (name) this.props.api.saveConfig(name);
                   }}
                 />
-                <input type="button" value="Save config" onClick={() => {}} />
-                <input type="button" value="Load config" onClick={() => {}} />
+                <input
+                  type="button"
+                  value="Load config"
+                  onClick={() => {
+                    this.props.api.getConfigList();
+                    this.openListModal();
+                    this.closeConfigModal();
+                  }}
+                />
               </div>
               {makeForm(configurationValues, this.props.config)}
             </form>
@@ -168,12 +271,15 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
 
+  const configList = state.misc.configList;
+
   return {
     name,
     ip,
     time,
     configLocked,
-    config
+    config,
+    configList
   };
 }
 

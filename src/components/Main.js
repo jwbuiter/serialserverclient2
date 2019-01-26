@@ -11,6 +11,7 @@ import InputList from "./InputList";
 import Table from "./Table";
 import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
+import { getColumnWidth } from "../helpers";
 
 import MBDC from "../assets/Logo-MBDC.jpg";
 import Infobar from "./Infobar";
@@ -19,16 +20,6 @@ import "../styles/main.scss";
 import "react-toggle/style.css";
 
 Modal.setAppElement("#root");
-
-const getColumnWidth = (rows, accessor) => {
-  const maxWidth = 400;
-  const minWidth = 50;
-  const magicSpacing = 11;
-  const cellLength = Math.max(
-    ...rows.map(row => (`${row[accessor]}` || "").length)
-  );
-  return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
-};
 
 class Main extends Component {
   constructor(props) {
@@ -92,7 +83,6 @@ class Main extends Component {
 
     return (
       <div id="page-wrap">
-        .
         <div
           className={classNames(
             "main",

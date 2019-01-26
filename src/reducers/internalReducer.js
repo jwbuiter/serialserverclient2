@@ -1,3 +1,5 @@
+const dateformat = require("dateformat");
+
 const {
   INPUT_PORT_STATE,
   OUTPUT_PORT_STATE,
@@ -41,15 +43,16 @@ export default function(fullState = initialState, action) {
 
       const newComs = Array.from(fullState.coms);
       let newHistory;
-      if (!fullState.coms[index]) {
-        newHistory = [];
-      } else if (!fullState.coms[index].entry) {
+      if (!fullState.coms[index]) fullState.coms[index] = { history: [] };
+
+      if (!entry) {
         newHistory = fullState.coms[index].history;
       } else {
         newHistory = [
           {
-            entry: fullState.coms[index].entry,
-            entryTime: fullState.coms[index].entryTime
+            entry,
+            entryTime,
+            timeString: dateformat(new Date(entryTime), "HH:MM:ss")
           },
           ...fullState.coms[index].history
         ];

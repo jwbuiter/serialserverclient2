@@ -5,7 +5,7 @@ const {
   CONFIG_CHANGE
 } = require("../actions/types");
 
-const { set } = require("../configHelper");
+const { set } = require("../helpers");
 
 const initialState = { loaded: false, locked: true, hasChanged: false };
 
