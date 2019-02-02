@@ -73,6 +73,8 @@ function makeForm(value, config, index, name = "") {
       );
     }
   } else {
+    if (value.condition && !value.condition(config, index)) return;
+
     switch (value.type) {
       case "title": {
         return <h3 key={value.name}>{value.name}</h3>;
@@ -81,7 +83,11 @@ function makeForm(value, config, index, name = "") {
         return (
           <>
             {value.name}:
-            <select name={name} value={get(config, name)}>
+            <select
+              className={value.numeric && "numeric"}
+              name={name}
+              value={get(config, name)}
+            >
               {Object.entries(value.options).map((entry, index) => (
                 <option key={index} value={entry[0]}>
                   {entry[1]}

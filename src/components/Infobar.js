@@ -16,7 +16,6 @@ const configurationValues = {
       name: "Serial",
       type: "title"
     },
-    testMode: { name: "Enable test mode", type: "checkbox" },
     resetTrigger: {
       name: "Reset on zero",
       type: "select",
@@ -61,14 +60,14 @@ const configurationValues = {
       options: { off: "Off", com0: "Com 0", com1: "Com 1" }
     },
     resetMode: {
-      name: "Reset mode:",
+      name: "Reset mode",
       type: "select",
       options: { off: "Off", time: "Time of day", interval: "Time interval" }
     },
     resetValue: {
       name: "Reset time",
       type: "time",
-      condition: "logger.resetMode==='time'"
+      condition: config => config.logger.resetMode === "time"
     }
   },
   FTP: {

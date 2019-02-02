@@ -1,5 +1,7 @@
 @import "constants";
 
+$inputsize: 80%;
+
 .tableCell {
   position: relative;
 
@@ -29,7 +31,7 @@
 
     &--input {
       border: none;
-      font-size: 90%;
+      font-size: $inputsize;
       text-align: center;
 
       &--numeric {
@@ -37,17 +39,17 @@
       }
 
       &--text {
-        width: 90%;
+        width: 70%;
       }
 
       &--select {
-        width: 90%;
+        width: 70%;
       }
     }
 
     button {
       background-color: $tertiary-color;
-      font-size: 90%;
+      font-size: $inputsize;
       width: 15%;
       padding: 1px 0;
     }

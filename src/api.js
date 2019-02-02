@@ -162,12 +162,15 @@ function api(store) {
 
     if (event.target.type === "checkbox") {
       value = event.target.checked;
-    } else if (event.target.type === "number") {
+    } else if (
+      event.target.type === "number" ||
+      event.target.className === "numeric"
+    ) {
+      console.log("number");
       value = Number(event.target.value);
     } else {
       value = event.target.value;
     }
-    console.log({ address, value });
 
     store.dispatch({ type: CONFIG_CHANGE, payload: { address, value } });
   }
@@ -189,6 +192,14 @@ function api(store) {
     window.location.href = "/downloadConfig?file=" + name;
   }
 
+  function deleteGeneralSL(key) {
+    socket.emit("deleteGeneralSL", key);
+  }
+
+  function deleteIndividualSL(key) {
+    socket.emit("deleteIndividualSL", key);
+  }
+
   loadConfig();
   loadStatic();
 
@@ -208,7 +219,9 @@ function api(store) {
     loadConfig,
     getConfigList,
     deleteConfig,
-    downloadConfig
+    downloadConfig,
+    deleteGeneralSL,
+    deleteIndividualSL
   };
 }
 

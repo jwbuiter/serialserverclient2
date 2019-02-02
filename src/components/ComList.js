@@ -11,32 +11,52 @@ const configurationValues = {
   serial: {
     coms: [
       {
+        mode: {
+          name: "Mode",
+          type: "select",
+          options: {
+            serial: "Serial",
+            test: "Test",
+            reader: "Reader"
+          }
+        },
         testMessage: {
           name: "Test value",
           type: "text",
-          condition: config => config.serial.testMode
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "test"
         },
-        reader: {
-          name: "MBDC Reader",
-          type: "checkbox"
-        },
-        baudRate: {
-          name: "Baudrate/Port",
+        readerPort: {
+          name: "Port",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "reader"
+        },
+        baudRate: {
+          name: "Baudrate",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         stopBits: {
           name: "Number of stop bits",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         bits: {
           name: "Number of data bits",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         parity: {
           name: "Parity of data",
@@ -47,15 +67,21 @@ const configurationValues = {
             odd: "Odd",
             mark: "Mark",
             space: "Space"
-          }
+          },
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         RTSCTS: {
           name: "RTS/CTS",
-          type: "checkbox"
+          type: "checkbox",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         XONXOFF: {
           name: "XON/XOFF",
-          type: "checkbox"
+          type: "checkbox",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
         name: {
           name: "Name of port",
@@ -101,9 +127,16 @@ const configurationValues = {
         },
         prefix: {
           name: "Prefix",
-          type: "text"
+          type: "text",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
         },
-        postfix: { name: "Suffix", type: "text" }
+        postfix: {
+          name: "Suffix",
+          type: "text",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial"
+        }
       }
     ]
   }
@@ -114,7 +147,7 @@ class ComList extends Component {
     super(props);
     this.state = {
       configModalIsOpen: false,
-      showHistory: false,
+      showHistory: props.coms.map(element => false),
       comIndex: -1
     };
   }
@@ -127,8 +160,12 @@ class ComList extends Component {
     this.setState({ configModalIsOpen: false });
   };
 
-  toggleShowHistory = () => {
-    this.setState({ showHistory: !this.state.showHistory });
+  toggleShowHistory = index => {
+    this.setState({
+      showHistory: this.state.showHistory.map((element, i) =>
+        i === index ? !element : element
+      )
+    });
   };
 
   render() {
@@ -164,7 +201,7 @@ class ComList extends Component {
             })}
             onClick={
               this.props.configLocked
-                ? () => this.toggleShowHistory()
+                ? () => !com.average && this.toggleShowHistory(com.index)
                 : () => this.openConfigModal(com.index)
             }
           >
@@ -180,10 +217,10 @@ class ComList extends Component {
             </div>
             <div
               className={classNames("comElement--content", {
-                "comElement--content--testMode": this.props.testMode
+                "comElement--content--testMode": com.mode === "test"
               })}
             >
-              {this.state.showHistory ? (
+              {this.state.showHistory[com.index] && com.history ? (
                 <div className="comElement--content--history">
                   {com.history
                     .slice(0, this.props.config.serial.coms[com.index].entries)
@@ -210,16 +247,15 @@ class ComList extends Component {
 }
 
 function mapStateToProps(state) {
-  const coms = state.internal.coms.map((com, index) => ({
+  const coms = state.config.serial.coms.map((com, index) => ({
     ...com,
-    ...state.config.serial.coms[index]
+    ...state.internal.coms[index]
   }));
 
   return {
     coms,
     configLocked: state.config.locked,
-    config: state.config,
-    testMode: state.config.serial.testMode
+    config: state.config
   };
 }
 

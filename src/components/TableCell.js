@@ -11,7 +11,7 @@ const TableCell = props => {
     case "manual": {
       content = (
         <input
-          type="text"
+          type={props.cell.numeric ? "number" : "text"}
           className={classnames(
             "tableCell--content--input",
             { "tableCell--content--input--text": !cell.numeric },
@@ -40,12 +40,15 @@ const TableCell = props => {
       break;
     }
     case "menu": {
-      const menuOptions = (cell.formula.match(/{[0-9.]+:\w+}/g) || []).map(
+      const menuOptions = (cell.formula.match(/{[0-9.]*:[\w ]*}/g) || []).map(
         str => {
           const parts = str.split(":");
+          const valueString = parts[0].slice(1);
+          const descriptionString = parts[1].slice(0, -1);
+
           return {
-            value: Number(parts[0].slice(1)),
-            description: parts[1].slice(0, -1)
+            value: valueString ? Number(parts[0].slice(1)) : "",
+            description: descriptionString
           };
         }
       );

@@ -35,6 +35,7 @@ const configurationValues = {
         follow: {
           name: "Follow output",
           type: "select",
+          numeric: true,
           options: {
             "-1": "None",
             "0": "Follow ouput 1",
@@ -50,13 +51,13 @@ const configurationValues = {
           }
         },
         timeout: {
-          name: "Debounce timeout in milliseconds",
+          name: "Debounce timeout (ms)",
           type: "number",
           min: 0,
           step: 1
         },
         manualTimeout: {
-          name: "Manual timeout in seconds",
+          name: "Manual timeout (s)",
           type: "number",
           min: 0,
           step: 1

@@ -27,158 +27,58 @@ const configurationValues = {
       name: "Number",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled !== "off"
     },
     startCalibration: {
       name: "Calibration",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled !== "off"
     },
     tolerance: {
       name: "Tolerance",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled !== "off"
     },
     startTolerance: {
       name: "Additional tolerance during learning",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config =>
+        config.selfLearning.enabled !== "off" &&
+        !config.selfLearning.enabled.endsWith("ind")
     },
     individualTolerance: {
       name: "Individual tolerance",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled.endsWith("ind")
     },
     individualToleranceIncrement: {
       name: "Individual tolerance increment",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled.endsWith("ind")
     },
     individualToleranceLimit: {
       name: "Individual tolerance limit",
       type: "number",
       min: 0,
-      step: 1
+      step: 1,
+      condition: config => config.selfLearning.enabled.endsWith("ind")
     }
   }
 };
 
-const generalTableColumns = [
-  {
-    Header: "Com0",
-    accessor: row => row.entries[0],
-    id: 1,
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "-1",
-    accessor: row => row.entries[1],
-    id: 2,
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "-2",
-    accessor: row => row.entries[2],
-    id: 3,
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "-3",
-    accessor: row => row.entries[3],
-    id: 4,
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "-4",
-    accessor: row => row.entries[4],
-    id: 5,
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "Com1",
-    accessor: "key",
-    style: { textAlign: "center" },
-    width: 200
-  },
-  {
-    Header: () => <input type="text" />,
-    accessor: "calibration",
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: props => <button>Delete</button>,
-    Cell: props => <button>Delete</button>,
-    id: 1,
-    style: { textAlign: "center" },
-    width: 70
-  }
-];
-
 const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
-
-const individualTableColumns = [
-  {
-    Header: "Com0",
-    accessor: "calibration",
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "Com1",
-    accessor: "key",
-    style: { textAlign: "center" },
-    width: 200
-  },
-  {
-    Header: () => <input type="text" />,
-    accessor: "calibration",
-    style: { textAlign: "center" },
-    width: 70
-  },
-  {
-    Header: "Tol",
-    accessor: "tolerance",
-    Cell: props => {
-      return (
-        <div
-          style={{
-            backgroundColor: individualColors[props.original.increments],
-            color: textColors[props.original.increments]
-          }}
-        >
-          {props.value}
-        </div>
-      );
-    },
-    style: { textAlign: "center" },
-    width: 50
-  },
-  {
-    Header: "Num",
-    accessor: "numUpdates",
-    style: { textAlign: "center" },
-    width: 50
-  },
-  {
-    Header: props => <button>Delete</button>,
-    Cell: props => <button>Delete</button>,
-    id: 1,
-    style: { textAlign: "center" },
-    width: 70
-  }
-];
 
 Modal.setAppElement("#root");
 
@@ -213,6 +113,182 @@ class SelfLearning extends Component {
   };
 
   render() {
+    const generalTableColumns = [
+      {
+        Header: "Com0",
+        accessor: row => {
+          console.log(row);
+          return row.entries[0];
+        },
+        id: 10,
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "-1",
+        accessor: row => row.entries[1],
+        id: 2,
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "-2",
+        accessor: row => row.entries[2],
+        id: 3,
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "-3",
+        accessor: row => row.entries[3],
+        id: 4,
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "-4",
+        accessor: row => row.entries[4],
+        id: 5,
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "Com1",
+        accessor: "key",
+        style: { textAlign: "center" },
+        width: 200
+      },
+      {
+        Header: () => <input type="text" />,
+        accessor: "calibration",
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: (
+          <button
+            onClick={() => {
+              if (
+                window.confirm(
+                  `Are you sure you want to delete all general entries?`
+                )
+              ) {
+                this.props.api.deleteGeneralSL();
+              }
+            }}
+          >
+            Delete
+          </button>
+        ),
+        Cell: props => {
+          return (
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `Are you sure you want to delete general entries for ${
+                      props.original.key
+                    }?`
+                  )
+                ) {
+                  this.props.api.deleteGeneralSL(props.original.key);
+                }
+              }}
+            >
+              Delete
+            </button>
+          );
+        },
+        id: 1,
+        style: { textAlign: "center" },
+        width: 70
+      }
+    ];
+
+    const individualTableColumns = [
+      {
+        Header: "Com0",
+        accessor: "calibration",
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "Com1",
+        accessor: "key",
+        style: { textAlign: "center" },
+        width: 200
+      },
+      {
+        Header: () => <input type="text" />,
+        accessor: "calibration",
+        style: { textAlign: "center" },
+        width: 70
+      },
+      {
+        Header: "Tol",
+        accessor: "tolerance",
+        Cell: props => {
+          return (
+            <div
+              style={{
+                backgroundColor: individualColors[props.original.increments],
+                color: textColors[props.original.increments]
+              }}
+            >
+              {props.value}
+            </div>
+          );
+        },
+        style: { textAlign: "center" },
+        width: 50
+      },
+      {
+        Header: "Num",
+        accessor: "numUpdates",
+        style: { textAlign: "center" },
+        width: 50
+      },
+      {
+        Header: (
+          <button
+            onClick={() => {
+              if (
+                window.confirm(
+                  `Are you sure you want to delete all individual entries?`
+                )
+              ) {
+                this.props.api.deleteIndividualSL();
+              }
+            }}
+          >
+            Delete
+          </button>
+        ),
+        Cell: props => {
+          return (
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `Are you sure you want to delete the entry for ${
+                      props.original.key
+                    }?`
+                  )
+                ) {
+                  this.props.api.deleteIndividualSL(props.original.key);
+                }
+              }}
+            >
+              Delete
+            </button>
+          );
+        },
+        id: 1,
+        style: { textAlign: "center" },
+        width: 70
+      }
+    ];
+
     const indicators = [
       "selfLearning--inProgress",
       "selfLearning--success",
@@ -302,7 +378,11 @@ class SelfLearning extends Component {
             indicators[this.props.success || 0]
           )}
           onClick={
-            this.props.configLocked ? this.openSLModal : this.openConfigModal
+            this.props.configLocked
+              ? this.props.individual
+                ? this.openSLModal
+                : null
+              : this.openConfigModal
           }
         >
           {cells.map((cell, index) => (
@@ -322,8 +402,9 @@ class SelfLearning extends Component {
 function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
+  const individual = state.internal.selfLearning.individual;
 
-  return { ...state.internal.selfLearning, configLocked, config };
+  return { ...state.internal.selfLearning, configLocked, config, individual };
 }
 
 export default connect(mapStateToProps)(SelfLearning);
