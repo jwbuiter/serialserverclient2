@@ -32,17 +32,31 @@ const configurationValues = {
         },
         formula: {
           name: "Formula for cell value",
-          type: "text"
+          type: "text",
+          condition: (config, index) =>
+            ["normal", "data"].includes(config.table.cells[index].type)
+        },
+        menuOptions: {
+          name: "Options and values for menu",
+          type: "keyValue",
+          condition: (config, index) =>
+            config.table.cells[index].type === "menu"
         },
         digits: {
           name: "Number of digits",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) =>
+            config.table.cells[index].type !== "menu"
         },
         resetOnExe: {
           name: "Reset value after execute",
           type: "checkbox"
+        },
+        colorConditions: {
+          name: "Conditions for cell colors",
+          type: "text"
         }
       }
     ]
@@ -82,7 +96,7 @@ class Table extends Component {
           contentLabel="Table Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>
                 Configuration for cell{" "}
                 {String.fromCharCode(
@@ -93,6 +107,7 @@ class Table extends Component {
               {makeForm(
                 configurationValues,
                 this.props.config,
+                this.props.api,
                 this.state.configCellIndex
               )}
             </form>

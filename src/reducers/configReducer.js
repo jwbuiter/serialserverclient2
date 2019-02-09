@@ -12,10 +12,10 @@ const initialState = { loaded: false, locked: true, hasChanged: false };
 export default function(state = initialState, action) {
   switch (action.type) {
     case RECEIVE_CONFIG: {
-      return { ...state, loaded: true, ...action.payload };
+      return { ...state, loaded: true, hasChanged: true, ...action.payload };
     }
     case CONFIG_UNLOCK: {
-      return { ...state, locked: false };
+      return { ...state, locked: false, hasChanged: false };
     }
     case CONFIG_LOCK: {
       return { ...state, locked: true };

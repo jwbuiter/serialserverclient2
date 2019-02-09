@@ -60,11 +60,12 @@ class OutputList extends Component {
           contentLabel="Output Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>Configuration for output {this.state.configPortIndex + 1}</h2>
               {makeForm(
                 configurationValues,
                 this.props.config,
+                this.props.api,
                 this.state.configPortIndex
               )}
             </form>

@@ -40,18 +40,7 @@ const TableCell = props => {
       break;
     }
     case "menu": {
-      const menuOptions = (cell.formula.match(/{[0-9.]*:[\w ]*}/g) || []).map(
-        str => {
-          const parts = str.split(":");
-          const valueString = parts[0].slice(1);
-          const descriptionString = parts[1].slice(0, -1);
-
-          return {
-            value: valueString ? Number(parts[0].slice(1)) : "",
-            description: descriptionString
-          };
-        }
-      );
+      const { menuOptions } = cell;
 
       content = (
         <select
@@ -64,7 +53,7 @@ const TableCell = props => {
           value={cell.value}
         >
           {menuOptions.map(option => (
-            <option value={option.value}>{option.description}</option>
+            <option value={option.key}>{option.value}</option>
           ))}
         </select>
       );

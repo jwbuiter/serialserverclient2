@@ -9,11 +9,12 @@ import "../styles/sidebar.scss";
 class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = { uploadModalIsOpen: false };
+    this.state = { uploadModalIsOpen: false, logModalIsOpen: false };
   }
 
   toggleConfigLock = () => {
-    console.log("click");
+    if (!this.props.isMenuOpen) return;
+
     if (this.props.configLocked) {
       this.props.api.unlockConfig();
     } else {
@@ -23,14 +24,24 @@ class Sidebar extends Component {
 
   openUploadModal = () => {
     this.setState({ uploadModalIsOpen: true });
-    this.props.api.toggleMenu();
+    this.props.api.closeMenu();
   };
 
   closeUploadModal = () => {
     this.setState({ uploadModalIsOpen: false });
   };
 
+  openLogModal = () => {
+    this.setState({ logModalIsOpen: true });
+    this.props.api.closeMenu();
+  };
+
+  closeLogModal = () => {
+    this.setState({ logModalIsOpen: false });
+  };
+
   render() {
+    const closeMenu = this.props.api.closeMenu;
     return (
       <>
         <Modal
@@ -51,6 +62,15 @@ class Sidebar extends Component {
             <input type="file" name="importFile" accept=".xls" />
           </form>
         </Modal>
+        <Modal
+          isOpen={this.state.logModalIsOpen}
+          onRequestClose={this.closeLogModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="Log files Modal"
+        >
+          <h2>Upload and download log files</h2>
+        </Modal>
         <Menu
           right
           customBurgerIcon={false}
@@ -58,25 +78,35 @@ class Sidebar extends Component {
           outerContainerId="outer-container"
           isOpen={this.props.isMenuOpen}
           onStateChange={newState =>
-            !newState.isOpen && this.props.api.toggleMenu()
+            !newState.isOpen && this.props.api.closeMenu()
           }
           width={400}
         >
           <span className="menu-item menu-item--clickable">
-            Unlock settings
-            <Toggle
-              onClick={event => {
-                console.log(event.target);
+            <span
+              onClick={() => {
+                closeMenu();
                 this.toggleConfigLock();
               }}
-              readOnly
+            >
+              Unlock settings
+            </span>
+
+            <Toggle
               checked={!this.props.configLocked}
+              onChange={() => {
+                closeMenu();
+                this.toggleConfigLock();
+              }}
             />
           </span>
           {this.props.writeLogs && (
             <span
               className="menu-item menu-item--clickable"
-              onClick={this.openLogModal}
+              onClick={() => {
+                this.openLogModal();
+                closeMenu();
+              }}
             >
               Log files
             </span>
@@ -84,7 +114,10 @@ class Sidebar extends Component {
           {this.props.exposeUpload && (
             <span
               className="menu-item menu-item--clickable"
-              onClick={this.openUploadModal}
+              onClick={() => {
+                this.openUploadModal();
+                closeMenu();
+              }}
             >
               Import Excel
             </span>
@@ -94,8 +127,8 @@ class Sidebar extends Component {
             onClick={() => {
               if (window.confirm("Are you sure you want to reboot?")) {
                 this.props.api.reboot();
-                this.props.api.toggleMenu();
               }
+              closeMenu();
             }}
           >
             Reboot unit
@@ -106,6 +139,7 @@ class Sidebar extends Component {
               onClick={() => {
                 if (window.confirm("Are you sure you want to shutdown?"))
                   this.props.api.shutdown();
+                closeMenu();
               }}
             >
               Shutdown unit

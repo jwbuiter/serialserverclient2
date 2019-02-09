@@ -2,6 +2,8 @@ const {
   RECEIVE_IP,
   RECEIVE_TIME,
   TOGGLE_MENU,
+  OPEN_MENU,
+  CLOSE_MENU,
   RECEIVE_CONFIG_LIST
 } = require("../actions/types");
 
@@ -31,6 +33,12 @@ export default (state = initialState, action) => {
         ...state,
         isMenuOpen: !state.isMenuOpen
       };
+    }
+    case OPEN_MENU: {
+      return { ...state, isMenuOpen: true };
+    }
+    case CLOSE_MENU: {
+      return { ...state, isMenuOpen: false };
     }
     case RECEIVE_CONFIG_LIST: {
       return {

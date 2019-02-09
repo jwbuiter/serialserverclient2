@@ -10,6 +10,8 @@ import {
   RECEIVE_IP,
   RECEIVE_TIME,
   TOGGLE_MENU,
+  OPEN_MENU,
+  CLOSE_MENU,
   CONFIG_UNLOCK,
   CONFIG_LOCK,
   CONFIG_CHANGE,
@@ -51,7 +53,6 @@ function api(store) {
   function loadConfig(name) {
     if (name) {
       socket.emit("loadConfig", name, config => {
-        console.log(config);
         store.dispatch({ type: RECEIVE_CONFIG, payload: JSON.parse(config) });
       });
     } else {
@@ -121,6 +122,14 @@ function api(store) {
     store.dispatch({ type: TOGGLE_MENU });
   }
 
+  function openMenu() {
+    store.dispatch({ type: OPEN_MENU });
+  }
+
+  function closeMenu() {
+    store.dispatch({ type: CLOSE_MENU });
+  }
+
   function unlockConfig() {
     store.dispatch({ type: CONFIG_UNLOCK });
   }
@@ -156,22 +165,10 @@ function api(store) {
     }
   }
 
-  function changeConfig(event) {
-    const address = event.target.name;
-    let value;
-
-    if (event.target.type === "checkbox") {
-      value = event.target.checked;
-    } else if (
-      event.target.type === "number" ||
-      event.target.className === "numeric"
-    ) {
-      console.log("number");
-      value = Number(event.target.value);
-    } else {
-      value = event.target.value;
+  function changeConfig(address, value, options) {
+    if (options && options.numeric) {
+      value = Number(value);
     }
-
     store.dispatch({ type: CONFIG_CHANGE, payload: { address, value } });
   }
 
@@ -213,6 +210,8 @@ function api(store) {
     shutdown,
     getLogo,
     toggleMenu,
+    openMenu,
+    closeMenu,
     unlockConfig,
     saveConfig,
     changeConfig,

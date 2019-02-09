@@ -16,8 +16,8 @@ const configurationValues = {
           type: "select",
           options: {
             serial: "Serial",
-            test: "Test",
-            reader: "Reader"
+            reader: "Reader",
+            test: "Test"
           }
         },
         testMessage: {
@@ -183,11 +183,12 @@ class ComList extends Component {
           contentLabel="Serial Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>Configuration for com{this.state.comIndex}</h2>
               {makeForm(
                 configurationValues,
                 this.props.config,
+                this.props.api,
                 this.state.comIndex
               )}
             </form>

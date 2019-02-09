@@ -92,11 +92,12 @@ class InputList extends Component {
           contentLabel="Input Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>Configuration for input {this.state.configPortIndex + 1}</h2>
               {makeForm(
                 configurationValues,
                 this.props.config,
+                this.props.api,
                 this.state.configPortIndex
               )}
             </form>

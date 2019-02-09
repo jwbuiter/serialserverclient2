@@ -128,7 +128,7 @@ class Main extends Component {
             <Logo
               image={this.state.logo}
               alt="LOGO"
-              onClick={this.props.api.toggleMenu}
+              onClick={this.props.api.openMenu}
             />
           </div>
 
@@ -179,19 +179,18 @@ function mapStateToProps(state) {
       }, false));
 
   const showInputs =
-    !configLocked ||
-    state.config.input.ports.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
+    state.static.exposeUpload &&
+    (!configLocked ||
+      state.config.input.ports.reduce((acc, cur) => {
+        return acc || cur.name;
+      }, false));
 
   const showOutputs =
-    !configLocked ||
-    state.config.output.ports.reduce((acc, cur) => {
-      return acc || cur.name;
-    }, false);
-
-  const showPorts =
-    state.static.exposeUpload && (!configLocked || showInputs || showOutputs);
+    state.static.exposeUpload &&
+    (!configLocked ||
+      state.config.output.ports.reduce((acc, cur) => {
+        return acc || cur.name;
+      }, false));
 
   const showSelfLearning =
     state.static.enabledModules.selfLearning &&
@@ -204,7 +203,6 @@ function mapStateToProps(state) {
     showTable,
     showInputs,
     showOutputs,
-    showPorts,
     showSelfLearning,
     configLocked,
     uniqueLogEnabled

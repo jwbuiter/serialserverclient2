@@ -10,6 +10,8 @@ const actionTypes = [
   "RECEIVE_TIME",
   "RECEIVE_IP",
   "TOGGLE_MENU",
+  "OPEN_MENU",
+  "CLOSE_MENU",
   "RECEIVE_CONFIG",
   "RECEIVE_STATIC",
   "INPUT_PORT_STATE",

@@ -113,47 +113,60 @@ class SelfLearning extends Component {
   };
 
   render() {
+    const keyName = this.props.config.serial.coms[1 - this.props.comIndex].name;
+    const valueName = this.props.config.serial.coms[this.props.comIndex].name;
+    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+
     const generalTableColumns = [
       {
-        Header: "Com0",
-        accessor: row => {
-          console.log(row);
-          return row.entries[0];
-        },
+        Header: valueName,
+        accessor: row => row.entries[0].toFixed(rounding),
         id: 10,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-1",
-        accessor: row => row.entries[1],
+        accessor: row => {
+          const val = row.entries[1];
+          return val ? val.toFixed(rounding) : "";
+        },
         id: 2,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-2",
-        accessor: row => row.entries[2],
+        accessor: row => {
+          const val = row.entries[2];
+          return val ? val.toFixed(rounding) : "";
+        },
         id: 3,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-3",
-        accessor: row => row.entries[3],
+        accessor: row => {
+          const val = row.entries[3];
+          return val ? val.toFixed(rounding) : "";
+        },
         id: 4,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-4",
-        accessor: row => row.entries[4],
+        accessor: row => {
+          const val = row.entries[4];
+          return val ? val.toFixed(rounding) : "";
+        },
         id: 5,
         style: { textAlign: "center" },
         width: 70
       },
       {
-        Header: "Com1",
+        Header: keyName,
         accessor: "key",
         style: { textAlign: "center" },
         width: 200
@@ -207,13 +220,14 @@ class SelfLearning extends Component {
 
     const individualTableColumns = [
       {
-        Header: "Com0",
-        accessor: "calibration",
+        Header: valueName,
+        accessor: row => row.calibration.toFixed(rounding),
         style: { textAlign: "center" },
-        width: 70
+        width: 70,
+        id: 12
       },
       {
-        Header: "Com1",
+        Header: keyName,
         accessor: "key",
         style: { textAlign: "center" },
         width: 200
@@ -333,9 +347,9 @@ class SelfLearning extends Component {
           contentLabel="SelfLearning Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>Configuration for SelfLearning</h2>
-              {makeForm(configurationValues, this.props.config)}
+              {makeForm(configurationValues, this.props.config, this.props.api)}
             </form>
           )}
         </Modal>

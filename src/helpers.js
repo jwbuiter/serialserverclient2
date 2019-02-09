@@ -32,7 +32,7 @@ function set(object, address, newValue) {
   }
 }
 
-function makeForm(value, config, index, name = "") {
+function makeForm(value, config, api, index, name = "") {
   if (typeof value.type === "undefined" || typeof value.type === "object") {
     if (Array.isArray(value)) {
       if (value.length === 1) {
@@ -43,6 +43,7 @@ function makeForm(value, config, index, name = "") {
                 makeForm(
                   value[0][key],
                   config,
+                  api,
                   index,
                   name + "[" + index + "]." + key
                 )
@@ -50,6 +51,16 @@ function makeForm(value, config, index, name = "") {
             </div>
           )
         );
+      } else {
+        return value.map((element, index) => {
+          return makeForm(
+            element,
+            config,
+            api,
+            index,
+            name + "[" + index + "]"
+          );
+        });
       }
     } else {
       return (
@@ -65,6 +76,7 @@ function makeForm(value, config, index, name = "") {
               makeForm(
                 value[key],
                 config,
+                api,
                 index,
                 name + (name ? "." : "") + key
               )
@@ -79,14 +91,72 @@ function makeForm(value, config, index, name = "") {
       case "title": {
         return <h3 key={value.name}>{value.name}</h3>;
       }
+      case "subtitle": {
+        return (
+          <>
+            <b key={value.name}>{value.name}</b>
+            <br />
+          </>
+        );
+      }
+      case "keyValue": {
+        const options = get(config, name) || [];
+        console.log(options);
+        return (
+          <>
+            {value.name}:
+            <br />
+            {options.map((option, index) => (
+              <>
+                <input
+                  type="button"
+                  value="x"
+                  onClick={() => {
+                    options.splice(index, 1);
+                    api.changeConfig(name, options);
+                  }}
+                />
+                <input
+                  type="text"
+                  onChange={e => {
+                    api.changeConfig(`${name}[${index}].value`, e.target.value);
+                  }}
+                  value={option.value}
+                />
+                <input
+                  type="number"
+                  onChange={e => {
+                    api.changeConfig(`${name}[${index}].key`, e.target.value, {
+                      numeric: true
+                    });
+                  }}
+                  value={option.key}
+                />
+                <br />
+              </>
+            ))}
+            <input
+              type="button"
+              value="+"
+              onClick={() => {
+                api.changeConfig(name, options.concat({ key: "", value: "" }));
+              }}
+            />
+            <br />
+          </>
+        );
+      }
       case "select": {
         return (
           <>
             {value.name}:
             <select
-              className={value.numeric && "numeric"}
-              name={name}
               value={get(config, name)}
+              onChange={event => {
+                api.changeConfig(name, event.target.value, {
+                  numeric: value.numeric
+                });
+              }}
             >
               {Object.entries(value.options).map((entry, index) => (
                 <option key={index} value={entry[0]}>
@@ -104,12 +174,20 @@ function makeForm(value, config, index, name = "") {
             {value.name}:
             <input
               type={value.type}
-              name={name}
               min={value.min}
               max={value.max}
               step={value.step}
               checked={get(config, name)}
               value={get(config, name)}
+              onChange={event => {
+                if (event.target.type === "checkbox") {
+                  api.changeConfig(name, event.target.checked);
+                } else {
+                  api.changeConfig(name, event.target.value, {
+                    numeric: value.type === "number"
+                  });
+                }
+              }}
             />
             <br />
           </>

@@ -78,7 +78,29 @@ const configurationValues = {
     automatic: {
       name: "Automatically upload logs on FTP",
       type: "checkbox"
-    }
+    },
+    targets: [1, 2].map(index => ({
+      title: {
+        name: "Target " + index,
+        type: "subtitle"
+      },
+      address: {
+        name: "Address",
+        type: "text"
+      },
+      folder: {
+        name: "Folder",
+        type: "text"
+      },
+      username: {
+        name: "Username",
+        type: "text"
+      },
+      password: {
+        name: "Password",
+        type: "text"
+      }
+    }))
   }
 };
 
@@ -161,7 +183,7 @@ class Infobar extends Component {
             onChange={event => {
               const file = event.target.files[0];
 
-              const versionName = file.name.match(/V[0-9\.]+\.json$/);
+              const versionName = file.name.match(/V[0-9.]+\.json$/);
               if (!versionName) {
                 alert("Config does not have a valid name");
                 return;
@@ -199,7 +221,7 @@ class Infobar extends Component {
           contentLabel="General Configuration Modal"
         >
           {this.state.configModalIsOpen && (
-            <form onChange={this.props.api.changeConfig}>
+            <form>
               <h2>General configuration</h2>
               <div className="infobar--modalButtons">
                 <input
@@ -223,7 +245,7 @@ class Infobar extends Component {
                   }}
                 />
               </div>
-              {makeForm(configurationValues, this.props.config)}
+              {makeForm(configurationValues, this.props.config, this.props.api)}
             </form>
           )}
         </Modal>
