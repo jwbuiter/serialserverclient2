@@ -112,7 +112,7 @@ class SelfLearning extends Component {
     this.setState({ showIndividualTable: !this.state.showIndividualTable });
   };
 
-  render() {
+  getSLModalContent = () => {
     const keyName = this.props.config.serial.coms[1 - this.props.comIndex].name;
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
     const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
@@ -303,12 +303,6 @@ class SelfLearning extends Component {
       }
     ];
 
-    const indicators = [
-      "selfLearning--inProgress",
-      "selfLearning--success",
-      "selfLearning--warning"
-    ];
-
     const individualEntries = [];
     const generalEntries = [];
 
@@ -318,6 +312,44 @@ class SelfLearning extends Component {
     for (let key in this.props.individualEntries) {
       individualEntries.push({ key, ...this.props.individualEntries[key] });
     }
+
+    return (
+      <>
+        <span>
+          <Toggle
+            checked={this.state.showIndividualTable}
+            onChange={this.toggleIndividualTable}
+          />
+          Show individual entries
+        </span>
+        {this.state.showIndividualTable ? (
+          <>
+            <div className="selfLearning--modal--title"> UN-list </div>
+            <ReactTable
+              data={individualEntries}
+              columns={individualTableColumns}
+            />
+          </>
+        ) : (
+          <>
+            <div className="selfLearning--modal--title"> SL-list </div>
+            <ReactTable
+              style={{ textAlign: "center" }}
+              data={generalEntries}
+              columns={generalTableColumns}
+            />
+          </>
+        )}
+      </>
+    );
+  };
+
+  render() {
+    const indicators = [
+      "selfLearning--inProgress",
+      "selfLearning--success",
+      "selfLearning--warning"
+    ];
 
     const cells = [
       "Self Learning",
@@ -336,7 +368,6 @@ class SelfLearning extends Component {
           "%"
       );
     }
-
     return (
       <>
         <Modal
@@ -360,31 +391,7 @@ class SelfLearning extends Component {
           className="modalContent"
           contentLabel="SelfLearning Modal"
         >
-          <span>
-            <Toggle
-              checked={this.state.showIndividualTable}
-              onChange={this.toggleIndividualTable}
-            />
-            Show individual entries
-          </span>
-          {this.state.showIndividualTable ? (
-            <>
-              <div className="selfLearning--modal--title"> UN-list </div>
-              <ReactTable
-                data={individualEntries}
-                columns={individualTableColumns}
-              />
-            </>
-          ) : (
-            <>
-              <div className="selfLearning--modal--title"> SL-list </div>
-              <ReactTable
-                style={{ textAlign: "center" }}
-                data={generalEntries}
-                columns={generalTableColumns}
-              />
-            </>
-          )}
+          {this.state.SLModalIsOpen && this.getSLModalContent()}
         </Modal>
         <div
           className={classNames(
