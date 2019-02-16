@@ -48,7 +48,7 @@ const configurationValues = {
           min: 0,
           step: 1,
           condition: (config, index) =>
-            config.table.cells[index].type !== "menu"
+            !["menu", "date"].includes(config.table.cells[index].type)
         },
         resetOnExe: {
           name: "Reset value after execute",
@@ -56,7 +56,8 @@ const configurationValues = {
         },
         colorConditions: {
           name: "Conditions for cell colors",
-          type: "text"
+          type: "keyValue",
+          options: { "#3fd35d": "Green", yellow: "Yellow", "#ffc000": "Orange" }
         }
       }
     ]

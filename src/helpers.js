@@ -101,6 +101,8 @@ function makeForm(value, config, api, index, name = "") {
       }
       case "keyValue": {
         const options = get(config, name) || [];
+
+        const keyOptions = value.options;
         return (
           <>
             {value.name}:
@@ -122,15 +124,34 @@ function makeForm(value, config, api, index, name = "") {
                   }}
                   value={option.value}
                 />
-                <input
-                  type="number"
-                  onChange={e => {
-                    api.changeConfig(`${name}[${index}].key`, e.target.value, {
-                      numeric: true
-                    });
-                  }}
-                  value={option.key}
-                />
+                {keyOptions ? (
+                  <select
+                    value={option.key}
+                    onChange={e => {
+                      console.log(`${name}[${index}].key`, e.target.value);
+                      api.changeConfig(`${name}[${index}].key`, e.target.value);
+                    }}
+                  >
+                    {Object.entries(keyOptions).map(entry => (
+                      <option value={entry[0]}>{entry[1]}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="number"
+                    onChange={e => {
+                      api.changeConfig(
+                        `${name}[${index}].key`,
+                        e.target.value,
+                        {
+                          numeric: true
+                        }
+                      );
+                    }}
+                    value={option.key}
+                  />
+                )}
+
                 <br />
               </>
             ))}
