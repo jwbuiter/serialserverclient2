@@ -40,7 +40,7 @@ const TableCell = props => {
       break;
     }
     case "menu": {
-      const { menuOptions } = cell;
+      const menuOptions = cell.menuOptions || [];
 
       content = (
         <select

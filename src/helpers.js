@@ -101,7 +101,6 @@ function makeForm(value, config, api, index, name = "") {
       }
       case "keyValue": {
         const options = get(config, name) || [];
-        console.log(options);
         return (
           <>
             {value.name}:
