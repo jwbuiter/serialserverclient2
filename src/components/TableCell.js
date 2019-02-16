@@ -63,7 +63,8 @@ const TableCell = props => {
       if (cell.numeric) {
         const decrement = () => {
           let newMenuIndex =
-            menuOptions.findIndex(option => option.key === cell.value) - 1;
+            menuOptions.findIndex(option => option.key === Number(cell.value)) -
+            1;
 
           if (newMenuIndex < 0) newMenuIndex = menuOptions.length - 1;
 
@@ -71,8 +72,9 @@ const TableCell = props => {
         };
         const increment = () => {
           let newMenuIndex =
-            menuOptions.findIndex(option => option.key === cell.value) + 1;
-
+            menuOptions.findIndex(option => option.key === Number(cell.value)) +
+            1;
+          console.log({ menuOptions, val: cell.value });
           if (newMenuIndex === 0 || newMenuIndex === menuOptions.length)
             newMenuIndex = 0;
 
@@ -90,9 +92,14 @@ const TableCell = props => {
       break;
     }
     case "date": {
+      if (!cell.value || cell.value === "0") {
+        content = "";
+        break;
+      }
       const date = daysToDate(cell.value);
 
-      content = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+      content = `${date.getDate()}-${date.getMonth() +
+        1}-${date.getFullYear()}`;
       break;
     }
     default: {

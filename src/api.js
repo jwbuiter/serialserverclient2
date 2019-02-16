@@ -222,7 +222,7 @@ function api(store) {
     for (let i = 0; i < fileList.length; i++) {
       socket.emit("deleteLog", fileList[i]);
     }
-    socket.emit("getLogList");
+    getLogList();
   }
 
   function deleteLog(name) {
