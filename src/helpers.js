@@ -206,4 +206,8 @@ const getColumnWidth = (rows, accessor) => {
   return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
 };
 
-export { get, set, makeForm, getColumnWidth };
+const daysToDate = days => {
+  return new Date((days - (25567 + 3)) * 86400 * 1000);
+};
+
+export { get, set, makeForm, getColumnWidth, daysToDate };

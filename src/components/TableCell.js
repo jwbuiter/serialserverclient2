@@ -2,6 +2,8 @@ import React from "react";
 import FitText from "react-fittext";
 import classnames from "classnames";
 
+import { daysToDate } from "../helpers";
+
 import "../styles/tableCell.scss";
 
 const TableCell = props => {
@@ -85,6 +87,12 @@ const TableCell = props => {
           </>
         );
       }
+      break;
+    }
+    case "date": {
+      const date = daysToDate(cell.value);
+
+      content = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
       break;
     }
     default: {
