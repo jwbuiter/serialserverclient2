@@ -58,7 +58,7 @@ class Sidebar extends Component {
             method="post"
             enctype="multipart/form-data"
           >
-            <input type="button" value="Import .xls" onclick={() => {}} />
+            <input type="submit" value="Import .xls" />
             <input type="file" name="importFile" accept=".xls" />
           </form>
         </Modal>
