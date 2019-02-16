@@ -18,7 +18,8 @@ import {
   RECEIVE_CONFIG,
   RECEIVE_STATIC,
   TABLE_FOUND_STATE,
-  RECEIVE_CONFIG_LIST
+  RECEIVE_CONFIG_LIST,
+  RECEIVE_LOG_LIST
 } from "./actions/types";
 
 function api(store) {
@@ -197,6 +198,38 @@ function api(store) {
     socket.emit("deleteIndividualSL", key);
   }
 
+  function getLogList() {
+    socket.emit("getLogList", null, list => {
+      store.dispatch({ type: RECEIVE_LOG_LIST, payload: list });
+    });
+  }
+
+  function uploadLog(name, index) {
+    socket.emit("uploadLog", { name, index });
+  }
+
+  function downloadLog(name) {
+    window.location.href = "/downloadLog?file=" + name;
+  }
+
+  function downloadAllLogs() {
+    window.location.href =
+      "/downloadLog?multiFile=" + store.getState().misc.logList;
+  }
+
+  function deleteAllLogs() {
+    const fileList = store.getState().misc.logList;
+    for (let i = 0; i < fileList.length; i++) {
+      socket.emit("deleteLog", fileList[i]);
+    }
+    socket.emit("getLogList");
+  }
+
+  function deleteLog(name) {
+    socket.emit("deleteLog", name);
+    getLogList();
+  }
+
   loadConfig();
   loadStatic();
 
@@ -220,7 +253,13 @@ function api(store) {
     deleteConfig,
     downloadConfig,
     deleteGeneralSL,
-    deleteIndividualSL
+    deleteIndividualSL,
+    getLogList,
+    uploadLog,
+    deleteLog,
+    downloadLog,
+    downloadAllLogs,
+    deleteAllLogs
   };
 }
 

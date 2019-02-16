@@ -4,14 +4,16 @@ const {
   TOGGLE_MENU,
   OPEN_MENU,
   CLOSE_MENU,
-  RECEIVE_CONFIG_LIST
+  RECEIVE_CONFIG_LIST,
+  RECEIVE_LOG_LIST
 } = require("../actions/types");
 
 const initialState = {
   ip: "",
   time: new Date().getTime(),
   isMenuOpen: false,
-  configList: []
+  configList: [],
+  logList: []
 };
 
 export default (state = initialState, action) => {
@@ -44,6 +46,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         configList: action.payload
+      };
+    }
+    case RECEIVE_LOG_LIST: {
+      return {
+        ...state,
+        logList: action.payload
       };
     }
     default:

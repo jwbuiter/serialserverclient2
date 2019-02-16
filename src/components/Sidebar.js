@@ -40,6 +40,30 @@ class Sidebar extends Component {
     this.setState({ logModalIsOpen: false });
   };
 
+  uploadLog = (log, index) => {
+    if (window.confirm("Do you really want to upload " + log + "?")) {
+      this.props.api.uploadLog(log, index);
+    }
+  };
+
+  deleteLog = log => {
+    if (window.confirm("Do you really want to delete " + log + "?")) {
+      this.props.api.deleteLog(log);
+    }
+  };
+
+  downloadAllLogs = () => {
+    if (window.confirm("Do you really want to download all logs?")) {
+      this.props.api.downloadAllLogs();
+    }
+  };
+
+  deleteAllLogs = () => {
+    if (window.confirm("Do you really want to delete all logs?")) {
+      this.props.api.deleteAllLogs();
+    }
+  };
+
   render() {
     const closeMenu = this.props.api.closeMenu;
     return (
@@ -70,6 +94,55 @@ class Sidebar extends Component {
           contentLabel="Log files Modal"
         >
           <h2>Upload and download log files</h2>
+          <form className="logForm">
+            {this.props.logList.map(log => (
+              <>
+                {log}
+                <input
+                  type="button"
+                  value="Delete"
+                  onClick={() => {
+                    this.deleteLog(log);
+                  }}
+                />
+                <input
+                  type="button"
+                  value="Download"
+                  onClick={() => {
+                    this.props.api.downloadLog(log);
+                  }}
+                />
+                {this.props.ftpTargets.map((target, index) => {
+                  if (target.address)
+                    return (
+                      <input
+                        type="button"
+                        value={`FTP ${index + 1}`}
+                        onClick={() => {
+                          this.uploadLog(log, index);
+                        }}
+                      />
+                    );
+                  return null;
+                })}
+                <br />
+              </>
+            ))}
+            <input
+              type="button"
+              value="Delete"
+              onClick={() => {
+                this.deleteAllLogs();
+              }}
+            />
+            <input
+              type="button"
+              value="Download"
+              onClick={() => {
+                this.downloadAllLogs();
+              }}
+            />
+          </form>
         </Modal>
         <Menu
           right
@@ -104,6 +177,7 @@ class Sidebar extends Component {
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
+                this.props.api.getLogList();
                 this.openLogModal();
                 closeMenu();
               }}
@@ -169,7 +243,8 @@ function mapStateToProps(state) {
       QS: "null",
       writeLogs: false,
       exposeUpload: false,
-      exposeShutdown: false
+      exposeShutdown: false,
+      logList: []
     };
   }
   return {
@@ -178,7 +253,9 @@ function mapStateToProps(state) {
     QS: state.static.QS,
     writeLogs: state.config.logger.writeToFile,
     exposeUpload: state.static.exposeUpload,
-    exposeShutdown: state.static.exposeShutdown
+    exposeShutdown: state.static.exposeShutdown,
+    logList: state.misc.logList,
+    ftpTargets: state.config.FTP.targets
   };
 }
 
