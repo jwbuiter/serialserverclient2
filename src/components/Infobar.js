@@ -64,10 +64,17 @@ const configurationValues = {
       type: "select",
       options: { off: "Off", time: "Time of day", interval: "Time interval" }
     },
-    resetValue: {
+    resetTime: {
       name: "Reset time",
       type: "time",
       condition: config => config.logger.resetMode === "time"
+    },
+    resetInterval: {
+      name: "Interval (min)",
+      type: "number",
+      min: 0,
+      step: 1,
+      condition: config => config.logger.resetMode === "interval"
     }
   },
   FTP: {

@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.d1596d3e.chunk.css",
-  "main.js": "/static/js/main.bd7c4aca.chunk.js",
-  "main.js.map": "/static/js/main.bd7c4aca.chunk.js.map",
+  "main.js": "/static/js/main.f5deacf9.chunk.js",
+  "main.js.map": "/static/js/main.f5deacf9.chunk.js.map",
   "static/css/1.442473e1.chunk.css": "/static/css/1.442473e1.chunk.css",
   "static/js/1.daa19031.chunk.js": "/static/js/1.daa19031.chunk.js",
   "static/js/1.daa19031.chunk.js.map": "/static/js/1.daa19031.chunk.js.map",
@@ -11,6 +11,6 @@
   "static/media/Logo-MBDC.jpg": "/static/media/Logo-MBDC.645b4549.jpg",
   "static/css/main.d1596d3e.chunk.css.map": "/static/css/main.d1596d3e.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.d259314645e53ada16b08fd8b53dbe7e.js": "/precache-manifest.d259314645e53ada16b08fd8b53dbe7e.js",
+  "precache-manifest.637a2f20535e76500dddf33d73445a8a.js": "/precache-manifest.637a2f20535e76500dddf33d73445a8a.js",
   "service-worker.js": "/service-worker.js"
 }
