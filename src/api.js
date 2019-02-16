@@ -51,6 +51,10 @@ function api(store) {
     );
   });
 
+  socket.on("uploadLogResponse", msg => {
+    window.alert(msg);
+  });
+
   function loadConfig(name) {
     if (name) {
       socket.emit("loadConfig", name, config => {
