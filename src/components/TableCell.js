@@ -63,20 +63,20 @@ const TableCell = props => {
       if (cell.numeric) {
         const decrement = () => {
           let newMenuIndex =
-            menuOptions.findIndex(option => option.value === cell.value) - 1;
+            menuOptions.findIndex(option => option.key === cell.value) - 1;
 
           if (newMenuIndex < 0) newMenuIndex = menuOptions.length - 1;
 
-          props.manualFunction(index, menuOptions[newMenuIndex].value);
+          props.manualFunction(index, menuOptions[newMenuIndex].key);
         };
         const increment = () => {
           let newMenuIndex =
-            menuOptions.findIndex(option => option.value === cell.value) + 1;
+            menuOptions.findIndex(option => option.key === cell.value) + 1;
 
           if (newMenuIndex === 0 || newMenuIndex === menuOptions.length)
             newMenuIndex = 0;
 
-          props.manualFunction(index, menuOptions[newMenuIndex].value);
+          props.manualFunction(index, menuOptions[newMenuIndex].key);
         };
 
         content = (
