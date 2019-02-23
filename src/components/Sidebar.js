@@ -173,7 +173,7 @@ class Sidebar extends Component {
               }}
             />
           </span>
-          {this.props.writeLogs && (
+          {this.props.writeLogs && this.props.exposeUpload && (
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
