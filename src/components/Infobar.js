@@ -206,13 +206,16 @@ class Infobar extends Component {
                 return;
               }
 
-              if (
-                this.props.api.configExists(file) &&
-                !window.confirm("Config already exists. Overwrite?")
-              )
-                return;
+              this.props.api.configExists(file.name).then(result => {
+                console.log(result);
+                if (
+                  result &&
+                  !window.confirm("Config already exists. Overwrite?")
+                )
+                  return;
 
-              this.uploadRef.parentElement.submit();
+                this.uploadRef.parentElement.submit();
+              });
             }}
           >
             <input

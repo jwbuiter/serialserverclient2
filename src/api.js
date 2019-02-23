@@ -51,10 +51,6 @@ function api(store) {
     );
   });
 
-  socket.on("uploadLogResponse", msg => {
-    window.alert(msg);
-  });
-
   function loadConfig(name) {
     if (name) {
       socket.emit("loadConfig", name, config => {
@@ -209,7 +205,7 @@ function api(store) {
   }
 
   function uploadLog(name, index) {
-    socket.emit("uploadLog", { name, index });
+    socket.emit("uploadLog", { name, index }, msg => window.alert(msg));
   }
 
   function downloadLog(name) {
