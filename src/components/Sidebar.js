@@ -220,15 +220,6 @@ class Sidebar extends Component {
             </span>
           )}
           <span className="menu-item">QS code: {this.props.QS}</span>
-          <a className="menu-item" href="/settings">
-            (OLD) serial settings
-          </a>
-          <a className="menu-item" href="/filesettings">
-            (OLD) other settings
-          </a>
-          <a className="menu-item" href="/fileupload">
-            (OLD) upload file
-          </a>
         </Menu>
       </>
     );
