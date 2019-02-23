@@ -38,14 +38,14 @@ const configurationValues = {
       condition: config => config.selfLearning.enabled !== "off"
     },
     tolerance: {
-      name: "Tolerance",
+      name: "Tolerance %",
       type: "number",
       min: 0,
       step: 1,
       condition: config => config.selfLearning.enabled !== "off"
     },
     startTolerance: {
-      name: "Additional tolerance during learning",
+      name: "Additional tolerance during learning %",
       type: "number",
       min: 0,
       step: 1,
@@ -53,24 +53,32 @@ const configurationValues = {
         config.selfLearning.enabled !== "off" &&
         !config.selfLearning.enabled.endsWith("ind")
     },
-    individualTolerance: {
+    individualToleranceAbs: {
       name: "Individual tolerance",
       type: "number",
       min: 0,
       step: 1,
       condition: config => config.selfLearning.enabled.endsWith("ind")
     },
-    individualToleranceIncrement: {
-      name: "Individual tolerance increment",
+    individualTolerance: {
+      name: "Individual tolerance %",
       type: "number",
       min: 0,
       step: 1,
       condition: config => config.selfLearning.enabled.endsWith("ind")
     },
-    individualToleranceLimit: {
-      name: "Individual tolerance limit",
+    individualCorrectionIncrement: {
+      name: "Correction %",
       type: "number",
       min: 0,
+      step: 1,
+      condition: config => config.selfLearning.enabled.endsWith("ind")
+    },
+    individualCorrectionLimit: {
+      name: "Correction limit (max 9)",
+      type: "number",
+      min: 0,
+      max: 9,
       step: 1,
       condition: config => config.selfLearning.enabled.endsWith("ind")
     }
@@ -249,7 +257,7 @@ class SelfLearning extends Component {
                 color: textColors[props.original.increments]
               }}
             >
-              {props.value}
+              {props.value.toFixed(rounding)}
             </div>
           );
         },

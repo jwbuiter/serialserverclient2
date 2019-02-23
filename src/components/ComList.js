@@ -202,7 +202,10 @@ class ComList extends Component {
             })}
             onClick={
               this.props.configLocked
-                ? () => !com.average && this.toggleShowHistory(com.index)
+                ? () =>
+                    !com.average &&
+                    com.entries > 0 &&
+                    this.toggleShowHistory(com.index)
                 : () => this.openConfigModal(com.index)
             }
           >
