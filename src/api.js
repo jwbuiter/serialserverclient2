@@ -146,7 +146,7 @@ function api(store) {
     delete newConfig.hasChanged;
 
     if (name) {
-      socket.emit("configExists", name, ({ result, name }) => {
+      configExists(name).then(result => {
         if (
           !result ||
           window.confirm("File already exists, do you want to overwrite?")
@@ -234,6 +234,12 @@ function api(store) {
     getLogList();
   }
 
+  function configExists(name) {
+    return new Promise(resolve => {
+      socket.emit("configExists", name, ({ result }) => resolve(result));
+    });
+  }
+
   loadConfig();
   loadStatic();
 
@@ -263,7 +269,8 @@ function api(store) {
     deleteLog,
     downloadLog,
     downloadAllLogs,
-    deleteAllLogs
+    deleteAllLogs,
+    configExists
   };
 }
 
