@@ -228,7 +228,7 @@ const getColumnWidth = (rows, accessor) => {
 };
 
 const daysToDate = days => {
-  return new Date((days - (25567 + 3)) * 86400 * 1000);
+  return new Date((days - (25567 + 2)) * 86400 * 1000);
 };
 
 export { get, set, makeForm, getColumnWidth, daysToDate };

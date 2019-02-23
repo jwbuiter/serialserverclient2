@@ -28,7 +28,9 @@ const configurationValues = {
         },
         numeric: {
           name: "Treat value as a number",
-          type: "checkbox"
+          type: "checkbox",
+          condition: (config, index) =>
+            config.table.cells[index].type !== "date"
         },
         formula: {
           name: "Formula for cell value",
@@ -48,7 +50,7 @@ const configurationValues = {
           min: 0,
           step: 1,
           condition: (config, index) =>
-            !["menu", "date"].includes(config.table.cells[index].type)
+            config.table.cells[index].type === "normal"
         },
         resetOnExe: {
           name: "Reset value after execute",
