@@ -15,7 +15,9 @@ const initialState = {
   inputs: [],
   cells: [],
   selfLearning: {
-    enabled: false
+    enabled: false,
+    formula: "",
+    formulaResults: []
   },
   tableNotFound: false
 };

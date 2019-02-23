@@ -241,7 +241,9 @@ class SelfLearning extends Component {
         width: 200
       },
       {
-        Header: () => <input type="text" />,
+        Header: () => (
+          <input type="text" onChange={e => console.log(e.target.value)} />
+        ),
         accessor: "calibration",
         style: { textAlign: "center" },
         width: 70
@@ -323,6 +325,18 @@ class SelfLearning extends Component {
 
     return (
       <>
+        <button
+          onClick={() => {
+            if (
+              window.confirm(
+                "Are you sure you want to reset the data of the individual selfLearning?"
+              )
+            )
+              this.props.api.resetIndividualSL();
+          }}
+        >
+          Reset
+        </button>
         <span>
           <Toggle
             checked={this.state.showIndividualTable}
@@ -401,6 +415,7 @@ class SelfLearning extends Component {
         >
           {this.state.SLModalIsOpen && this.getSLModalContent()}
         </Modal>
+
         <div
           className={classNames(
             "selfLearning",

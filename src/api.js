@@ -198,6 +198,10 @@ function api(store) {
     socket.emit("deleteIndividualSL", key);
   }
 
+  function resetIndividualSL() {
+    socket.emit("resetIndividualSL");
+  }
+
   function getLogList() {
     socket.emit("getLogList", null, list => {
       store.dispatch({ type: RECEIVE_LOG_LIST, payload: list });
@@ -266,7 +270,8 @@ function api(store) {
     downloadLog,
     downloadAllLogs,
     deleteAllLogs,
-    configExists
+    configExists,
+    resetIndividualSL
   };
 }
 
