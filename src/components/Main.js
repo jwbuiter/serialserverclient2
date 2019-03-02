@@ -113,7 +113,7 @@ class Main extends Component {
                   {this.state.logModalUnique ? "Unique Log" : "Normal Log"}
                 </div>
                 <ReactTable
-                  style={{ fontSize: 13 }}
+                  style={{ fontSize: 14 }}
                   data={this.state.logEntries}
                   columns={this.state.logTableColumns}
                 />

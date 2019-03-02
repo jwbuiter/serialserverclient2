@@ -325,24 +325,26 @@ class SelfLearning extends Component {
 
     return (
       <>
-        <button
-          onClick={() => {
-            if (
-              window.confirm(
-                "Are you sure you want to reset the data of the individual selfLearning?"
-              )
-            )
-              this.props.api.resetIndividualSL();
-          }}
-        >
-          Reset
-        </button>
         <span>
           <Toggle
             checked={this.state.showIndividualTable}
             onChange={this.toggleIndividualTable}
           />
           Show individual entries
+        </span>
+        <span className="selfLearning--modal--buttons">
+          <button
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Are you sure you want to reset the data of the individual selfLearning?"
+                )
+              )
+                this.props.api.resetIndividualSL();
+            }}
+          >
+            Reset
+          </button>
         </span>
         {this.state.showIndividualTable ? (
           <>

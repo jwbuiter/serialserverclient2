@@ -83,7 +83,7 @@ const configurationValues = {
       type: "title"
     },
     automatic: {
-      name: "Automatically upload logs on FTP",
+      name: "Automatically upload log on FTP",
       type: "checkbox"
     },
     targets: [1, 2].map(index => ({
