@@ -24,7 +24,7 @@ const configurationValues = {
           name: "Only on execute",
           type: "checkbox"
         },
-        timeout: {
+        seconds: {
           name: "Timeout in seconds",
           type: "number",
           min: 0,
