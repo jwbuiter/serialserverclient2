@@ -107,7 +107,7 @@ const TableCell = props => {
       break;
     }
   }
-
+  console.log(cell);
   return (
     <div
       className={classnames("tableCell", {
@@ -119,7 +119,10 @@ const TableCell = props => {
           <div className="center">{cell.name}</div>
         </FitText>
       </div>
-      <div className="tableCell--content">
+      <div
+        className="tableCell--content"
+        style={{ backgroundColor: cell.color }}
+      >
         <FitText compressor={0.6}>
           <div className="center">{content}</div>
         </FitText>

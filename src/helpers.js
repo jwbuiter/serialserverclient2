@@ -132,9 +132,11 @@ function makeForm(value, config, api, index, name = "") {
                       api.changeConfig(`${name}[${index}].key`, e.target.value);
                     }}
                   >
-                    {Object.entries(keyOptions).map(entry => (
-                      <option value={entry[0]}>{entry[1]}</option>
-                    ))}
+                    {Object.entries(keyOptions)
+                      .concat([["", ""]])
+                      .map(entry => (
+                        <option value={entry[0]}>{entry[1]}</option>
+                      ))}
                   </select>
                 ) : (
                   <input

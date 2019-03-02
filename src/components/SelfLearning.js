@@ -81,6 +81,17 @@ const configurationValues = {
       max: 9,
       step: 1,
       condition: config => config.selfLearning.enabled.endsWith("ind")
+    },
+    tableExtraColumnTitle: {
+      name: "Extra column title",
+      type: "text"
+    },
+    tableExtraColumn: {
+      name: "Extra column number",
+      type: "number",
+      min: 0,
+      step: 1,
+      condition: config => config.selfLearning.enabled.endsWith("ind")
     }
   }
 };
@@ -180,7 +191,7 @@ class SelfLearning extends Component {
         width: 200
       },
       {
-        Header: () => <input type="text" />,
+        Header: this.props.tableExtraColumnTitle,
         accessor: "calibration",
         style: { textAlign: "center" },
         width: 70
@@ -241,9 +252,7 @@ class SelfLearning extends Component {
         width: 200
       },
       {
-        Header: () => (
-          <input type="text" onChange={e => console.log(e.target.value)} />
-        ),
+        Header: this.props.tableExtraColumnTitle,
         accessor: "calibration",
         style: { textAlign: "center" },
         width: 70
@@ -449,8 +458,15 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
   const individual = state.internal.selfLearning.individual;
+  const tableExtraColumnTitle = state.config.selfLearning.tableExtraColumnTitle;
 
-  return { ...state.internal.selfLearning, configLocked, config, individual };
+  return {
+    ...state.internal.selfLearning,
+    configLocked,
+    config,
+    individual,
+    tableExtraColumnTitle
+  };
 }
 
 export default connect(mapStateToProps)(SelfLearning);
