@@ -62,9 +62,13 @@ class Main extends Component {
             Header: () => <b>{name}</b>,
             accessor: index + "",
             width: getColumnWidth(result.data.entries, index + ""),
-            style: { textAlign: "center" }
+            style: { textAlign: "center" },
+            name
           }))
-          .filter((name, index) => index >= 2),
+          .filter((column, index) => index >= 2)
+          .filter(
+            column => this.props.uniqueLogEnabled || column.name !== "TU"
+          ),
         logEntries: result.data.entries,
         logModalUnique: unique
       });
