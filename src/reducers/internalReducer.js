@@ -5,6 +5,7 @@ const {
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
   TABLE_CELL_STATE,
+  TABLE_CELL_COLOR,
   SELFLEARNING_STATE,
   TABLE_FOUND_STATE
 } = require("../actions/types");
@@ -73,6 +74,14 @@ export default function(fullState = initialState, action) {
 
       const newCells = Array.from(fullState.cells);
       newCells[index] = { value, manual };
+
+      return { ...fullState, cells: newCells };
+    }
+    case TABLE_CELL_COLOR: {
+      const { index, color } = action.payload;
+
+      const newCells = Array.from(fullState.cells);
+      newCells[index] = { ...newCells[index], color };
 
       return { ...fullState, cells: newCells };
     }
