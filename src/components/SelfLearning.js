@@ -9,6 +9,7 @@ import Toggle from "react-toggle";
 import { makeForm } from "../helpers";
 import "../styles/selfLearning.scss";
 import "react-table/react-table.css";
+import { isUndefined } from "util";
 
 const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
@@ -292,7 +293,9 @@ class SelfLearning extends Component {
   };
 
   render() {
-    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    let rounding = 0;
+    if (!isUndefined(this.props.comIndex))
+      rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const configurationValues = {
       selfLearning: {
