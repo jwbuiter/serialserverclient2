@@ -107,7 +107,7 @@ class SelfLearning extends Component {
       },
       {
         Header: this.props.tableExtraColumnTitle,
-        accessor: "calibration",
+        accessor: "extra",
         style: { textAlign: "center" },
         width: 70
       },
@@ -168,7 +168,7 @@ class SelfLearning extends Component {
       },
       {
         Header: this.props.tableExtraColumnTitle,
-        accessor: "calibration",
+        accessor: "extra",
         style: { textAlign: "center" },
         width: 70
       },
@@ -241,7 +241,7 @@ class SelfLearning extends Component {
     const generalEntries = [];
 
     for (let key in this.props.generalEntries) {
-      generalEntries.push({ key, entries: this.props.generalEntries[key] });
+      generalEntries.push({ key, ...this.props.generalEntries[key] });
     }
     for (let key in this.props.individualEntries) {
       individualEntries.push({ key, ...this.props.individualEntries[key] });

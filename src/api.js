@@ -78,13 +78,27 @@ function api(store) {
   }
 
   function forceInput(index) {
-    console.log("forceinput", index);
-    socket.emit("forceInput", index);
+    if (
+      !store.getState().config.input.ports[index].manualConfirmation ||
+      window.confirm(
+        `Are you sure you want to manually change input ${index + 1}?`
+      )
+    ) {
+      console.log("forceinput", index);
+      socket.emit("forceInput", index);
+    }
   }
 
   function forceOutput(index) {
-    console.log("forceoutput", index);
-    socket.emit("forceOutput", index);
+    if (
+      !store.getState().config.output.ports[index].manualConfirmation ||
+      window.confirm(
+        `Are you sure you want to manually change output ${index + 1}?`
+      )
+    ) {
+      console.log("forceoutput", index);
+      socket.emit("forceOutput", index);
+    }
   }
 
   function tableManual(index, value) {

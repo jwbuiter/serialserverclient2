@@ -29,6 +29,10 @@ const configurationValues = {
           type: "number",
           min: 0,
           step: 1
+        },
+        manualConfirmation: {
+          name: "Manual input requires confirmation",
+          type: "checkbox"
         }
       }
     ]

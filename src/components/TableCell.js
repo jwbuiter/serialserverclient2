@@ -74,7 +74,6 @@ const TableCell = props => {
           let newMenuIndex =
             menuOptions.findIndex(option => option.key === Number(cell.value)) +
             1;
-          console.log({ menuOptions, val: cell.value });
           if (newMenuIndex === 0 || newMenuIndex === menuOptions.length)
             newMenuIndex = 0;
 
@@ -107,7 +106,7 @@ const TableCell = props => {
       break;
     }
   }
-  console.log(cell);
+
   return (
     <div
       className={classnames("tableCell", {
