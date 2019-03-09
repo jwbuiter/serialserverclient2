@@ -200,16 +200,19 @@ class ComList extends Component {
             className={classNames("comElement", {
               "comElement--wide": coms.length === 1
             })}
-            onClick={
-              this.props.configLocked
-                ? () =>
-                    !com.average &&
-                    com.entries > 0 &&
-                    this.toggleShowHistory(com.index)
-                : () => this.openConfigModal(com.index)
+            onClick={() =>
+              !this.props.configLocked && this.openConfigModal(com.index)
             }
           >
-            <div className="comElement--title">
+            <div
+              className="comElement--title"
+              onClick={() =>
+                this.props.configLocked &&
+                !com.average &&
+                com.entries > 0 &&
+                this.toggleShowHistory(com.index)
+              }
+            >
               <div className="center">
                 <FitText>
                   <div>{com.name}</div>

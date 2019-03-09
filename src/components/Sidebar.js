@@ -153,7 +153,7 @@ class Sidebar extends Component {
           onStateChange={newState =>
             !newState.isOpen && this.props.api.closeMenu()
           }
-          width={400}
+          width={450}
         >
           <span className="menu-item menu-item--clickable">
             <span
@@ -163,8 +163,7 @@ class Sidebar extends Component {
               }}
             >
               Unlock settings
-            </span>
-
+            </span>{" "}
             <Toggle
               checked={!this.props.configLocked}
               onChange={() => {

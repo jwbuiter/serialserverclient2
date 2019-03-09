@@ -25,8 +25,25 @@ const configurationValues = {
             exebl: "Execute Block",
             teach: "SL Teach",
             restart: "Restart",
-            shutdown: "Shutdown"
+            shutdown: "Shutdown",
+            command: "COM command"
           }
+        },
+        commandCom: {
+          name: "COM to send command",
+          type: "select",
+          options: {
+            com0: "COM 0",
+            com1: "COM 1"
+          },
+          condition: (config, index) =>
+            config.input.ports[index].formula === "command"
+        },
+        commandValue: {
+          name: "Value to send on COM",
+          type: "text",
+          condition: (config, index) =>
+            config.input.ports[index].formula === "command"
         },
         invert: {
           name: "Invert follow",
@@ -61,6 +78,10 @@ const configurationValues = {
           type: "number",
           min: 0,
           step: 1
+        },
+        manualConfirmation: {
+          name: "Manual input requires confirmation",
+          type: "checkbox"
         }
       }
     ]

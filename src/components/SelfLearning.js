@@ -10,92 +10,6 @@ import { makeForm } from "../helpers";
 import "../styles/selfLearning.scss";
 import "react-table/react-table.css";
 
-const configurationValues = {
-  selfLearning: {
-    enabled: {
-      name: "Enabled type",
-      type: "select",
-      options: {
-        off: "Off",
-        com0: "Com 0",
-        com1: "Com 1",
-        com0ind: "Com 0 Individual",
-        com1ind: "Com 1 Individual"
-      }
-    },
-    number: {
-      name: "Number",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled !== "off"
-    },
-    startCalibration: {
-      name: "Calibration",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled !== "off"
-    },
-    tolerance: {
-      name: "Tolerance %",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled !== "off"
-    },
-    startTolerance: {
-      name: "Additional tolerance during learning %",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config =>
-        config.selfLearning.enabled !== "off" &&
-        !config.selfLearning.enabled.endsWith("ind")
-    },
-    individualToleranceAbs: {
-      name: "Individual tolerance",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled.endsWith("ind")
-    },
-    individualTolerance: {
-      name: "Individual tolerance %",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled.endsWith("ind")
-    },
-    individualCorrectionIncrement: {
-      name: "Correction %",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled.endsWith("ind")
-    },
-    individualCorrectionLimit: {
-      name: "Correction limit (max 9)",
-      type: "number",
-      min: 0,
-      max: 9,
-      step: 1,
-      condition: config => config.selfLearning.enabled.endsWith("ind")
-    },
-    tableExtraColumnTitle: {
-      name: "Extra column title",
-      type: "text"
-    },
-    tableExtraColumn: {
-      name: "Extra column number",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.selfLearning.enabled.endsWith("ind")
-    }
-  }
-};
-
 const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
 
@@ -338,8 +252,8 @@ class SelfLearning extends Component {
           <Toggle
             checked={this.state.showIndividualTable}
             onChange={this.toggleIndividualTable}
-          />
-          Show individual entries
+          />{" "}
+          Show SL-list
         </span>
         <span className="selfLearning--modal--buttons">
           <button
@@ -355,7 +269,7 @@ class SelfLearning extends Component {
             Reset
           </button>
         </span>
-        {this.state.showIndividualTable ? (
+        {!this.state.showIndividualTable ? (
           <>
             <div className="selfLearning--modal--title"> UN-list </div>
             <ReactTable
@@ -378,6 +292,95 @@ class SelfLearning extends Component {
   };
 
   render() {
+    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+
+    const configurationValues = {
+      selfLearning: {
+        enabled: {
+          name: "Enabled type",
+          type: "select",
+          options: {
+            off: "Off",
+            com0: "Com 0",
+            com1: "Com 1",
+            com0ind: "Com 0 Individual",
+            com1ind: "Com 1 Individual"
+          }
+        },
+        number: {
+          name: "Number",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled !== "off"
+        },
+        startCalibration: {
+          name: "Calibration",
+          type: "number",
+          min: 0,
+          step: 1,
+          rounding,
+          condition: config => config.selfLearning.enabled !== "off"
+        },
+        tolerance: {
+          name: "Tolerance %",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled !== "off"
+        },
+        startTolerance: {
+          name: "Additional tolerance during learning %",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config =>
+            config.selfLearning.enabled !== "off" &&
+            !config.selfLearning.enabled.endsWith("ind")
+        },
+        individualToleranceAbs: {
+          name: "Individual tolerance",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled.endsWith("ind")
+        },
+        individualTolerance: {
+          name: "Individual tolerance %",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled.endsWith("ind")
+        },
+        individualCorrectionIncrement: {
+          name: "Correction %",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled.endsWith("ind")
+        },
+        individualCorrectionLimit: {
+          name: "Correction limit (max 9)",
+          type: "number",
+          min: 0,
+          max: 9,
+          step: 1,
+          condition: config => config.selfLearning.enabled.endsWith("ind")
+        },
+        tableExtraColumnTitle: {
+          name: "Extra column title",
+          type: "text"
+        },
+        tableExtraColumn: {
+          name: "Extra column number",
+          type: "number",
+          min: 0,
+          step: 1,
+          condition: config => config.selfLearning.enabled.endsWith("ind")
+        }
+      }
+    };
+
     const indicators = [
       "selfLearning--inProgress",
       "selfLearning--success",

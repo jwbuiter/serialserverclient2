@@ -26,6 +26,12 @@ const configurationValues = {
             menu: "Menu"
           }
         },
+        readerPort: {
+          name: "Reader port",
+          type: "number",
+          min: 0,
+          step: 1
+        },
         numeric: {
           name: "Treat value as a number",
           type: "checkbox",
@@ -59,7 +65,13 @@ const configurationValues = {
         colorConditions: {
           name: "Conditions for cell colors",
           type: "keyValue",
-          options: { "#3fd35d": "Green", yellow: "Yellow", "#ffc000": "Orange" }
+          options: {
+            "#3fd35d": "Green",
+            yellow: "Yellow",
+            "#ffc000": "Orange"
+          },
+          condition: (config, index) =>
+            ["normal", "date"].includes(config.table.cells[index].type)
         }
       }
     ]

@@ -200,7 +200,11 @@ function makeForm(value, config, api, index, name = "") {
               max={value.max}
               step={value.step}
               checked={get(config, name)}
-              value={get(config, name)}
+              value={
+                value.rounding
+                  ? round(get(config, name), value.rounding)
+                  : get(config, name)
+              }
               onChange={event => {
                 if (event.target.type === "checkbox") {
                   api.changeConfig(name, event.target.checked);
@@ -217,6 +221,11 @@ function makeForm(value, config, api, index, name = "") {
       }
     }
   }
+}
+
+function round(num, digits) {
+  const factor = Math.pow(10, digits);
+  return Math.round(num * factor) / factor;
 }
 
 const getColumnWidth = (rows, accessor) => {
