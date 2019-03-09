@@ -42,7 +42,8 @@ const configurationValues = {
           name: "Formula for cell value",
           type: "text",
           condition: (config, index) =>
-            ["normal", "date"].includes(config.table.cells[index].type)
+            ["normal", "date"].includes(config.table.cells[index].type) &&
+            !config.table.cells[index].readerPort
         },
         menuOptions: {
           name: "Options and values for menu",

@@ -179,8 +179,9 @@ class SelfLearning extends Component {
           return (
             <div
               style={{
-                backgroundColor: individualColors[props.original.increments],
-                color: textColors[props.original.increments]
+                backgroundColor:
+                  individualColors[Math.min(4, props.original.increments)],
+                color: textColors[Math.min(4, props.original.increments)]
               }}
             >
               {props.value.toFixed(rounding)}
@@ -333,7 +334,7 @@ class SelfLearning extends Component {
           condition: config => config.selfLearning.enabled !== "off"
         },
         startTolerance: {
-          name: "Additional tolerance during learning %",
+          name: "Extra tolerance during learning %",
           type: "number",
           min: 0,
           step: 1,
