@@ -254,8 +254,8 @@ class SelfLearning extends Component {
           <Toggle
             checked={this.state.showIndividualTable}
             onChange={this.toggleIndividualTable}
-          />{" "}
-          Show SL-list
+          />
+          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
         </span>
         <span className="selfLearning--modal--buttons">
           <button
@@ -373,7 +373,8 @@ class SelfLearning extends Component {
         },
         tableExtraColumnTitle: {
           name: "Extra column title",
-          type: "text"
+          type: "text",
+          condition: config => config.selfLearning.enabled.endsWith("ind")
         },
         tableExtraColumn: {
           name: "Extra column number",

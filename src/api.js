@@ -78,25 +78,23 @@ function api(store) {
   }
 
   function forceInput(index) {
+    const port = store.getState().config.input.ports[index];
+
     if (
-      !store.getState().config.input.ports[index].manualConfirmation ||
-      window.confirm(
-        `Are you sure you want to manually change input ${index + 1}?`
-      )
+      !port.manualConfirmation ||
+      window.confirm(`Are you sure you want to manually change ${port.name}?`)
     ) {
-      console.log("forceinput", index);
       socket.emit("forceInput", index);
     }
   }
 
   function forceOutput(index) {
+    const port = store.getState().config.output.ports[index];
+
     if (
-      !store.getState().config.output.ports[index].manualConfirmation ||
-      window.confirm(
-        `Are you sure you want to manually change output ${index + 1}?`
-      )
+      !port.manualConfirmation ||
+      window.confirm(`Are you sure you want to manually change ${port.name}?`)
     ) {
-      console.log("forceoutput", index);
       socket.emit("forceOutput", index);
     }
   }

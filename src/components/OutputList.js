@@ -31,7 +31,7 @@ const configurationValues = {
           step: 1
         },
         manualConfirmation: {
-          name: "Manual input requires confirmation",
+          name: "Manual requires confirmation",
           type: "checkbox"
         }
       }

@@ -107,7 +107,7 @@ class Main extends Component {
                 <Toggle
                   checked={this.state.logModalUnique}
                   onChange={this.reloadLogEntries}
-                />
+                />{" "}
                 Only show unique entries
               </span>
             )}

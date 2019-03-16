@@ -270,24 +270,24 @@ class Infobar extends Component {
           className="infobar"
           onClick={this.props.configLocked ? null : this.openConfigModal}
         >
-          <FitText>
+          <FitText compressor={0.8}>
             <div className="infobar--item">
               <div className="center">{this.props.name}</div>
             </div>
           </FitText>
-          <FitText>
+          <FitText compressor={0.8}>
             <div className="infobar--item">
               <div className="center">{this.props.ip}</div>
             </div>
           </FitText>
-          <FitText>
+          <FitText compressor={0.8}>
             <div className="infobar--item">
               <div className="center">
                 {moment(this.props.time).format("HH:mm:ss")}
               </div>
             </div>
           </FitText>
-          <FitText>
+          <FitText compressor={0.8}>
             <div className="infobar--item">
               <div className="center">
                 {moment(this.props.time).format("DD-MM-YYYY")}
