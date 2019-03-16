@@ -9,6 +9,9 @@ function get(object, address) {
   } else if (address[0] === "[") {
     const index = address.match(/\[[0-9]+\]/)[0].slice(1, -1);
     const newAddress = address.slice(index.length + 2);
+
+    if (!newAddress) return object[Number(index)];
+
     return get(object[Number(index)], newAddress);
   } else {
     const newAddress = address.slice(parts[0].length);
@@ -25,7 +28,12 @@ function set(object, address, newValue) {
   } else if (address[0] === "[") {
     const index = address.match(/\[[0-9]+\]/)[0].slice(1, -1);
     const newAddress = address.slice(index.length + 2);
-    set(object[Number(index)], newAddress, newValue);
+
+    if (!newAddress) {
+      object[Number(index)] = newValue;
+    } else {
+      set(object[Number(index)], newAddress, newValue);
+    }
   } else {
     const newAddress = address.slice(parts[0].length);
     set(object[parts[0]], newAddress, newValue);
@@ -233,8 +241,9 @@ const getColumnWidth = (rows, accessor) => {
   const minWidth = 50;
   const magicSpacing = 11;
   const cellLength = Math.max(
-    ...rows.map(row => (`${row[accessor]}` || "").length)
+    ...rows.map(row => (`${get(row, accessor)}` || "").length)
   );
+
   return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
 };
 

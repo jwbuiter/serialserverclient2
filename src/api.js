@@ -71,7 +71,6 @@ function api(store) {
 
   function loadStatic() {
     axios.get("/static").then(result => {
-      console.log("Got static");
       store.dispatch({ type: RECEIVE_STATIC, payload: result.data });
       document.title = result.data.name;
     });
@@ -115,7 +114,6 @@ function api(store) {
     axios.get("/restart");
     setTimeout(() => {
       loadConfig();
-      console.log("test");
     }, 5000);
   }
 

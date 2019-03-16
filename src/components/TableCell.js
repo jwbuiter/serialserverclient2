@@ -120,7 +120,7 @@ const TableCell = props => {
       </div>
       <div
         className="tableCell--content"
-        style={{ backgroundColor: cell.color }}
+        style={{ backgroundColor: !props.notFound && cell.color }}
       >
         <FitText compressor={0.6}>
           <div className="center">{content}</div>

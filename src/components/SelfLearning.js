@@ -255,7 +255,7 @@ class SelfLearning extends Component {
             checked={this.state.showIndividualTable}
             onChange={this.toggleIndividualTable}
           />
-          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
+          {this.state.showIndividualTable ? " Show UN-list" : " Show SL-list"}
         </span>
         <span className="selfLearning--modal--buttons">
           <button

@@ -56,12 +56,17 @@ class Main extends Component {
       : this.props.api.getLog;
 
     getFunction().then(result => {
+      console.log(result.data.entries);
+
       this.setState({
         logTableColumns: result.data.legend
           .map((name, index) => ({
             Header: () => <b>{name}</b>,
-            accessor: index + "",
-            width: getColumnWidth(result.data.entries, index + ""),
+            accessor: result.data.accessors[index],
+            width: getColumnWidth(
+              result.data.entries,
+              result.data.accessors[index]
+            ),
             style: { textAlign: "center" },
             name
           }))
