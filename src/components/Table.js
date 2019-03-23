@@ -70,9 +70,7 @@ const configurationValues = {
             "#3fd35d": "Green",
             yellow: "Yellow",
             "#ffc000": "Orange"
-          },
-          condition: (config, index) =>
-            ["normal", "date"].includes(config.table.cells[index].type)
+          }
         }
       }
     ]

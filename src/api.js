@@ -166,13 +166,19 @@ function api(store) {
     }
 
     if (store.getState().config.hasChanged) {
-      if (window.confirm("Are you sure you want to save these changes?")) {
-        socket.emit("settings", newConfig);
-        store.dispatch({ type: CONFIG_LOCK });
-        reboot();
-      } else {
-        window.location.reload();
-      }
+      socket.emit("checkConfigConsistency", newConfig, consistent => {
+        if (
+          (consistent ||
+            window.confirm("This will reset the log, continue?")) &&
+          window.confirm("Are you sure you want to save these changes?")
+        ) {
+          socket.emit("settings", newConfig);
+          store.dispatch({ type: CONFIG_LOCK });
+          reboot();
+        } else {
+          window.location.reload();
+        }
+      });
     } else {
       store.dispatch({ type: CONFIG_LOCK });
     }
