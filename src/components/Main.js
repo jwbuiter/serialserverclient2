@@ -119,7 +119,9 @@ class Main extends Component {
             <div className="main--logModal">
               <div>
                 <div className="main--logModal--title">
-                  {this.state.logModalUnique ? "Unique Log" : "Normal Log"}
+                  <b>
+                    {this.state.logModalUnique ? "Unique Log" : "Normal Log"}
+                  </b>
                 </div>
                 <ReactTable
                   style={{ fontSize: 14 }}

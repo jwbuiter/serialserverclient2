@@ -51,7 +51,7 @@ const configurationValues = {
       type: "checkbox"
     },
     logID: {
-      name: "ID of log",
+      name: "LogID",
       type: "text"
     },
     unique: {

@@ -49,52 +49,40 @@ class SelfLearning extends Component {
   getSLModalContent = () => {
     const keyName = this.props.config.serial.coms[1 - this.props.comIndex].name;
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
-    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    //const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const generalTableColumns = [
       {
         Header: valueName,
-        accessor: row => row.entries[0].toFixed(rounding),
+        accessor: row => row.entries[0],
         id: 10,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-1",
-        accessor: row => {
-          const val = row.entries[1];
-          return val ? val.toFixed(rounding) : "";
-        },
+        accessor: row => row.entries[1] || "",
         id: 2,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-2",
-        accessor: row => {
-          const val = row.entries[2];
-          return val ? val.toFixed(rounding) : "";
-        },
+        accessor: row => row.entries[2] || "",
         id: 3,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-3",
-        accessor: row => {
-          const val = row.entries[3];
-          return val ? val.toFixed(rounding) : "";
-        },
+        accessor: row => row.entries[3] || "",
         id: 4,
         style: { textAlign: "center" },
         width: 70
       },
       {
         Header: "-4",
-        accessor: row => {
-          const val = row.entries[4];
-          return val ? val.toFixed(rounding) : "";
-        },
+        accessor: row => row.entries[4] || "",
         id: 5,
         style: { textAlign: "center" },
         width: 70
@@ -142,7 +130,7 @@ class SelfLearning extends Component {
                 }
               }}
             >
-              Delete
+              <b>Delete</b>
             </button>
           );
         },
@@ -150,12 +138,12 @@ class SelfLearning extends Component {
         style: { textAlign: "center" },
         width: 70
       }
-    ];
+    ].map(column => ({ ...column, Header: <b>{column.Header}</b> }));
 
     const individualTableColumns = [
       {
         Header: valueName,
-        accessor: row => row.calibration.toFixed(rounding),
+        accessor: "calibration",
         style: { textAlign: "center" },
         width: 70,
         id: 12
@@ -184,7 +172,7 @@ class SelfLearning extends Component {
                 color: textColors[Math.min(4, props.original.increments)]
               }}
             >
-              {props.value.toFixed(rounding)}
+              {props.value}
             </div>
           );
         },
@@ -228,7 +216,7 @@ class SelfLearning extends Component {
                 }
               }}
             >
-              Delete
+              <b>Delete</b>
             </button>
           );
         },
@@ -236,7 +224,7 @@ class SelfLearning extends Component {
         style: { textAlign: "center" },
         width: 70
       }
-    ];
+    ].map(column => ({ ...column, Header: <b>{column.Header}</b> }));
 
     const individualEntries = [];
     const generalEntries = [];
@@ -268,7 +256,7 @@ class SelfLearning extends Component {
                 this.props.api.resetIndividualSL();
             }}
           >
-            Reset
+            <b>Reset</b>
           </button>
         </span>
         {!this.state.showIndividualTable ? (
