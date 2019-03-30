@@ -10,107 +10,6 @@ import "../styles/infobar.scss";
 
 Modal.setAppElement("#root");
 
-const configurationValues = {
-  serial: {
-    title: {
-      name: "Serial",
-      type: "title"
-    },
-    resetTrigger: {
-      name: "Reset on zero",
-      type: "select",
-      options: { off: "Off", on: "On", com0: "Com 0", com1: "Com 1" }
-    }
-  },
-  table: {
-    title: {
-      name: "Table",
-      type: "title"
-    },
-    trigger: {
-      name: "Trigger",
-      type: "select",
-      options: { "0": "Com 0", "1": "Com 1" }
-    },
-    useFile: { name: "Use imported file", type: "checkbox" },
-    waitForOther: { name: "Wait for other com", type: "checkbox" },
-    searchColumn: {
-      name: "Column to search in",
-      type: "number",
-      min: 0,
-      step: 1
-    }
-  },
-  logger: {
-    title: {
-      name: "Logger",
-      type: "title"
-    },
-    writeToFile: {
-      name: "Write log to file",
-      type: "checkbox"
-    },
-    logID: {
-      name: "LogID",
-      type: "text"
-    },
-    unique: {
-      name: "Unique log type",
-      type: "select",
-      options: { off: "Off", com0: "Com 0", com1: "Com 1" }
-    },
-    resetMode: {
-      name: "Reset mode",
-      type: "select",
-      options: { off: "Off", time: "Time of day", interval: "Time interval" }
-    },
-    resetTime: {
-      name: "Reset time",
-      type: "time",
-      condition: config => config.logger.resetMode === "time"
-    },
-    resetInterval: {
-      name: "Interval (min)",
-      type: "number",
-      min: 0,
-      step: 1,
-      condition: config => config.logger.resetMode === "interval"
-    }
-  },
-  FTP: {
-    title: {
-      name: "FTP",
-      type: "title"
-    },
-    automatic: {
-      name: "Automatically upload log on FTP",
-      type: "checkbox"
-    },
-    targets: [1, 2].map(index => ({
-      title: {
-        name: "Target " + index,
-        type: "subtitle"
-      },
-      address: {
-        name: "Address",
-        type: "text"
-      },
-      folder: {
-        name: "Folder",
-        type: "text"
-      },
-      username: {
-        name: "Username",
-        type: "text"
-      },
-      password: {
-        name: "Password",
-        type: "text"
-      }
-    }))
-  }
-};
-
 class Infobar extends Component {
   constructor(props) {
     super(props);
@@ -135,6 +34,128 @@ class Infobar extends Component {
   };
 
   render() {
+    let configurationValues = {
+      serial: {
+        title: {
+          name: "Serial",
+          type: "title"
+        },
+        resetTrigger: {
+          name: "Reset on zero",
+          type: "select",
+          options: { off: "Off", on: "On", com0: "Com 0", com1: "Com 1" }
+        }
+      }
+    };
+
+    if (this.props.enabledModules.table) {
+      configurationValues = {
+        ...configurationValues,
+        table: {
+          title: {
+            name: "Table",
+            type: "title"
+          },
+          trigger: {
+            name: "Trigger",
+            type: "select",
+            options: { "0": "Com 0", "1": "Com 1" }
+          },
+          useFile: { name: "Use imported file", type: "checkbox" },
+          waitForOther: { name: "Wait for other com", type: "checkbox" },
+          searchColumn: {
+            name: "Column to search in",
+            type: "number",
+            min: 0,
+            step: 1
+          }
+        }
+      };
+    }
+
+    if (this.props.enabledModules.logger) {
+      configurationValues = {
+        ...configurationValues,
+        logger: {
+          title: {
+            name: "Logger",
+            type: "title"
+          },
+          writeToFile: {
+            name: "Write log to file",
+            type: "checkbox"
+          },
+          logID: {
+            name: "LogID",
+            type: "text"
+          },
+          unique: {
+            name: "Unique log type",
+            type: "select",
+            options: { off: "Off", com0: "Com 0", com1: "Com 1" }
+          },
+          resetMode: {
+            name: "Reset mode",
+            type: "select",
+            options: {
+              off: "Off",
+              time: "Time of day",
+              interval: "Time interval"
+            }
+          },
+          resetTime: {
+            name: "Reset time",
+            type: "time",
+            condition: config => config.logger.resetMode === "time"
+          },
+          resetInterval: {
+            name: "Interval (min)",
+            type: "number",
+            min: 0,
+            step: 1,
+            condition: config => config.logger.resetMode === "interval"
+          }
+        }
+      };
+    }
+
+    if (this.props.enabledModules.FTP) {
+      configurationValues = {
+        ...configurationValues,
+        FTP: {
+          title: {
+            name: "FTP",
+            type: "title"
+          },
+          automatic: {
+            name: "Automatically upload log on FTP",
+            type: "checkbox"
+          },
+          targets: [1, 2].map(index => ({
+            title: {
+              name: "Target " + index,
+              type: "subtitle"
+            },
+            address: {
+              name: "Address",
+              type: "text"
+            },
+            folder: {
+              name: "Folder",
+              type: "text"
+            },
+            username: {
+              name: "Username",
+              type: "text"
+            },
+            password: {
+              name: "Password",
+              type: "text"
+            }
+          }))
+        }
+      };
+    }
     return (
       <>
         <Modal
@@ -307,6 +328,7 @@ function mapStateToProps(state) {
 
   const configLocked = state.config.locked;
   const config = state.config;
+  const enabledModules = state.static.enabledModules;
 
   const configList = state.misc.configList;
 
@@ -316,7 +338,8 @@ function mapStateToProps(state) {
     time,
     configLocked,
     config,
-    configList
+    configList,
+    enabledModules
   };
 }
 

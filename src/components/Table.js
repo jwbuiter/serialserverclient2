@@ -23,14 +23,17 @@ const configurationValues = {
             normal: "Normal",
             date: "Date",
             manual: "Input",
-            menu: "Menu"
+            menu: "Menu",
+            reader: "Reader"
           }
         },
         readerPort: {
           name: "Reader port",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) =>
+            config.table.cells[index].type !== "reader"
         },
         numeric: {
           name: "Treat value as a number",
@@ -57,7 +60,7 @@ const configurationValues = {
           min: 0,
           step: 1,
           condition: (config, index) =>
-            config.table.cells[index].type === "normal"
+            ["normal", "reader"].includes(config.table.cells[index].type)
         },
         resetOnExe: {
           name: "Reset value after execute",

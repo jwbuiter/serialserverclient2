@@ -77,25 +77,39 @@ function api(store) {
   }
 
   function forceInput(index) {
-    const port = store.getState().config.input.ports[index];
+    const state = store.getState();
+    const port = {
+      ...state.config.input.ports[index],
+      ...state.internal.inputs[index]
+    };
+
+    const askForConfirmation = port.manualConfirmation && !port.isForced;
 
     if (
-      !port.manualConfirmation ||
-      window.confirm(`Are you sure you want to manually change ${port.name}?`)
-    ) {
-      socket.emit("forceInput", index);
-    }
+      askForConfirmation &&
+      !window.confirm(`Are you sure you want to manually change ${port.name}?`)
+    )
+      return;
+
+    socket.emit("forceInput", index);
   }
 
   function forceOutput(index) {
-    const port = store.getState().config.output.ports[index];
+    const state = store.getState();
+    const port = {
+      ...state.config.output.ports[index],
+      ...state.internal.outputs[index]
+    };
+
+    const askForConfirmation = port.manualConfirmation && !port.isForced;
 
     if (
-      !port.manualConfirmation ||
-      window.confirm(`Are you sure you want to manually change ${port.name}?`)
-    ) {
-      socket.emit("forceOutput", index);
-    }
+      askForConfirmation &&
+      !window.confirm(`Are you sure you want to manually change ${port.name}?`)
+    )
+      return;
+
+    socket.emit("forceOutput", index);
   }
 
   function tableManual(index, value) {

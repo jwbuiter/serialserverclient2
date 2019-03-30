@@ -236,7 +236,7 @@ class SelfLearningModal extends Component {
             checked={this.state.showIndividualTable}
             onChange={this.toggleIndividualTable}
           />
-          {this.state.showIndividualTable ? " Show UN-list" : " Show SL-list"}
+          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
         </span>
         <span className="selfLearning--modal--buttons">
           <button
@@ -252,7 +252,7 @@ class SelfLearningModal extends Component {
             <b>Reset</b>
           </button>
         </span>
-        {!this.state.showIndividualTable ? (
+        {this.state.showIndividualTable ? (
           <>
             <div className="selfLearning--modal--title"> UN-list </div>
             <ReactTable
