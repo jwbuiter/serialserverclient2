@@ -33,7 +33,7 @@ const configurationValues = {
           min: 0,
           step: 1,
           condition: (config, index) =>
-            config.table.cells[index].type !== "reader"
+            config.table.cells[index].type === "reader"
         },
         numeric: {
           name: "Treat value as a number",

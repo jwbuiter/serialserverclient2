@@ -73,7 +73,7 @@ export default function(fullState = initialState, action) {
       const { index, value, manual } = action.payload;
 
       const newCells = Array.from(fullState.cells);
-      newCells[index] = { value, manual };
+      newCells[index] = { ...newCells[index], value, manual };
 
       return { ...fullState, cells: newCells };
     }
