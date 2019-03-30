@@ -48,7 +48,7 @@ class Infobar extends Component {
       }
     };
 
-    if (this.props.enabledModules.table) {
+    if (this.props.exposeUpload) {
       configurationValues = {
         ...configurationValues,
         table: {
@@ -73,7 +73,7 @@ class Infobar extends Component {
       };
     }
 
-    if (this.props.enabledModules.logger) {
+    if (this.props.exposeUpload) {
       configurationValues = {
         ...configurationValues,
         logger: {
@@ -119,7 +119,7 @@ class Infobar extends Component {
       };
     }
 
-    if (this.props.enabledModules.FTP) {
+    if (this.props.exposeUpload) {
       configurationValues = {
         ...configurationValues,
         FTP: {
@@ -328,7 +328,7 @@ function mapStateToProps(state) {
 
   const configLocked = state.config.locked;
   const config = state.config;
-  const enabledModules = state.static.enabledModules;
+  const exposeUpload = state.static.exposeUpload;
 
   const configList = state.misc.configList;
 
@@ -339,7 +339,7 @@ function mapStateToProps(state) {
     configLocked,
     config,
     configList,
-    enabledModules
+    exposeUpload
   };
 }
 

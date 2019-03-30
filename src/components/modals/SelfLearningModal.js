@@ -20,12 +20,13 @@ class SelfLearningModal extends Component {
   getSLModalContent = () => {
     const keyName = this.props.config.serial.coms[1 - this.props.comIndex].name;
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
-    //const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const generalTableColumns = [
       {
         Header: valueName,
         accessor: row => row.entries[0],
+        Cell: props => props.value.toFixed(rounding),
         id: 10,
         style: { textAlign: "center" },
         width: 70
@@ -33,6 +34,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-1",
         accessor: row => row.entries[1] || "",
+        Cell: props => props.value.toFixed(rounding),
         id: 2,
         style: { textAlign: "center" },
         width: 70
@@ -40,6 +42,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-2",
         accessor: row => row.entries[2] || "",
+        Cell: props => props.value.toFixed(rounding),
         id: 3,
         style: { textAlign: "center" },
         width: 70
@@ -47,6 +50,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-3",
         accessor: row => row.entries[3] || "",
+        Cell: props => props.value.toFixed(rounding),
         id: 4,
         style: { textAlign: "center" },
         width: 70
@@ -54,6 +58,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-4",
         accessor: row => row.entries[4] || "",
+        Cell: props => props.value.toFixed(rounding),
         id: 5,
         style: { textAlign: "center" },
         width: 70
@@ -117,6 +122,7 @@ class SelfLearningModal extends Component {
         accessor: "calibration",
         style: { textAlign: "center" },
         width: 70,
+        Cell: props => props.value.toFixed(rounding),
         id: 12
       },
       {
@@ -143,7 +149,7 @@ class SelfLearningModal extends Component {
                 color: textColors[Math.min(4, props.original.increments)]
               }}
             >
-              {props.value}
+              {props.value.toFixed(1)}
             </div>
           );
         },
@@ -217,7 +223,14 @@ class SelfLearningModal extends Component {
         style: { textAlign: "center" },
         width: 70
       }
-    ].map(column => ({ ...column, Header: <b>{column.Header}</b> }));
+    ].map(column => ({
+      ...column,
+      Header: (
+        <>
+          <b>{column.Header}</b>
+        </>
+      )
+    }));
 
     const individualEntries = [];
     const generalEntries = [];

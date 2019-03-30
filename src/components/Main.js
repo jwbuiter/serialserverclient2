@@ -56,8 +56,6 @@ class Main extends Component {
       : this.props.api.getLog;
 
     getFunction().then(result => {
-      console.log(result.data.entries);
-
       this.setState({
         logTableColumns: result.data.legend
           .map((name, index) => ({
@@ -68,6 +66,12 @@ class Main extends Component {
               result.data.accessors[index]
             ),
             style: { textAlign: "center" },
+            Cell: props => {
+              if (typeof props.value === "number") {
+                return props.value.toFixed(result.data.digits[index]);
+              }
+              return props.value;
+            },
             name
           }))
           .filter((column, index) => index >= 2)

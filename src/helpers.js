@@ -107,6 +107,29 @@ function makeForm(value, config, api, index, name = "") {
           </>
         );
       }
+      case "structArray": {
+        const contents = get(config, name) || [];
+        const stucture = value.structure;
+        const defaultStruct = value.defaults;
+
+        return (
+          <>
+            {value.name}:
+            <br />
+            {contents.map((element, index) => (
+              <div className="test">a</div>
+            ))}
+            <br />
+            <input
+              type="button"
+              value="+"
+              onClick={() => {
+                api.changeConfig(name, contents.concat(defaultStruct));
+              }}
+            />
+          </>
+        );
+      }
       case "keyValue": {
         const options = get(config, name) || [];
 
