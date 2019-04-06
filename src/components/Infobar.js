@@ -59,15 +59,16 @@ class Infobar extends Component {
           trigger: {
             name: "Trigger",
             type: "select",
-            options: { "0": "Com 0", "1": "Com 1" }
+            options: ["Com 0", "Com 1"]
           },
           useFile: { name: "Use imported file", type: "checkbox" },
           waitForOther: { name: "Wait for other com", type: "checkbox" },
           searchColumn: {
             name: "Column to search in",
-            type: "number",
-            min: 0,
-            step: 1
+            type: "select",
+            options: [...Array(26).keys()].map(i =>
+              String.fromCharCode("A".charCodeAt(0) + i)
+            )
           }
         }
       };
