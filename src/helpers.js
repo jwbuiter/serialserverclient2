@@ -107,19 +107,56 @@ function makeForm(value, config, api, index, name = "") {
           </>
         );
       }
+      case "emphasis": {
+        const oldName = name.replace(/\.\w+$/, "");
+        return (
+          <div className="configuration--emphasis">
+            {makeForm(value.contents, config, api, index, oldName)}
+          </div>
+        );
+      }
+      case "conditional": {
+        const oldName = name.replace(/\.\w+$/, "");
+        return makeForm(value.contents, config, api, index, oldName);
+      }
+      case "external": {
+        console.log(value);
+        return makeForm(
+          value.configuration,
+          config,
+          api,
+          index,
+          value.location
+        );
+      }
       case "structArray": {
         const contents = get(config, name) || [];
-        const stucture = value.structure;
+        const structure = value.structure;
         const defaultStruct = value.defaults;
-
         return (
           <>
             {value.name}:
             <br />
             {contents.map((element, index) => (
-              <div className="test">a</div>
+              <div className="configuration--struct">
+                #{index + 3}
+                <input
+                  type="button"
+                  value="x"
+                  onClick={() => {
+                    contents.splice(index, 1);
+                    api.changeConfig(name, contents);
+                  }}
+                />
+                {makeForm(
+                  structure,
+                  config,
+                  api,
+                  index,
+                  name + "[" + index + "]"
+                )}
+              </div>
             ))}
-            <br />
             <input
               type="button"
               value="+"
@@ -159,7 +196,6 @@ function makeForm(value, config, api, index, name = "") {
                   <select
                     value={option.key}
                     onChange={e => {
-                      console.log(`${name}[${index}].key`, e.target.value);
                       api.changeConfig(`${name}[${index}].key`, e.target.value);
                     }}
                   >
@@ -195,6 +231,14 @@ function makeForm(value, config, api, index, name = "") {
                 api.changeConfig(name, options.concat({ key: "", value: "" }));
               }}
             />
+            <br />
+          </>
+        );
+      }
+      case "button": {
+        return (
+          <>
+            <input type="button" value={value.name} />
             <br />
           </>
         );

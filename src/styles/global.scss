@@ -1,3 +1,4 @@
+@import "constants";
 body {
   margin: 0;
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
@@ -72,4 +73,14 @@ form {
   border-radius: 4px;
   outline: none;
   padding: 20px;
+}
+
+.configuration {
+  &--emphasis {
+    padding: 0.5em;
+    background-color: $tertiary-color;
+  }
+  &--struct {
+    border: 1px solid black;
+  }
 }

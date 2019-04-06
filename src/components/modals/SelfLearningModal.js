@@ -34,7 +34,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-1",
         accessor: row => row.entries[1] || "",
-        Cell: props => props.value.toFixed(rounding),
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
         id: 2,
         style: { textAlign: "center" },
         width: 70
@@ -42,7 +42,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-2",
         accessor: row => row.entries[2] || "",
-        Cell: props => props.value.toFixed(rounding),
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
         id: 3,
         style: { textAlign: "center" },
         width: 70
@@ -50,7 +50,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-3",
         accessor: row => row.entries[3] || "",
-        Cell: props => props.value.toFixed(rounding),
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
         id: 4,
         style: { textAlign: "center" },
         width: 70
@@ -58,7 +58,7 @@ class SelfLearningModal extends Component {
       {
         Header: "-4",
         accessor: row => row.entries[4] || "",
-        Cell: props => props.value.toFixed(rounding),
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
         id: 5,
         style: { textAlign: "center" },
         width: 70

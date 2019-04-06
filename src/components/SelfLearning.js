@@ -57,77 +57,204 @@ class SelfLearning extends Component {
             com1ind: "Com 1 Individual"
           }
         },
-        number: {
-          name: "Number",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled !== "off"
-        },
-        startCalibration: {
-          name: "Calibration",
-          type: "number",
-          min: 0,
-          step: 1,
-          rounding,
-          condition: config => config.selfLearning.enabled !== "off"
-        },
-        tolerance: {
-          name: "Tolerance %",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled !== "off"
-        },
-        startTolerance: {
-          name: "Extra tolerance during learning %",
-          type: "number",
-          min: 0,
-          step: 1,
+        normal: {
+          type: "conditional",
           condition: config =>
-            config.selfLearning.enabled !== "off" &&
-            !config.selfLearning.enabled.endsWith("ind")
+            !config.selfLearning.enabled.endsWith("ind") &&
+            config.selfLearning.enabled !== "off",
+          contents: {
+            LogID: {
+              name: "LogID",
+              type: "external",
+              location: "logger.logID",
+              configuration: {
+                name: "LogID",
+                type: "text"
+              }
+            },
+            startCalibration: {
+              name: "Calibration",
+              type: "number",
+              min: 0,
+              step: 1,
+              rounding
+            },
+            totalNumber: {
+              name: "Total number",
+              type: "number",
+              min: 0,
+              step: 1
+            },
+            numberPercentage: {
+              name: "SL number %",
+              type: "number",
+              min: 0,
+              step: 1
+            },
+            tolerance: {
+              name: "Tolerance %",
+              type: "number",
+              min: 0,
+              step: 1
+            },
+            startTolerance: {
+              name: "Extra tolerance during learning %",
+              type: "number",
+              min: 0,
+              step: 1
+            }
+          }
         },
-        individualToleranceAbs: {
-          name: "Individual tolerance",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled.endsWith("ind")
-        },
-        individualTolerance: {
-          name: "Individual tolerance %",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled.endsWith("ind")
-        },
-        individualCorrectionIncrement: {
-          name: "Correction %",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled.endsWith("ind")
-        },
-        individualCorrectionLimit: {
-          name: "Correction limit (max 9)",
-          type: "number",
-          min: 0,
-          max: 9,
-          step: 1,
-          condition: config => config.selfLearning.enabled.endsWith("ind")
-        },
-        tableExtraColumnTitle: {
-          name: "Extra column title",
-          type: "text",
-          condition: config => config.selfLearning.enabled.endsWith("ind")
-        },
-        tableExtraColumn: {
-          name: "Extra column number",
-          type: "number",
-          min: 0,
-          step: 1,
-          condition: config => config.selfLearning.enabled.endsWith("ind")
+        individual: {
+          type: "conditional",
+          condition: config => config.selfLearning.enabled.endsWith("ind"),
+          contents: {
+            important: {
+              type: "emphasis",
+              contents: {
+                resetSL: {
+                  name: "Reset Self Learning Data",
+                  type: "button"
+                },
+                downloadExcel: {
+                  name: "Download Excel file",
+                  type: "button"
+                },
+                logID: {
+                  type: "external",
+                  location: "logger.logID",
+                  configuration: {
+                    name: "LogID",
+                    type: "text"
+                  }
+                },
+                startCalibration: {
+                  name: "Calibration",
+                  type: "number",
+                  min: 0,
+                  step: 1,
+                  rounding
+                },
+                totalNumber: {
+                  name: "Total number",
+                  type: "number",
+                  min: 0,
+                  step: 1
+                }
+              }
+            },
+            numberPercentage: {
+              name: "SL number %",
+              type: "number",
+              min: 0,
+              step: 1
+            },
+            tolerance: {
+              name: "Tolerance %",
+              type: "number",
+              min: 0,
+              step: 1
+            },
+            individualToleranceAbs: {
+              name: "Individual tolerance",
+              type: "number",
+              min: 0,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            individualTolerance: {
+              name: "Individual tolerance %",
+              type: "number",
+              min: 0,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            individualCorrectionIncrement: {
+              name: "Correction %",
+              type: "number",
+              min: 0,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            individualCorrectionLimit: {
+              name: "Correction limit (max 9)",
+              type: "number",
+              min: 0,
+              max: 9,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            excelIndividualColumn: {
+              name: "Excel column - Com Ind",
+              type: "select",
+              options: [...Array(26).keys()].map(i =>
+                String.fromCharCode("A".charCodeAt(0) + i)
+              )
+            },
+            excelDateColumn: {
+              name: "Excel column - Date",
+              type: "select",
+              options: [...Array(26).keys()].map(i =>
+                String.fromCharCode("A".charCodeAt(0) + i)
+              )
+            },
+            uploadExcelTemplate: {
+              name: "Upload Excel Template",
+              type: "button"
+            },
+            title: {
+              name: "List column configuration",
+              type: "title"
+            },
+            firstTopFormula: {
+              name: "#1 Top Formula",
+              type: "text"
+            },
+            secondTopFormula: {
+              name: "#2 Top Formula",
+              type: "text"
+            },
+            extraColumns: {
+              name: "Additional columns",
+              type: "structArray",
+              structure: {
+                title: {
+                  name: "Title",
+                  type: "text"
+                },
+                topFormula: {
+                  name: "Top formula",
+                  type: "text"
+                },
+                formula: {
+                  name: "Formula",
+                  type: "text"
+                },
+                type: {
+                  name: "Type of content",
+                  type: "select",
+                  options: {
+                    text: "Non-num",
+                    number: "Numeric",
+                    date: "Date"
+                  }
+                },
+                digits: {
+                  name: "Digits",
+                  type: "number",
+                  min: 0,
+                  step: 1
+                }
+              },
+              defaults: {
+                title: "",
+                topFormula: "",
+                formula: "",
+                type: "text",
+                digits: 0
+              }
+            }
+          }
         }
       }
     };
