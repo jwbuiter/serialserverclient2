@@ -272,6 +272,23 @@ function api(store) {
     });
   }
 
+  function downloadExcel() {
+    window.location.href = "/downloadExcel";
+  }
+
+  function resetSLData() {
+    if (
+      window.confirm(
+        "This will clear the data file. Do you want to download it first?"
+      )
+    ) {
+      return;
+    }
+    if (window.confirm("Are you sure you want to clear all SL data?")) {
+      socket.emit("deleteSLData");
+    }
+  }
+
   loadConfig();
   loadStatic();
 
@@ -303,7 +320,9 @@ function api(store) {
     downloadAllLogs,
     deleteAllLogs,
     configExists,
-    resetIndividualSL
+    resetIndividualSL,
+    downloadExcel,
+    resetSLData
   };
 }
 

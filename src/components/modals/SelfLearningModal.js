@@ -22,6 +22,16 @@ class SelfLearningModal extends Component {
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
     const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
+    const extraColumns = this.props.config.selfLearning.extraColumns.map(
+      (column, index) => ({
+        Header: column.title,
+        accessor: row => row.extra[index],
+        style: { textAlign: "center" },
+        width: Math.max(70, 11 * column.title.length),
+        id: index + 20
+      })
+    );
+
     const generalTableColumns = [
       {
         Header: valueName,
@@ -69,12 +79,7 @@ class SelfLearningModal extends Component {
         style: { textAlign: "center" },
         width: 200
       },
-      {
-        Header: this.props.tableExtraColumnTitle,
-        accessor: "extra",
-        style: { textAlign: "center" },
-        width: 70
-      },
+      ...extraColumns,
       {
         Header: (
           <button
@@ -131,12 +136,7 @@ class SelfLearningModal extends Component {
         style: { textAlign: "center" },
         width: 200
       },
-      {
-        Header: this.props.tableExtraColumnTitle,
-        accessor: "extra",
-        style: { textAlign: "center" },
-        width: 70
-      },
+      ...extraColumns,
       {
         Header: "Tol",
         accessor: "tolerance",

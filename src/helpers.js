@@ -238,7 +238,12 @@ function makeForm(value, config, api, index, name = "") {
       case "button": {
         return (
           <>
-            <input type="button" value={value.name} />
+            <input
+              type="button"
+              value={value.name}
+              className="configuration--button"
+              onClick={value.onClick}
+            />
             <br />
           </>
         );

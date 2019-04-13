@@ -114,11 +114,17 @@ class SelfLearning extends Component {
               contents: {
                 resetSL: {
                   name: "Reset Self Learning Data",
-                  type: "button"
+                  type: "button",
+                  onClick: () => {
+                    this.props.api.resetSLData();
+                  }
                 },
                 downloadExcel: {
                   name: "Download Excel file",
-                  type: "button"
+                  type: "button",
+                  onClick: () => {
+                    this.props.api.downloadExcel();
+                  }
                 },
                 logID: {
                   type: "external",
@@ -243,7 +249,9 @@ class SelfLearning extends Component {
                   name: "Digits",
                   type: "number",
                   min: 0,
-                  step: 1
+                  step: 1,
+                  condition: (config, index) =>
+                    config.selfLearning.extraColumns[index].type !== "date"
                 }
               },
               defaults: {
