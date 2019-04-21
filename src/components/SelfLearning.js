@@ -191,18 +191,40 @@ class SelfLearning extends Component {
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
             excelIndividualColumn: {
-              name: "Excel column - Com Ind",
-              type: "select",
-              options: [...Array(26).keys()].map(i =>
-                String.fromCharCode("A".charCodeAt(0) + i)
-              )
+              type: "external",
+              location: "table.individualColumn",
+              configuration: {
+                name: "Excel column - Com Ind",
+                type: "select",
+                numeric: true,
+                options: [...Array(26).keys()].map(i =>
+                  String.fromCharCode("A".charCodeAt(0) + i)
+                )
+              }
             },
             excelDateColumn: {
-              name: "Excel column - Date",
-              type: "select",
-              options: [...Array(26).keys()].map(i =>
-                String.fromCharCode("A".charCodeAt(0) + i)
-              )
+              type: "external",
+              location: "table.dateColumn",
+              configuration: {
+                name: "Excel column - Date",
+                type: "select",
+                numeric: true,
+                options: [...Array(26).keys()].map(i =>
+                  String.fromCharCode("A".charCodeAt(0) + i)
+                )
+              }
+            },
+            excelExitColumn: {
+              type: "external",
+              location: "table.exitColumn",
+              configuration: {
+                name: "Excel column - Exit",
+                type: "select",
+                numeric: true,
+                options: [...Array(26).keys()].map(i =>
+                  String.fromCharCode("A".charCodeAt(0) + i)
+                )
+              }
             },
             uploadExcelTemplate: {
               name: "Upload Excel Template",
@@ -252,6 +274,10 @@ class SelfLearning extends Component {
                   step: 1,
                   condition: (config, index) =>
                     config.selfLearning.extraColumns[index].type !== "date"
+                },
+                generalVisible: {
+                  name: "Show in SL list",
+                  type: "checkbox"
                 }
               },
               defaults: {

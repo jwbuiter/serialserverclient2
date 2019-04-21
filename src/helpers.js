@@ -120,7 +120,6 @@ function makeForm(value, config, api, index, name = "") {
         return makeForm(value.contents, config, api, index, oldName);
       }
       case "external": {
-        console.log(value);
         return makeForm(
           value.configuration,
           config,

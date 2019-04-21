@@ -66,6 +66,7 @@ class Infobar extends Component {
           searchColumn: {
             name: "Column to search in",
             type: "select",
+            numeric: true,
             options: [...Array(26).keys()].map(i =>
               String.fromCharCode("A".charCodeAt(0) + i)
             )

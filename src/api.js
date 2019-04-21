@@ -279,7 +279,7 @@ function api(store) {
   function resetSLData() {
     if (
       window.confirm(
-        "This will clear the data file. Do you want to download it first?"
+        "This will clear the Excel file. Do you want to download it first?"
       )
     ) {
       return;
