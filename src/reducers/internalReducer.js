@@ -7,7 +7,8 @@ const {
   TABLE_CELL_STATE,
   TABLE_CELL_COLOR,
   SELFLEARNING_STATE,
-  TABLE_FOUND_STATE
+  TABLE_FOUND_STATE,
+  SERIAL_CLEAR
 } = require("../actions/types");
 
 const initialState = {
@@ -66,6 +67,15 @@ export default function(fullState = initialState, action) {
         entryTime,
         history: newHistory
       };
+
+      return { ...fullState, coms: newComs };
+    }
+    case SERIAL_CLEAR: {
+      const newComs = fullState.coms.map(com => ({
+        entry: "",
+        entryTime: new Date(),
+        history: com.history
+      }));
 
       return { ...fullState, coms: newComs };
     }

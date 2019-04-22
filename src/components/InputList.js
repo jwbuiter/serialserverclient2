@@ -4,6 +4,8 @@ import Modal from "react-modal";
 import FitText from "react-fittext";
 
 import { makeForm } from "../helpers";
+import { changeConfig } from "../actions/configActions";
+import { forceInput } from "../actions/internalActions";
 import "../styles/inputList.scss";
 
 Modal.setAppElement("#root");
@@ -36,14 +38,12 @@ const configurationValues = {
             com0: "COM 0",
             com1: "COM 1"
           },
-          condition: (config, index) =>
-            config.input.ports[index].formula === "command"
+          condition: (config, index) => config.input.ports[index].formula === "command"
         },
         commandValue: {
           name: "Value to send on COM",
           type: "text",
-          condition: (config, index) =>
-            config.input.ports[index].formula === "command"
+          condition: (config, index) => config.input.ports[index].formula === "command"
         },
         invert: {
           name: "Invert follow",
@@ -115,12 +115,7 @@ class InputList extends Component {
           {this.state.configModalIsOpen && (
             <form>
               <h2>Configuration for input {this.state.configPortIndex + 1}</h2>
-              {makeForm(
-                configurationValues,
-                this.props.config,
-                this.props.api,
-                this.state.configPortIndex
-              )}
+              {makeForm(configurationValues, this.props.config, this.props.changeConfig, this.state.configPortIndex)}
             </form>
           )}
         </Modal>
@@ -135,11 +130,7 @@ class InputList extends Component {
           {this.props.inputs
             .map((port, index) => ({ ...port, index }))
             .filter((port, index) => {
-              return (
-                this.props.portsEnabled[index] ||
-                port.name !== "" ||
-                !this.props.configLocked
-              );
+              return this.props.portsEnabled[index] || port.name !== "" || !this.props.configLocked;
             })
             .map(port => {
               let indicator = "buttonList--list--indicator--input";
@@ -153,7 +144,7 @@ class InputList extends Component {
                   className="buttonList--list--item"
                   onClick={
                     this.props.configLocked
-                      ? () => this.props.api.forceInput(port.index)
+                      ? () => this.props.forceInput(port.index)
                       : () => this.openConfigModal(port.index)
                   }
                 >
@@ -182,9 +173,7 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.input.ports.map(
-    port => port.formula !== ""
-  );
+  const portsEnabled = state.config.input.ports.map(port => port.formula !== "");
 
   return {
     inputs,
@@ -194,4 +183,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(InputList);
+export default connect(
+  mapStateToProps,
+  { forceInput, changeConfig }
+)(InputList);

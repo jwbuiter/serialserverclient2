@@ -6,8 +6,8 @@ class App extends Component {
   render() {
     return (
       <div id="outer-container">
-        <Sidebar api={this.props.api} />
-        <Main api={this.props.api} />
+        <Sidebar />
+        <Main />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import FitText from "react-fittext";
 import Modal from "react-modal";
 import classNames from "classnames";
 
+import { changeConfig } from "../actions/configActions";
 import { makeForm } from "../helpers";
 import "../styles/comElement.scss";
 
@@ -23,40 +24,35 @@ const configurationValues = {
         testMessage: {
           name: "Test value",
           type: "text",
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "test"
+          condition: (config, index) => config.serial.coms[index].mode === "test"
         },
         readerPort: {
           name: "Port",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "reader"
+          condition: (config, index) => config.serial.coms[index].mode === "reader"
         },
         baudRate: {
           name: "Baudrate",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         stopBits: {
           name: "Number of stop bits",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         bits: {
           name: "Number of data bits",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         parity: {
           name: "Parity of data",
@@ -68,20 +64,17 @@ const configurationValues = {
             mark: "Mark",
             space: "Space"
           },
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         RTSCTS: {
           name: "RTS/CTS",
           type: "checkbox",
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         XONXOFF: {
           name: "XON/XOFF",
           type: "checkbox",
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         name: {
           name: "Name of port",
@@ -128,14 +121,12 @@ const configurationValues = {
         prefix: {
           name: "Prefix",
           type: "text",
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         },
         postfix: {
           name: "Suffix",
           type: "text",
-          condition: (config, index) =>
-            config.serial.coms[index].mode === "serial"
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
         }
       }
     ]
@@ -162,9 +153,7 @@ class ComList extends Component {
 
   toggleShowHistory = index => {
     this.setState({
-      showHistory: this.state.showHistory.map((element, i) =>
-        i === index ? !element : element
-      )
+      showHistory: this.state.showHistory.map((element, i) => (i === index ? !element : element))
     });
   };
 
@@ -185,12 +174,7 @@ class ComList extends Component {
           {this.state.configModalIsOpen && (
             <form>
               <h2>Configuration for com{this.state.comIndex}</h2>
-              {makeForm(
-                configurationValues,
-                this.props.config,
-                this.props.api,
-                this.state.comIndex
-              )}
+              {makeForm(configurationValues, this.props.config, this.props.changeConfig, this.state.comIndex)}
             </form>
           )}
         </Modal>
@@ -231,14 +215,12 @@ class ComList extends Component {
             >
               {this.state.showHistory[com.index] && com.history ? (
                 <div className="comElement--content--history">
-                  {com.history
-                    .slice(0, this.props.config.serial.coms[com.index].entries)
-                    .map(element => (
-                      <>
-                        <div>{element.timeString}</div>
-                        <div>{element.entry}</div>
-                      </>
-                    ))}
+                  {com.history.slice(0, this.props.config.serial.coms[com.index].entries).map(element => (
+                    <>
+                      <div>{element.timeString}</div>
+                      <div>{element.entry}</div>
+                    </>
+                  ))}
                 </div>
               ) : (
                 <div className="center">
@@ -268,4 +250,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(ComList);
+export default connect(
+  mapStateToProps,
+  { changeConfig }
+)(ComList);

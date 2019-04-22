@@ -5,6 +5,10 @@ import ReactTable from "react-table";
 import Toggle from "react-toggle";
 import classNames from "classnames";
 
+import { loadConfig, loadStatic } from "../actions/configActions";
+import { getLog, getUniqueLog } from "../actions/logActions";
+import { openMenu, getLogo } from "../actions/menuActions";
+
 import ComList from "./ComList";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
@@ -25,7 +29,10 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
-    props.api.getLogo().then(result => {
+    this.props.loadConfig();
+    this.props.loadStatic();
+
+    getLogo().then(result => {
       if (result) {
         this.setState({ logo: result });
       }
@@ -51,9 +58,7 @@ class Main extends Component {
 
   reloadLogEntries = e => {
     const unique = e ? e.target.checked : this.state.logModalUnique;
-    const getFunction = unique
-      ? this.props.api.getUniqueLog
-      : this.props.api.getLog;
+    const getFunction = unique ? getUniqueLog : getLog;
 
     getFunction().then(result => {
       this.setState({
@@ -61,10 +66,7 @@ class Main extends Component {
           .map((name, index) => ({
             Header: () => <b>{name}</b>,
             accessor: result.data.accessors[index],
-            width: getColumnWidth(
-              result.data.entries,
-              result.data.accessors[index]
-            ),
+            width: getColumnWidth(result.data.entries, result.data.accessors[index]),
             style: { textAlign: "center" },
             Cell: props => {
               if (typeof props.value === "number") {
@@ -75,9 +77,7 @@ class Main extends Component {
             name
           }))
           .filter((column, index) => index >= 2)
-          .filter(
-            column => this.props.uniqueLogEnabled || column.name !== "TU"
-          ),
+          .filter(column => this.props.uniqueLogEnabled || column.name !== "TU"),
         logEntries: result.data.entries,
         logModalUnique: unique
       });
@@ -113,19 +113,13 @@ class Main extends Component {
           >
             {this.props.uniqueLogEnabled && (
               <span>
-                <Toggle
-                  checked={this.state.logModalUnique}
-                  onChange={this.reloadLogEntries}
-                />{" "}
-                Only show unique entries
+                <Toggle checked={this.state.logModalUnique} onChange={this.reloadLogEntries} /> Only show unique entries
               </span>
             )}
             <div className="main--logModal">
               <div>
                 <div className="main--logModal--title">
-                  <b>
-                    {this.state.logModalUnique ? "Unique Log" : "Normal Log"}
-                  </b>
+                  <b>{this.state.logModalUnique ? "Unique Log" : "Normal Log"}</b>
                 </div>
                 <ReactTable
                   style={{ fontSize: 14 }}
@@ -136,15 +130,11 @@ class Main extends Component {
             </div>
           </Modal>
           <div className="info">
-            <Infobar api={this.props.api} />
+            <Infobar />
           </div>
 
           <div className="logo">
-            <Logo
-              image={this.state.logo}
-              alt="LOGO"
-              onClick={this.props.api.openMenu}
-            />
+            <Logo image={this.state.logo} alt="LOGO" onClick={this.props.openMenu} />
           </div>
 
           <div
@@ -152,25 +142,15 @@ class Main extends Component {
               "coms--noselfLearning": !this.props.showSelfLearning
             })}
           >
-            {this.props.showSelfLearning && (
-              <SelfLearning api={this.props.api} />
-            )}
-            <ComList api={this.props.api} />
+            {this.props.showSelfLearning && <SelfLearning />}
+            <ComList />
           </div>
 
-          {this.props.showOutputs && (
-            <div className="outputs">
-              {this.props.showOutputs && <OutputList api={this.props.api} />}{" "}
-            </div>
-          )}
-          {this.props.showInputs && (
-            <div className="inputs">
-              {this.props.showInputs && <InputList api={this.props.api} />}
-            </div>
-          )}
+          {this.props.showOutputs && <div className="outputs">{this.props.showOutputs && <OutputList />} </div>}
+          {this.props.showInputs && <div className="inputs">{this.props.showInputs && <InputList />}</div>}
           {this.props.showTable && (
             <div className="table">
-              <Table api={this.props.api} openLog={this.openLogModal} />
+              <Table openLog={this.openLogModal} />
             </div>
           )}
         </div>
@@ -208,8 +188,7 @@ function mapStateToProps(state) {
       }, false));
 
   const showSelfLearning =
-    state.static.enabledModules.selfLearning &&
-    (!configLocked || state.internal.selfLearning.enabled);
+    state.static.enabledModules.selfLearning && (!configLocked || state.internal.selfLearning.enabled);
 
   const uniqueLogEnabled = state.config.logger.unique !== "off";
 
@@ -224,4 +203,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Main);
+export default connect(
+  mapStateToProps,
+  { loadConfig, loadStatic, openMenu }
+)(Main);

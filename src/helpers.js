@@ -40,7 +40,7 @@ function set(object, address, newValue) {
   }
 }
 
-function makeForm(value, config, api, index, name = "") {
+function makeForm(value, config, changeConfig, index, name = "") {
   if (typeof value.type === "undefined" || typeof value.type === "object") {
     if (Array.isArray(value)) {
       if (value.length === 1) {
@@ -48,26 +48,14 @@ function makeForm(value, config, api, index, name = "") {
           index >= 0 && (
             <div name={name}>
               {Object.keys(value[0]).map(key =>
-                makeForm(
-                  value[0][key],
-                  config,
-                  api,
-                  index,
-                  name + "[" + index + "]." + key
-                )
+                makeForm(value[0][key], config, changeConfig, index, name + "[" + index + "]." + key)
               )}
             </div>
           )
         );
       } else {
         return value.map((element, index) => {
-          return makeForm(
-            element,
-            config,
-            api,
-            index,
-            name + "[" + index + "]"
-          );
+          return makeForm(element, config, changeConfig, index, name + "[" + index + "]");
         });
       }
     } else {
@@ -80,15 +68,7 @@ function makeForm(value, config, api, index, name = "") {
 
               return true;
             })
-            .map(key =>
-              makeForm(
-                value[key],
-                config,
-                api,
-                index,
-                name + (name ? "." : "") + key
-              )
-            )}
+            .map(key => makeForm(value[key], config, changeConfig, index, name + (name ? "." : "") + key))}
         </div>
       );
     }
@@ -111,22 +91,16 @@ function makeForm(value, config, api, index, name = "") {
         const oldName = name.replace(/\.\w+$/, "");
         return (
           <div className="configuration--emphasis">
-            {makeForm(value.contents, config, api, index, oldName)}
+            {makeForm(value.contents, config, changeConfig, index, oldName)}
           </div>
         );
       }
       case "conditional": {
         const oldName = name.replace(/\.\w+$/, "");
-        return makeForm(value.contents, config, api, index, oldName);
+        return makeForm(value.contents, config, changeConfig, index, oldName);
       }
       case "external": {
-        return makeForm(
-          value.configuration,
-          config,
-          api,
-          index,
-          value.location
-        );
+        return makeForm(value.configuration, config, changeConfig, index, value.location);
       }
       case "structArray": {
         const contents = get(config, name) || [];
@@ -144,23 +118,17 @@ function makeForm(value, config, api, index, name = "") {
                   value="x"
                   onClick={() => {
                     contents.splice(index, 1);
-                    api.changeConfig(name, contents);
+                    changeConfig(name, contents);
                   }}
                 />
-                {makeForm(
-                  structure,
-                  config,
-                  api,
-                  index,
-                  name + "[" + index + "]"
-                )}
+                {makeForm(structure, config, changeConfig, index, name + "[" + index + "]")}
               </div>
             ))}
             <input
               type="button"
               value="+"
               onClick={() => {
-                api.changeConfig(name, contents.concat(defaultStruct));
+                changeConfig(name, contents.concat(defaultStruct));
               }}
             />
           </>
@@ -181,13 +149,13 @@ function makeForm(value, config, api, index, name = "") {
                   value="x"
                   onClick={() => {
                     options.splice(index, 1);
-                    api.changeConfig(name, options);
+                    changeConfig(name, options);
                   }}
                 />
                 <input
                   type="text"
                   onChange={e => {
-                    api.changeConfig(`${name}[${index}].value`, e.target.value);
+                    changeConfig(`${name}[${index}].value`, e.target.value);
                   }}
                   value={option.value}
                 />
@@ -195,7 +163,7 @@ function makeForm(value, config, api, index, name = "") {
                   <select
                     value={option.key}
                     onChange={e => {
-                      api.changeConfig(`${name}[${index}].key`, e.target.value);
+                      changeConfig(`${name}[${index}].key`, e.target.value);
                     }}
                   >
                     {Object.entries(keyOptions)
@@ -208,13 +176,9 @@ function makeForm(value, config, api, index, name = "") {
                   <input
                     type="number"
                     onChange={e => {
-                      api.changeConfig(
-                        `${name}[${index}].key`,
-                        e.target.value,
-                        {
-                          numeric: true
-                        }
-                      );
+                      changeConfig(`${name}[${index}].key`, e.target.value, {
+                        numeric: true
+                      });
                     }}
                     value={option.key}
                   />
@@ -227,7 +191,7 @@ function makeForm(value, config, api, index, name = "") {
               type="button"
               value="+"
               onClick={() => {
-                api.changeConfig(name, options.concat({ key: "", value: "" }));
+                changeConfig(name, options.concat({ key: "", value: "" }));
               }}
             />
             <br />
@@ -237,12 +201,7 @@ function makeForm(value, config, api, index, name = "") {
       case "button": {
         return (
           <>
-            <input
-              type="button"
-              value={value.name}
-              className="configuration--button"
-              onClick={value.onClick}
-            />
+            <input type="button" value={value.name} className="configuration--button" onClick={value.onClick} />
             <br />
           </>
         );
@@ -254,7 +213,7 @@ function makeForm(value, config, api, index, name = "") {
             <select
               value={get(config, name)}
               onChange={event => {
-                api.changeConfig(name, event.target.value, {
+                changeConfig(name, event.target.value, {
                   numeric: value.numeric
                 });
               }}
@@ -279,16 +238,12 @@ function makeForm(value, config, api, index, name = "") {
               max={value.max}
               step={value.step}
               checked={get(config, name)}
-              value={
-                value.rounding
-                  ? round(get(config, name), value.rounding)
-                  : get(config, name)
-              }
+              value={value.rounding ? round(get(config, name), value.rounding) : get(config, name)}
               onChange={event => {
                 if (event.target.type === "checkbox") {
-                  api.changeConfig(name, event.target.checked);
+                  changeConfig(name, event.target.checked);
                 } else {
-                  api.changeConfig(name, event.target.value, {
+                  changeConfig(name, event.target.value, {
                     numeric: value.type === "number"
                   });
                 }
@@ -311,9 +266,7 @@ const getColumnWidth = (rows, accessor) => {
   const maxWidth = 400;
   const minWidth = 50;
   const magicSpacing = 11;
-  const cellLength = Math.max(
-    ...rows.map(row => (`${get(row, accessor)}` || "").length)
-  );
+  const cellLength = Math.max(...rows.map(row => (`${get(row, accessor)}` || "").length));
 
   return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
 };

@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import FitText from "react-fittext";
 
+import { changeConfig } from "../actions/configActions";
+import { forceOutput } from "../actions/internalActions";
 import { makeForm } from "../helpers";
 import "../styles/outputList.scss";
 
@@ -66,12 +68,7 @@ class OutputList extends Component {
           {this.state.configModalIsOpen && (
             <form>
               <h2>Configuration for output {this.state.configPortIndex + 1}</h2>
-              {makeForm(
-                configurationValues,
-                this.props.config,
-                this.props.api,
-                this.state.configPortIndex
-              )}
+              {makeForm(configurationValues, this.props.config, this.props.changeConfig, this.state.configPortIndex)}
             </form>
           )}
         </Modal>
@@ -86,11 +83,7 @@ class OutputList extends Component {
           {this.props.outputs
             .map((port, index) => ({ ...port, index }))
             .filter((port, index) => {
-              return (
-                this.props.portsEnabled[index] ||
-                port.name !== "" ||
-                !this.props.configLocked
-              );
+              return this.props.portsEnabled[index] || port.name !== "" || !this.props.configLocked;
             })
             .map(port => {
               let indicator = "buttonList--list--indicator--output";
@@ -110,7 +103,7 @@ class OutputList extends Component {
                   className="buttonList--list--item"
                   onClick={
                     this.props.configLocked
-                      ? () => this.props.api.forceOutput(port.index)
+                      ? () => this.props.forceOutput(port.index)
                       : () => this.openConfigModal(port.index)
                   }
                 >
@@ -139,9 +132,7 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.output.ports.map(
-    port => port.formula !== ""
-  );
+  const portsEnabled = state.config.output.ports.map(port => port.formula !== "");
 
   return {
     outputs,
@@ -151,4 +142,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(OutputList);
+export default connect(
+  mapStateToProps,
+  { forceOutput, changeConfig }
+)(OutputList);

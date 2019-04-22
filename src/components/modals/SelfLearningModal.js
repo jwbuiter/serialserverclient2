@@ -6,6 +6,7 @@ import Toggle from "react-toggle";
 import dateFormat from "dateformat";
 
 import { daysToDate } from "../../helpers";
+import { deleteGeneralSL, deleteIndividualSL, resetIndividualSL } from "../../actions/selfLearningActions";
 
 const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
@@ -29,29 +30,27 @@ class SelfLearningModal extends Component {
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
     const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
-    const extraColumns = this.props.config.selfLearning.extraColumns.map(
-      (column, index) => ({
-        Header: column.title,
-        accessor: row => row.extra[index],
-        Cell: props => {
-          console.log(props);
-          switch (column.type) {
-            case "text":
-              return String(props.value).slice(-column.digits);
-            case "number":
-              return Number(props.value).toFixed(column.digits);
-            case "date":
-              return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
-          }
-          props.value.toFixed(rounding);
-        },
-        style: {
-          textAlign: "center"
-        },
-        width: Math.max(70, 11 * column.title.length),
-        id: index + 20
-      })
-    );
+    const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => ({
+      Header: column.title,
+      accessor: row => row.extra[index],
+      Cell: props => {
+        console.log(props);
+        switch (column.type) {
+          case "text":
+            return String(props.value).slice(-column.digits);
+          case "number":
+            return Number(props.value).toFixed(column.digits);
+          case "date":
+            return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
+        }
+        props.value.toFixed(rounding);
+      },
+      style: {
+        textAlign: "center"
+      },
+      width: Math.max(70, 11 * column.title.length),
+      id: index + 20
+    }));
 
     const generalTableColumns = [
       {
@@ -117,12 +116,8 @@ class SelfLearningModal extends Component {
         Header: (
           <button
             onClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete all general entries?`
-                )
-              ) {
-                this.props.api.deleteGeneralSL();
+              if (window.confirm(`Are you sure you want to delete all general entries?`)) {
+                this.props.deleteGeneralSL();
               }
             }}
           >
@@ -133,14 +128,8 @@ class SelfLearningModal extends Component {
           return (
             <button
               onClick={() => {
-                if (
-                  window.confirm(
-                    `Are you sure you want to delete general entries for ${
-                      props.original.key
-                    }?`
-                  )
-                ) {
-                  this.props.api.deleteGeneralSL(props.original.key);
+                if (window.confirm(`Are you sure you want to delete general entries for ${props.original.key}?`)) {
+                  this.props.deleteGeneralSL(props.original.key);
                 }
               }}
             >
@@ -186,8 +175,7 @@ class SelfLearningModal extends Component {
           return (
             <div
               style={{
-                backgroundColor:
-                  individualColors[Math.min(4, props.original.increments)],
+                backgroundColor: individualColors[Math.min(4, props.original.increments)],
                 color: textColors[Math.min(4, props.original.increments)]
               }}
             >
@@ -239,12 +227,8 @@ class SelfLearningModal extends Component {
         Header: (
           <button
             onClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete all individual entries?`
-                )
-              ) {
-                this.props.api.deleteIndividualSL();
+              if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
+                this.props.deleteIndividualSL();
               }
             }}
           >
@@ -255,14 +239,8 @@ class SelfLearningModal extends Component {
           return (
             <button
               onClick={() => {
-                if (
-                  window.confirm(
-                    `Are you sure you want to delete the entry for ${
-                      props.original.key
-                    }?`
-                  )
-                ) {
-                  this.props.api.deleteIndividualSL(props.original.key);
+                if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
+                  this.props.deleteIndividualSL(props.original.key);
                 }
               }}
             >
@@ -305,21 +283,14 @@ class SelfLearningModal extends Component {
     return (
       <>
         <span>
-          <Toggle
-            checked={this.state.showIndividualTable}
-            onChange={this.toggleIndividualTable}
-          />{" "}
+          <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />{" "}
           {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}{" "}
         </span>{" "}
         <span className="selfLearning--modal--buttons">
           <button
             onClick={() => {
-              if (
-                window.confirm(
-                  "Are you sure you want to reset the data of the individual selfLearning?"
-                )
-              )
-                this.props.api.resetIndividualSL();
+              if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
+                this.props.resetIndividualSL();
             }}
           >
             <b> Reset </b>{" "}
@@ -328,10 +299,7 @@ class SelfLearningModal extends Component {
         {this.state.showIndividualTable ? (
           <>
             <div className="selfLearning--modal--title"> UN - list </div>{" "}
-            <ReactTable
-              data={individualEntries}
-              columns={individualTableColumns}
-            />{" "}
+            <ReactTable data={individualEntries} columns={individualTableColumns} />{" "}
           </>
         ) : (
           <>
@@ -379,4 +347,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(SelfLearningModal);
+export default connect(
+  mapStateToProps,
+  { deleteGeneralSL, deleteIndividualSL, resetIndividualSL }
+)(SelfLearningModal);

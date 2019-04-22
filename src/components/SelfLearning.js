@@ -5,6 +5,9 @@ import FitText from "react-fittext";
 import classNames from "classnames";
 
 import SelfLearningModal from "./modals/SelfLearningModal";
+import { resetSLData } from "../actions/selfLearningActions";
+import { downloadExcel, uploadExcelTemplate } from "../actions/excelActions";
+import { changeConfig } from "../actions/configActions";
 
 import { makeForm } from "../helpers";
 import "../styles/selfLearning.scss";
@@ -41,8 +44,7 @@ class SelfLearning extends Component {
 
   render() {
     let rounding = 0;
-    if (!isUndefined(this.props.comIndex))
-      rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    if (!isUndefined(this.props.comIndex)) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const configurationValues = {
       selfLearning: {
@@ -59,9 +61,7 @@ class SelfLearning extends Component {
         },
         normal: {
           type: "conditional",
-          condition: config =>
-            !config.selfLearning.enabled.endsWith("ind") &&
-            config.selfLearning.enabled !== "off",
+          condition: config => !config.selfLearning.enabled.endsWith("ind") && config.selfLearning.enabled !== "off",
           contents: {
             LogID: {
               name: "LogID",
@@ -116,14 +116,14 @@ class SelfLearning extends Component {
                   name: "Reset Self Learning Data",
                   type: "button",
                   onClick: () => {
-                    this.props.api.resetSLData();
+                    this.props.resetSLData();
                   }
                 },
                 downloadExcel: {
                   name: "Download Excel file",
                   type: "button",
                   onClick: () => {
-                    this.props.api.downloadExcel();
+                    this.props.downloadExcel();
                   }
                 },
                 logID: {
@@ -197,9 +197,7 @@ class SelfLearning extends Component {
                 name: "Excel column - Com Ind",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i =>
-                  String.fromCharCode("A".charCodeAt(0) + i)
-                )
+                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
               }
             },
             excelDateColumn: {
@@ -209,9 +207,7 @@ class SelfLearning extends Component {
                 name: "Excel column - Date",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i =>
-                  String.fromCharCode("A".charCodeAt(0) + i)
-                )
+                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
               }
             },
             excelExitColumn: {
@@ -221,14 +217,13 @@ class SelfLearning extends Component {
                 name: "Excel column - Exit",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i =>
-                  String.fromCharCode("A".charCodeAt(0) + i)
-                )
+                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
               }
             },
             uploadExcelTemplate: {
               name: "Upload Excel Template",
-              type: "button"
+              type: "button",
+              onClick: uploadExcelTemplate
             },
             title: {
               name: "List column configuration",
@@ -272,8 +267,7 @@ class SelfLearning extends Component {
                   type: "number",
                   min: 0,
                   step: 1,
-                  condition: (config, index) =>
-                    config.selfLearning.extraColumns[index].type !== "date"
+                  condition: (config, index) => config.selfLearning.extraColumns[index].type !== "date"
                 },
                 generalVisible: {
                   name: "Show in SL list",
@@ -293,28 +287,16 @@ class SelfLearning extends Component {
       }
     };
 
-    const indicators = [
-      "selfLearning--inProgress",
-      "selfLearning--success",
-      "selfLearning--warning"
-    ];
+    const indicators = ["selfLearning--inProgress", "selfLearning--success", "selfLearning--warning"];
 
     const cells = [
       "Self Learning",
-      (this.props.calibration || 0).toFixed(
-        this.props.config.serial.coms[this.props.comIndex || 0].digits
-      ) || 0,
+      (this.props.calibration || 0).toFixed(this.props.config.serial.coms[this.props.comIndex || 0].digits) || 0,
       Math.round((this.props.tolerance || 0) * 1000) / 10 + "%"
     ];
 
     if (!this.props.individual && this.props.success) {
-      cells.push(
-        Math.round(
-          (this.props.tolerance || 0 - this.props.matchedTolerance || 0) * 1000
-        ) /
-          10 +
-          "%"
-      );
+      cells.push(Math.round((this.props.tolerance || 0 - this.props.matchedTolerance || 0) * 1000) / 10 + "%");
     }
     return (
       <>
@@ -328,28 +310,15 @@ class SelfLearning extends Component {
           {this.state.configModalIsOpen && (
             <form>
               <h2>Configuration for SelfLearning</h2>
-              {makeForm(configurationValues, this.props.config, this.props.api)}
+              {makeForm(configurationValues, this.props.config, this.props.changeConfig)}
             </form>
           )}
         </Modal>
-        <SelfLearningModal
-          isOpen={this.state.SLModalIsOpen}
-          onClose={this.closeSLModal}
-          api={this.props.api}
-        />
+        <SelfLearningModal isOpen={this.state.SLModalIsOpen} onClose={this.closeSLModal} />
 
         <div
-          className={classNames(
-            "selfLearning",
-            indicators[this.props.success || 0]
-          )}
-          onClick={
-            this.props.configLocked
-              ? this.props.individual
-                ? this.openSLModal
-                : null
-              : this.openConfigModal
-          }
+          className={classNames("selfLearning", indicators[this.props.success || 0])}
+          onClick={this.props.configLocked ? (this.props.individual ? this.openSLModal : null) : this.openConfigModal}
         >
           {cells.map((cell, index) => (
             <div key={index} className={"selfLearning--cell"}>
@@ -380,4 +349,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(SelfLearning);
+export default connect(
+  mapStateToProps,
+  { resetSLData, downloadExcel, changeConfig }
+)(SelfLearning);

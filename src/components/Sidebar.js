@@ -4,6 +4,11 @@ import { slide as Menu } from "react-burger-menu";
 import Toggle from "react-toggle";
 import Modal from "react-modal";
 
+import { downloadExcel, uploadExcel } from "../actions/excelActions";
+import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList } from "../actions/logActions";
+import { saveConfig } from "../actions/configActions";
+import { unlockConfig, toggleMenu, openMenu, closeMenu } from "../actions/menuActions";
+
 import "../styles/sidebar.scss";
 
 class Sidebar extends Component {
@@ -16,15 +21,15 @@ class Sidebar extends Component {
     if (!this.props.isMenuOpen) return;
 
     if (this.props.configLocked) {
-      this.props.api.unlockConfig();
+      this.props.unlockConfig();
     } else {
-      this.props.api.saveConfig();
+      this.props.saveConfig();
     }
   };
 
   openUploadModal = () => {
     this.setState({ uploadModalIsOpen: true });
-    this.props.api.closeMenu();
+    this.props.closeMenu();
   };
 
   closeUploadModal = () => {
@@ -33,7 +38,7 @@ class Sidebar extends Component {
 
   openLogModal = () => {
     this.setState({ logModalIsOpen: true });
-    this.props.api.closeMenu();
+    this.props.closeMenu();
   };
 
   closeLogModal = () => {
@@ -42,50 +47,32 @@ class Sidebar extends Component {
 
   uploadLog = (log, index) => {
     if (window.confirm("Do you really want to upload " + log + "?")) {
-      this.props.api.uploadLog(log, index);
+      this.props.uploadLog(log, index);
     }
   };
 
   deleteLog = log => {
     if (window.confirm("Do you really want to delete " + log + "?")) {
-      this.props.api.deleteLog(log);
+      this.props.deleteLog(log);
     }
   };
 
   downloadAllLogs = () => {
     if (window.confirm("Do you really want to download all logs?")) {
-      this.props.api.downloadAllLogs();
+      this.props.downloadAllLogs();
     }
   };
 
   deleteAllLogs = () => {
     if (window.confirm("Do you really want to delete all logs?")) {
-      this.props.api.deleteAllLogs();
+      this.props.deleteAllLogs();
     }
   };
 
   render() {
-    const closeMenu = this.props.api.closeMenu;
+    const closeMenu = this.props.closeMenu;
     return (
       <>
-        <Modal
-          isOpen={this.state.uploadModalIsOpen}
-          onRequestClose={this.closeUploadModal}
-          overlayClassName="modalOverlay"
-          className="modalContent"
-          contentLabel="File Upload Modal"
-        >
-          <h2>Upload an excel file</h2>
-          <form
-            id="uploadForm"
-            action="importFile"
-            method="post"
-            enctype="multipart/form-data"
-          >
-            <input type="submit" value="Import .xls" />
-            <input type="file" name="importFile" accept=".xls" />
-          </form>
-        </Modal>
         <Modal
           isOpen={this.state.logModalIsOpen}
           onRequestClose={this.closeLogModal}
@@ -109,7 +96,7 @@ class Sidebar extends Component {
                   type="button"
                   value="Download"
                   onClick={() => {
-                    this.props.api.downloadLog(log);
+                    this.props.downloadLog(log);
                   }}
                 />
                 {this.props.ftpTargets.map((target, index) => {
@@ -150,9 +137,7 @@ class Sidebar extends Component {
           pageWrapId="page-wrap"
           outerContainerId="outer-container"
           isOpen={this.props.isMenuOpen}
-          onStateChange={newState =>
-            !newState.isOpen && this.props.api.closeMenu()
-          }
+          onStateChange={newState => !newState.isOpen && closeMenu()}
           width={450}
         >
           <span className="menu-item menu-item--clickable">
@@ -176,7 +161,7 @@ class Sidebar extends Component {
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
-                this.props.api.getLogList();
+                this.props.getLogList();
                 this.openLogModal();
                 closeMenu();
               }}
@@ -188,18 +173,30 @@ class Sidebar extends Component {
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
-                this.openUploadModal();
-                closeMenu();
+                uploadExcel();
+                //this.openUploadModal();
+                //closeMenu();
               }}
             >
               Import Excel
+            </span>
+          )}
+          {this.props.exposeUpload && (
+            <span
+              className="menu-item menu-item--clickable"
+              onClick={() => {
+                this.props.downloadExcel();
+                closeMenu();
+              }}
+            >
+              Download Excel
             </span>
           )}
           <span
             className="menu-item menu-item--clickable"
             onClick={() => {
               if (window.confirm("Are you sure you want to reboot?")) {
-                this.props.api.reboot();
+                this.props.reboot();
               }
               closeMenu();
             }}
@@ -210,8 +207,7 @@ class Sidebar extends Component {
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
-                if (window.confirm("Are you sure you want to shutdown?"))
-                  this.props.api.shutdown();
+                if (window.confirm("Are you sure you want to shutdown?")) this.props.shutdown();
                 closeMenu();
               }}
             >
@@ -249,4 +245,19 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Sidebar);
+export default connect(
+  mapStateToProps,
+  {
+    downloadExcel,
+    downloadAllLogs,
+    deleteLog,
+    deleteAllLogs,
+    downloadLog,
+    getLogList,
+    unlockConfig,
+    toggleMenu,
+    openMenu,
+    closeMenu,
+    saveConfig
+  }
+)(Sidebar);
