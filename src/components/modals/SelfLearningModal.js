@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Modal from "react-modal";
-import ReactTable from "react-table";
+import ReactTable from "../util/ReactTableWrapper";
 import Toggle from "react-toggle";
 import dateFormat from "dateformat";
 
@@ -10,6 +10,10 @@ import { deleteGeneralSL, deleteIndividualSL, resetIndividualSL } from "../../ac
 
 const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
+
+function sum(list) {
+  return list.reduce((acc, cur) => acc + cur, 0);
+}
 
 class SelfLearningModal extends Component {
   constructor(props) {
@@ -30,240 +34,6 @@ class SelfLearningModal extends Component {
     const valueName = this.props.config.serial.coms[this.props.comIndex].name;
     const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
-    const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => ({
-      Header: column.title,
-      accessor: row => row.extra[index],
-      Cell: props => {
-        console.log(props);
-        switch (column.type) {
-          case "text":
-            return String(props.value).slice(-column.digits);
-          case "number":
-            return Number(props.value).toFixed(column.digits);
-          case "date":
-            return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
-        }
-        props.value.toFixed(rounding);
-      },
-      style: {
-        textAlign: "center"
-      },
-      width: Math.max(70, 11 * column.title.length),
-      id: index + 20
-    }));
-
-    const generalTableColumns = [
-      {
-        Header: valueName,
-        accessor: row => row.entries[0],
-        Cell: props => props.value.toFixed(rounding),
-        id: 10,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      },
-      {
-        Header: "-1",
-        accessor: row => row.entries[1] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
-        id: 2,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      },
-      {
-        Header: "-2",
-        accessor: row => row.entries[2] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
-        id: 3,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      },
-      {
-        Header: "-3",
-        accessor: row => row.entries[3] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
-        id: 4,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      },
-      {
-        Header: "-4",
-        accessor: row => row.entries[4] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
-        id: 5,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      },
-      {
-        Header: keyName,
-        accessor: "key",
-        style: {
-          textAlign: "center"
-        },
-        width: 200
-      },
-      ...extraColumns,
-      {
-        Header: (
-          <button
-            onClick={() => {
-              if (window.confirm(`Are you sure you want to delete all general entries?`)) {
-                this.props.deleteGeneralSL();
-              }
-            }}
-          >
-            <b> Delete </b>
-          </button>
-        ),
-        Cell: props => {
-          return (
-            <button
-              onClick={() => {
-                if (window.confirm(`Are you sure you want to delete general entries for ${props.original.key}?`)) {
-                  this.props.deleteGeneralSL(props.original.key);
-                }
-              }}
-            >
-              Delete
-            </button>
-          );
-        },
-        id: 1,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      }
-    ].map(column => ({
-      ...column,
-      Header: <b> {column.Header} </b>
-    }));
-
-    const individualTableColumns = [
-      {
-        Header: valueName,
-        accessor: "calibration",
-        style: {
-          textAlign: "center"
-        },
-        width: 70,
-        Cell: props => props.value.toFixed(rounding),
-        id: 12
-      },
-      {
-        Header: keyName,
-        accessor: "key",
-        style: {
-          textAlign: "center"
-        },
-        width: 200
-      },
-      ...extraColumns,
-      {
-        Header: "Tol",
-        accessor: "tolerance",
-        Cell: props => {
-          return (
-            <div
-              style={{
-                backgroundColor: individualColors[Math.min(4, props.original.increments)],
-                color: textColors[Math.min(4, props.original.increments)]
-              }}
-            >
-              {props.value.toFixed(1)}{" "}
-            </div>
-          );
-        },
-        style: {
-          textAlign: "center"
-        },
-        width: 50
-      },
-      {
-        Header: "Num",
-        accessor: "numUpdates",
-        style: {
-          textAlign: "center"
-        },
-        width: 50
-      },
-      {
-        Header: "-1",
-        accessor: row => row.numUpdatesHistory[0] || "",
-        style: {
-          textAlign: "center"
-        },
-        width: 50,
-        id: 1
-      },
-      {
-        Header: "-2",
-        accessor: row => row.numUpdatesHistory[1] || "",
-        style: {
-          textAlign: "center"
-        },
-        width: 50,
-        id: 2
-      },
-      {
-        Header: "-3",
-        accessor: row => row.numUpdatesHistory[2] || "",
-        style: {
-          textAlign: "center"
-        },
-        width: 50,
-        id: 3
-      },
-      {
-        Header: (
-          <button
-            onClick={() => {
-              if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
-                this.props.deleteIndividualSL();
-              }
-            }}
-          >
-            <b> Delete </b>{" "}
-          </button>
-        ),
-        Cell: props => {
-          return (
-            <button
-              onClick={() => {
-                if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
-                  this.props.deleteIndividualSL(props.original.key);
-                }
-              }}
-            >
-              {" "}
-              Delete{" "}
-            </button>
-          );
-        },
-        id: 4,
-        style: {
-          textAlign: "center"
-        },
-        width: 70
-      }
-    ].map(column => ({
-      ...column,
-      Header: (
-        <>
-          <b> {column.Header} </b>{" "}
-        </>
-      )
-    }));
-
     const individualEntries = [];
     const generalEntries = [];
 
@@ -279,6 +49,173 @@ class SelfLearningModal extends Component {
         ...this.props.individualEntries[key]
       });
     }
+
+    const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => ({
+      Headers: ["", column.title],
+      accessor: row => row.extra[index],
+      Cell: props => {
+        console.log(props);
+        switch (column.type) {
+          case "text":
+            return String(props.value).slice(-column.digits);
+          case "number":
+            return Number(props.value).toFixed(column.digits);
+          case "date":
+            return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
+        }
+        props.value.toFixed(rounding);
+      },
+      width: Math.max(70, 11 * column.title.length),
+      generalVisible: column.generalVisible
+    }));
+
+    const generalTableColumns = [
+      {
+        Headers: ["", valueName],
+        accessor: row => row.entries[0],
+        Cell: props => props.value.toFixed(rounding),
+        width: 70
+      },
+      {
+        Headers: ["", "-1"],
+        accessor: row => row.entries[1] || "",
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        width: 70
+      },
+      {
+        Headers: ["", "-2"],
+        accessor: row => row.entries[2] || "",
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        width: 70
+      },
+      {
+        Headers: ["", "-3"],
+        accessor: row => row.entries[3] || "",
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        width: 70
+      },
+      {
+        Headers: ["", "-4"],
+        accessor: row => row.entries[4] || "",
+        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        width: 70
+      },
+      {
+        Headers: ["", keyName],
+        accessor: "key",
+        width: 200
+      },
+      ...extraColumns.filter(column => column.generalVisible),
+      {
+        Headers: [
+          "",
+          <button
+            onClick={() => {
+              if (window.confirm(`Are you sure you want to delete all general entries?`)) {
+                this.props.deleteGeneralSL();
+              }
+            }}
+          >
+            <b> Delete </b>
+          </button>
+        ],
+        Cell: props => {
+          return (
+            <button
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete general entries for ${props.original.key}?`)) {
+                  this.props.deleteGeneralSL(props.original.key);
+                }
+              }}
+            >
+              Delete
+            </button>
+          );
+        },
+        width: 70
+      }
+    ];
+
+    const individualTableColumns = [
+      {
+        Headers: ["", valueName],
+        accessor: "calibration",
+        width: 70,
+        Cell: props => props.value.toFixed(rounding)
+      },
+      {
+        Headers: ["", keyName],
+        accessor: "key",
+        width: 200
+      },
+      ...extraColumns,
+      {
+        Headers: ["", "Tol"],
+        accessor: "tolerance",
+        Cell: props => {
+          return (
+            <div
+              style={{
+                backgroundColor: individualColors[Math.min(4, props.original.increments)],
+                color: textColors[Math.min(4, props.original.increments)]
+              }}
+            >
+              {props.value.toFixed(1)}{" "}
+            </div>
+          );
+        },
+        width: 50
+      },
+      {
+        Headers: [sum(individualEntries.map(entry => entry.numUpdates)), "Num"],
+        accessor: "numUpdates",
+        width: 50
+      },
+      {
+        Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[0])), "-1"],
+        accessor: row => row.numUpdatesHistory[0] || "",
+        width: 50
+      },
+      {
+        Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[1])), "-2"],
+        accessor: row => row.numUpdatesHistory[1] || "",
+        width: 50
+      },
+      {
+        Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[2])), "-3"],
+        accessor: row => row.numUpdatesHistory[2] || "",
+        width: 50
+      },
+      {
+        Headers: [
+          "",
+          <button
+            onClick={() => {
+              if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
+                this.props.deleteIndividualSL();
+              }
+            }}
+          >
+            <b> Delete </b>{" "}
+          </button>
+        ],
+        Cell: props => {
+          return (
+            <button
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
+                  this.props.deleteIndividualSL(props.original.key);
+                }
+              }}
+            >
+              {" "}
+              Delete{" "}
+            </button>
+          );
+        },
+        width: 70
+      }
+    ];
 
     return (
       <>
@@ -299,7 +236,13 @@ class SelfLearningModal extends Component {
         {this.state.showIndividualTable ? (
           <>
             <div className="selfLearning--modal--title"> UN - list </div>{" "}
-            <ReactTable data={individualEntries} columns={individualTableColumns} />{" "}
+            <ReactTable
+              data={individualEntries}
+              columns={individualTableColumns}
+              style={{
+                textAlign: "center"
+              }}
+            />{" "}
           </>
         ) : (
           <>

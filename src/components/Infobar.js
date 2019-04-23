@@ -141,6 +141,10 @@ class Infobar extends Component {
             name: "Automatically upload log on FTP",
             type: "checkbox"
           },
+          uploadExcel: {
+            name: "Include Excel with upload",
+            type: "checkbox"
+          },
           targets: [1, 2].map(index => ({
             title: {
               name: "Target " + index,

@@ -6,7 +6,7 @@ import Toggle from "react-toggle";
 import classNames from "classnames";
 
 import { loadConfig, loadStatic } from "../actions/configActions";
-import { getLog, getUniqueLog } from "../actions/logActions";
+import { getLog } from "../actions/logActions";
 import { openMenu, getLogo } from "../actions/menuActions";
 
 import ComList from "./ComList";
@@ -40,7 +40,7 @@ class Main extends Component {
 
     this.state = {
       logModalIsOpen: false,
-      logModalUnique: false,
+      logModalFilterType: "none",
       logEntries: [],
       logTableColumns: [],
       logo: MBDC,
@@ -48,7 +48,30 @@ class Main extends Component {
     };
   }
 
+  filterTypes = [
+    {
+      id: "none",
+      name: "Show all",
+      filter: entry => true
+    }
+  ];
+
   openLogModal = () => {
+    if (this.props.uniqueLogEnabled) {
+      this.filterTypes.push({
+        id: "unique",
+        name: "Show only unique",
+        filter: entry => entry.TU
+      });
+    }
+
+    if (this.props.activityCounter) {
+      this.filterTypes.push({
+        id: "activity",
+        name: "Show only activity",
+        filter: entry => entry.TA
+      });
+    }
     this.setState({
       logModalIsOpen: true,
       reloadInterval: setInterval(this.reloadLogEntries, 1000)
@@ -57,10 +80,11 @@ class Main extends Component {
   };
 
   reloadLogEntries = e => {
-    const unique = e ? e.target.checked : this.state.logModalUnique;
-    const getFunction = unique ? getUniqueLog : getLog;
+    const filterType = e ? e.target.value : this.state.logModalFilterType;
 
-    getFunction().then(result => {
+    const filter = this.filterTypes.find(filter => filter.id === filterType).filter;
+
+    getLog().then(result => {
       this.setState({
         logTableColumns: result.data.legend
           .map((name, index) => ({
@@ -77,9 +101,10 @@ class Main extends Component {
             name
           }))
           .filter((column, index) => index >= 2)
-          .filter(column => this.props.uniqueLogEnabled || column.name !== "TU"),
-        logEntries: result.data.entries,
-        logModalUnique: unique
+          .filter(column => this.props.uniqueLogEnabled || column.name !== "TU")
+          .filter(column => this.props.activityCounter || column.name !== "TA"),
+        logEntries: result.data.entries.filter(filter),
+        logModalFilterType: filterType
       });
     });
   };
@@ -111,11 +136,16 @@ class Main extends Component {
             className="modalContent"
             contentLabel="Log Modal"
           >
-            {this.props.uniqueLogEnabled && (
+            {this.filterTypes.length > 1 && (
               <span>
-                <Toggle checked={this.state.logModalUnique} onChange={this.reloadLogEntries} /> Only show unique entries
+                <select value={this.state.logModalUnique} onChange={this.reloadLogEntries}>
+                  {this.filterTypes.map(filter => (
+                    <option value={filter.id}>{filter.name}</option>
+                  ))}
+                </select>
               </span>
             )}
+
             <div className="main--logModal">
               <div>
                 <div className="main--logModal--title">
@@ -192,6 +222,8 @@ function mapStateToProps(state) {
 
   const uniqueLogEnabled = state.config.logger.unique !== "off";
 
+  const { activityCounter } = state.config.selfLearning;
+
   return {
     loaded: true,
     showTable,
@@ -199,7 +231,8 @@ function mapStateToProps(state) {
     showOutputs,
     showSelfLearning,
     configLocked,
-    uniqueLogEnabled
+    uniqueLogEnabled,
+    activityCounter
   };
 }
 

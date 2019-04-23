@@ -220,6 +220,14 @@ class SelfLearning extends Component {
                 options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
               }
             },
+            exitOptions: {
+              name: "Exit options",
+              type: "keyValue"
+            },
+            activityCounter: {
+              type: "checkbox",
+              name: "Activity counter"
+            },
             uploadExcelTemplate: {
               name: "Upload Excel Template",
               type: "button",
