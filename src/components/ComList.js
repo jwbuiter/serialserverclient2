@@ -92,11 +92,13 @@ const configurationValues = {
         },
         average: {
           name: "Take average",
-          type: "checkbox"
+          type: "checkbox",
+          condition: (config, index) => config.serial.coms[index].numeric
         },
         factor: {
           name: "Factor",
-          type: "number"
+          type: "number",
+          condition: (config, index) => config.serial.coms[index].numeric
         },
         digits: {
           name: "Digits/rounding",
@@ -106,7 +108,8 @@ const configurationValues = {
         },
         alwaysPositive: {
           name: "Always positive",
-          type: "checkbox"
+          type: "checkbox",
+          condition: (config, index) => config.serial.coms[index].numeric
         },
         timeoutReset: {
           name: "Reset after timeout",

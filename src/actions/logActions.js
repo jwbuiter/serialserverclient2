@@ -1,5 +1,5 @@
 import axios from "axios";
-import { RECEIVE_LOG_LIST } from "./types";
+import { RECEIVE_LOG_LIST, LOGGER_STATE } from "./types";
 
 export const downloadLog = name => {
   window.location.href = "/downloadLog?file=" + name;
@@ -32,10 +32,8 @@ export const deleteLog = name => (dispatch, getState, { emit }) => {
   dispatch(getLogList());
 };
 
-export const getLog = () => {
-  return axios.get("/comlog");
-};
-
-export const getUniqueLog = () => {
-  return axios.get("/comlogu");
+export const getLog = () => dispatch => {
+  axios.get("/comlog").then(result => {
+    dispatch({ type: LOGGER_STATE, payload: result.data });
+  });
 };

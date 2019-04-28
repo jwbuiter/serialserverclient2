@@ -8,7 +8,7 @@ export default function ReactTableWrapper(props) {
     id++;
     return {
       id,
-      style: props.style,
+      style: { ...props.style, ...column.style },
       Header: (
         <b>
           {column.Headers.reduce((acc, cur) => (

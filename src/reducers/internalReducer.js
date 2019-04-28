@@ -7,6 +7,7 @@ const {
   TABLE_CELL_STATE,
   TABLE_CELL_COLOR,
   SELFLEARNING_STATE,
+  LOGGER_STATE,
   TABLE_FOUND_STATE,
   SERIAL_CLEAR
 } = require("../actions/types");
@@ -20,6 +21,12 @@ const initialState = {
     enabled: false,
     formula: "",
     formulaResults: []
+  },
+  logger: {
+    entries: [],
+    legend: [],
+    accessors: [],
+    digits: []
   },
   tableNotFound: false
 };
@@ -105,6 +112,12 @@ export default function(fullState = initialState, action) {
       return {
         ...fullState,
         tableNotFound: action.payload
+      };
+    }
+    case LOGGER_STATE: {
+      return {
+        ...fullState,
+        logger: action.payload
       };
     }
     default:

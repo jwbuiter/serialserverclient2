@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Modal from "react-modal";
-import ReactTable from "react-table";
-import Toggle from "react-toggle";
 import classNames from "classnames";
 
 import { loadConfig, loadStatic } from "../actions/configActions";
 import { getLog } from "../actions/logActions";
 import { openMenu, getLogo } from "../actions/menuActions";
 
+import LogModal from "./modals/LogModal";
 import ComList from "./ComList";
 import OutputList from "./OutputList";
 import InputList from "./InputList";
 import Table from "./Table";
 import SelfLearning from "./SelfLearning";
 import Logo from "./Logo";
-import { getColumnWidth } from "../helpers";
 
 import MBDC from "../assets/Logo-MBDC.jpg";
 import Infobar from "./Infobar";
@@ -48,65 +46,12 @@ class Main extends Component {
     };
   }
 
-  filterTypes = [
-    {
-      id: "none",
-      name: "Show all",
-      filter: entry => true
-    }
-  ];
-
   openLogModal = () => {
-    if (this.props.uniqueLogEnabled) {
-      this.filterTypes.push({
-        id: "unique",
-        name: "Show only unique",
-        filter: entry => entry.TU
-      });
-    }
-
-    if (this.props.activityCounter) {
-      this.filterTypes.push({
-        id: "activity",
-        name: "Show only activity",
-        filter: entry => entry.TA
-      });
-    }
     this.setState({
       logModalIsOpen: true,
-      reloadInterval: setInterval(this.reloadLogEntries, 1000)
+      reloadInterval: setInterval(this.props.getLog, 1000)
     });
-    this.reloadLogEntries();
-  };
-
-  reloadLogEntries = e => {
-    const filterType = e ? e.target.value : this.state.logModalFilterType;
-
-    const filter = this.filterTypes.find(filter => filter.id === filterType).filter;
-
-    getLog().then(result => {
-      this.setState({
-        logTableColumns: result.data.legend
-          .map((name, index) => ({
-            Header: () => <b>{name}</b>,
-            accessor: result.data.accessors[index],
-            width: getColumnWidth(result.data.entries, result.data.accessors[index]),
-            style: { textAlign: "center" },
-            Cell: props => {
-              if (typeof props.value === "number") {
-                return props.value.toFixed(result.data.digits[index]);
-              }
-              return props.value;
-            },
-            name
-          }))
-          .filter((column, index) => index >= 2)
-          .filter(column => this.props.uniqueLogEnabled || column.name !== "TU")
-          .filter(column => this.props.activityCounter || column.name !== "TA"),
-        logEntries: result.data.entries.filter(filter),
-        logModalFilterType: filterType
-      });
-    });
+    this.props.getLog();
   };
 
   closeLogModal = () => {
@@ -129,36 +74,7 @@ class Main extends Component {
             { "main--nooutputs": !this.props.showOutputs }
           )}
         >
-          <Modal
-            isOpen={this.state.logModalIsOpen}
-            onRequestClose={this.closeLogModal}
-            overlayClassName="modalOverlay"
-            className="modalContent"
-            contentLabel="Log Modal"
-          >
-            {this.filterTypes.length > 1 && (
-              <span>
-                <select value={this.state.logModalUnique} onChange={this.reloadLogEntries}>
-                  {this.filterTypes.map(filter => (
-                    <option value={filter.id}>{filter.name}</option>
-                  ))}
-                </select>
-              </span>
-            )}
-
-            <div className="main--logModal">
-              <div>
-                <div className="main--logModal--title">
-                  <b>{this.state.logModalUnique ? "Unique Log" : "Normal Log"}</b>
-                </div>
-                <ReactTable
-                  style={{ fontSize: 14 }}
-                  data={this.state.logEntries}
-                  columns={this.state.logTableColumns}
-                />
-              </div>
-            </div>
-          </Modal>
+          <LogModal isOpen={this.state.logModalIsOpen} onClose={this.closeLogModal} />
           <div className="info">
             <Infobar />
           </div>
@@ -238,5 +154,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { loadConfig, loadStatic, openMenu }
+  { loadConfig, loadStatic, openMenu, getLog }
 )(Main);

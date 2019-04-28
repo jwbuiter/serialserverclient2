@@ -5,9 +5,9 @@ import Toggle from "react-toggle";
 import Modal from "react-modal";
 
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
-import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList } from "../actions/logActions";
+import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
 import { saveConfig } from "../actions/configActions";
-import { unlockConfig, toggleMenu, openMenu, closeMenu } from "../actions/menuActions";
+import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, shutdown } from "../actions/menuActions";
 
 import "../styles/sidebar.scss";
 
@@ -258,6 +258,9 @@ export default connect(
     toggleMenu,
     openMenu,
     closeMenu,
-    saveConfig
+    saveConfig,
+    reboot,
+    shutdown,
+    uploadLog
   }
 )(Sidebar);

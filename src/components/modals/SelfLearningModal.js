@@ -12,7 +12,7 @@ const individualColors = ["", "green", "yellow", "orange", "red"];
 const textColors = ["black", "white", "black", "black", "white"];
 
 function sum(list) {
-  return list.reduce((acc, cur) => acc + cur, 0);
+  return list.filter(entry => entry).reduce((acc, cur) => acc + cur, 0);
 }
 
 class SelfLearningModal extends Component {
@@ -36,6 +36,7 @@ class SelfLearningModal extends Component {
 
     const individualEntries = [];
     const generalEntries = [];
+    const individualColumnHeaders = this.props.individualColumnHeaders;
 
     for (let key in this.props.generalEntries) {
       generalEntries.push({
@@ -51,10 +52,9 @@ class SelfLearningModal extends Component {
     }
 
     const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => ({
-      Headers: ["", column.title],
+      Headers: [individualColumnHeaders[index + 2], column.title],
       accessor: row => row.extra[index],
       Cell: props => {
-        console.log(props);
         switch (column.type) {
           case "text":
             return String(props.value).slice(-column.digits);
@@ -62,8 +62,9 @@ class SelfLearningModal extends Component {
             return Number(props.value).toFixed(column.digits);
           case "date":
             return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
+          default:
+            return props.value;
         }
-        props.value.toFixed(rounding);
       },
       width: Math.max(70, 11 * column.title.length),
       generalVisible: column.generalVisible
@@ -138,13 +139,13 @@ class SelfLearningModal extends Component {
 
     const individualTableColumns = [
       {
-        Headers: ["", valueName],
+        Headers: [individualColumnHeaders[0], valueName],
         accessor: "calibration",
         width: 70,
         Cell: props => props.value.toFixed(rounding)
       },
       {
-        Headers: ["", keyName],
+        Headers: [individualColumnHeaders[1], keyName],
         accessor: "key",
         width: 200
       },
@@ -174,48 +175,92 @@ class SelfLearningModal extends Component {
       {
         Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[0])), "-1"],
         accessor: row => row.numUpdatesHistory[0] || "",
-        width: 50
+        width: 50,
+        style: {
+          backgroundColor: "#ddd"
+        }
       },
       {
         Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[1])), "-2"],
         accessor: row => row.numUpdatesHistory[1] || "",
-        width: 50
+        width: 50,
+        style: {
+          backgroundColor: "#ddd"
+        }
       },
       {
         Headers: [sum(individualEntries.map(entry => entry.numUpdatesHistory[2])), "-3"],
         accessor: row => row.numUpdatesHistory[2] || "",
-        width: 50
-      },
-      {
-        Headers: [
-          "",
+        width: 50,
+        style: {
+          backgroundColor: "#ddd"
+        }
+      }
+    ];
+
+    if (this.props.activityCounter) {
+      individualTableColumns.push(
+        {
+          Headers: [sum(individualEntries.map(entry => entry.activity)), "TA"],
+          accessor: "activity",
+          width: 50
+        },
+        {
+          Headers: [sum(individualEntries.map(entry => entry.activityHistory[0])), "-1"],
+          accessor: row => row.activityHistory[0] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        },
+        {
+          Headers: [sum(individualEntries.map(entry => entry.activityHistory[1])), "-2"],
+          accessor: row => row.activityHistory[1] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        },
+        {
+          Headers: [sum(individualEntries.map(entry => entry.activityHistory[2])), "-3"],
+          accessor: row => row.activityHistory[2] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        }
+      );
+    }
+
+    individualTableColumns.push({
+      Headers: [
+        "",
+        <button
+          onClick={() => {
+            if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
+              this.props.deleteIndividualSL();
+            }
+          }}
+        >
+          <b> Delete </b>{" "}
+        </button>
+      ],
+      Cell: props => {
+        return (
           <button
             onClick={() => {
-              if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
-                this.props.deleteIndividualSL();
+              if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
+                this.props.deleteIndividualSL(props.original.key);
               }
             }}
           >
-            <b> Delete </b>{" "}
+            {" "}
+            Delete{" "}
           </button>
-        ],
-        Cell: props => {
-          return (
-            <button
-              onClick={() => {
-                if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
-                  this.props.deleteIndividualSL(props.original.key);
-                }
-              }}
-            >
-              {" "}
-              Delete{" "}
-            </button>
-          );
-        },
-        width: 70
-      }
-    ];
+        );
+      },
+      width: 70
+    });
 
     return (
       <>
@@ -280,13 +325,15 @@ function mapStateToProps(state) {
   const config = state.config;
   const individual = state.internal.selfLearning.individual;
   const tableExtraColumnTitle = state.config.selfLearning.tableExtraColumnTitle;
+  const { activityCounter } = state.config.selfLearning;
 
   return {
     ...state.internal.selfLearning,
     configLocked,
     config,
     individual,
-    tableExtraColumnTitle
+    tableExtraColumnTitle,
+    activityCounter
   };
 }
 
