@@ -18,6 +18,10 @@ const configurationValues = {
           name: "Name of output",
           type: "text"
         },
+        visible: {
+          name: "Visible",
+          type: "checkbox"
+        },
         formula: {
           name: "Formula for output",
           type: "text"
@@ -82,9 +86,7 @@ class OutputList extends Component {
           </div>
           {this.props.outputs
             .map((port, index) => ({ ...port, index }))
-            .filter((port, index) => {
-              return this.props.portsEnabled[index] || port.name !== "" || !this.props.configLocked;
-            })
+            .filter((port, index) => this.props.portsEnabled[index] || !this.props.configLocked)
             .map(port => {
               let indicator = "buttonList--list--indicator--output";
               if (port.isForced) indicator += "Forced";
@@ -132,7 +134,7 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.output.ports.map(port => port.formula !== "");
+  const portsEnabled = state.config.output.ports.map(port => port.visible);
 
   return {
     outputs,

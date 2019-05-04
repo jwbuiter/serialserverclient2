@@ -18,6 +18,10 @@ const configurationValues = {
           name: "Name of cell",
           type: "text"
         },
+        visible: {
+          name: "Visible",
+          type: "checkbox"
+        },
         formula: {
           name: "Command for input",
           type: "select",
@@ -129,9 +133,7 @@ class InputList extends Component {
           </div>
           {this.props.inputs
             .map((port, index) => ({ ...port, index }))
-            .filter((port, index) => {
-              return this.props.portsEnabled[index] || port.name !== "" || !this.props.configLocked;
-            })
+            .filter((port, index) => this.props.portsEnabled[index] || !this.props.configLocked)
             .map(port => {
               let indicator = "buttonList--list--indicator--input";
               if (port.isForced) indicator += "Forced";
@@ -173,7 +175,7 @@ function mapStateToProps(state) {
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.input.ports.map(port => port.formula !== "");
+  const portsEnabled = state.config.input.ports.map(port => port.visible);
 
   return {
     inputs,

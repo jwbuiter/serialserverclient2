@@ -1,16 +1,18 @@
 {
-  "main.css": "/static/css/main.afca9f10.chunk.css",
-  "main.js": "/static/js/main.25651c0f.chunk.js",
-  "main.js.map": "/static/js/main.25651c0f.chunk.js.map",
-  "static/css/1.0f57cc3c.chunk.css": "/static/css/1.0f57cc3c.chunk.css",
-  "static/js/1.b5cb0f22.chunk.js": "/static/js/1.b5cb0f22.chunk.js",
-  "static/js/1.b5cb0f22.chunk.js.map": "/static/js/1.b5cb0f22.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
-  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
-  "static/css/1.0f57cc3c.chunk.css.map": "/static/css/1.0f57cc3c.chunk.css.map",
-  "static/media/Logo-MBDC.jpg": "/static/media/Logo-MBDC.645b4549.jpg",
-  "static/css/main.afca9f10.chunk.css.map": "/static/css/main.afca9f10.chunk.css.map",
-  "index.html": "/index.html",
-  "precache-manifest.f1667c3b6cf64e8905cf5c38225df9b5.js": "/precache-manifest.f1667c3b6cf64e8905cf5c38225df9b5.js",
-  "service-worker.js": "/service-worker.js"
+  "files": {
+    "main.css": "/static/css/main.c7318f41.chunk.css",
+    "main.js": "/static/js/main.c151f893.chunk.js",
+    "main.js.map": "/static/js/main.c151f893.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/css/2.33754160.chunk.css": "/static/css/2.33754160.chunk.css",
+    "static/js/2.d9a481ce.chunk.js": "/static/js/2.d9a481ce.chunk.js",
+    "static/js/2.d9a481ce.chunk.js.map": "/static/js/2.d9a481ce.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.c14ee7bacbc42f1559cf95f416431f25.js": "/precache-manifest.c14ee7bacbc42f1559cf95f416431f25.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.33754160.chunk.css.map": "/static/css/2.33754160.chunk.css.map",
+    "static/css/main.c7318f41.chunk.css.map": "/static/css/main.c7318f41.chunk.css.map",
+    "static/media/Logo-MBDC.jpg": "/static/media/Logo-MBDC.645b4549.jpg"
+  }
 }

@@ -7,11 +7,7 @@ export const forceInput = index => (dispatch, getState, { emit }) => {
 
   const askForConfirmation = port.manualConfirmation && !port.isForced;
 
-  if (
-    askForConfirmation &&
-    !window.confirm(`Are you sure you want to manually change ${port.name}?`)
-  )
-    return;
+  if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
 
   emit("forceInput", index);
 };
@@ -25,11 +21,7 @@ export const forceOutput = index => (dispatch, getState, { emit }) => {
 
   const askForConfirmation = port.manualConfirmation && !port.isForced;
 
-  if (
-    askForConfirmation &&
-    !window.confirm(`Are you sure you want to manually change ${port.name}?`)
-  )
-    return;
+  if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
 
   emit("forceOutput", index);
 };

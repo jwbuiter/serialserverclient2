@@ -19,7 +19,11 @@ const TableCell = props => {
             { "tableCell--content--input--text": !cell.numeric },
             { "tableCell--content--input--numeric": cell.numeric }
           )}
-          onChange={e => props.manualFunction(index, e.target.value)}
+          onChange={event => {
+            const value = event.target.value;
+            const message = props.cell.numeric ? Number(value) : value;
+            props.manualFunction(index, message);
+          }}
           value={cell.value}
         />
       );
@@ -62,20 +66,15 @@ const TableCell = props => {
 
       if (cell.numeric) {
         const decrement = () => {
-          let newMenuIndex =
-            menuOptions.findIndex(option => option.key === Number(cell.value)) -
-            1;
+          let newMenuIndex = menuOptions.findIndex(option => option.key === Number(cell.value)) - 1;
 
           if (newMenuIndex < 0) newMenuIndex = menuOptions.length - 1;
 
           props.manualFunction(index, menuOptions[newMenuIndex].key);
         };
         const increment = () => {
-          let newMenuIndex =
-            menuOptions.findIndex(option => option.key === Number(cell.value)) +
-            1;
-          if (newMenuIndex === 0 || newMenuIndex === menuOptions.length)
-            newMenuIndex = 0;
+          let newMenuIndex = menuOptions.findIndex(option => option.key === Number(cell.value)) + 1;
+          if (newMenuIndex === 0 || newMenuIndex === menuOptions.length) newMenuIndex = 0;
 
           props.manualFunction(index, menuOptions[newMenuIndex].key);
         };
@@ -97,8 +96,7 @@ const TableCell = props => {
       }
       const date = daysToDate(cell.value);
 
-      content = `${date.getDate()}-${date.getMonth() +
-        1}-${date.getFullYear()}`;
+      content = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
       break;
     }
     default: {
@@ -114,15 +112,12 @@ const TableCell = props => {
       })}
     >
       <div className="tableCell--title" onClick={props.openModal}>
-        <FitText>
+        <FitText compressor={1.3}>
           <div className="center">{cell.name}</div>
         </FitText>
       </div>
-      <div
-        className="tableCell--content"
-        style={{ backgroundColor: !props.notFound && cell.color }}
-      >
-        <FitText compressor={0.6}>
+      <div className="tableCell--content" style={{ backgroundColor: !props.notFound && cell.color }}>
+        <FitText compressor={0.7}>
           <div className="center">{content}</div>
         </FitText>
       </div>

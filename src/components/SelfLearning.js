@@ -274,8 +274,7 @@ class SelfLearning extends Component {
                   name: "Digits",
                   type: "number",
                   min: 0,
-                  step: 1,
-                  condition: (config, index) => config.selfLearning.extraColumns[index].type !== "date"
+                  step: 1
                 },
                 generalVisible: {
                   name: "Show in SL list",

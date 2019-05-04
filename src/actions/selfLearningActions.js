@@ -2,8 +2,8 @@ export const deleteGeneralSL = key => (dispatch, getState, { emit }) => {
   emit("deleteGeneralSL", key);
 };
 
-export const deleteIndividualSL = key => (dispatch, getState, { emit }) => {
-  emit("deleteIndividualSL", key);
+export const deleteIndividualSL = (key, message) => (dispatch, getState, { emit }) => {
+  emit("deleteIndividualSL", { key, message });
 };
 
 export const resetIndividualSL = () => (dispatch, getState, { emit }) => {

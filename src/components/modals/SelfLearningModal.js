@@ -51,24 +51,28 @@ class SelfLearningModal extends Component {
       });
     }
 
-    const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => ({
-      Headers: [individualColumnHeaders[index + 2], column.title],
-      accessor: row => row.extra[index],
-      Cell: props => {
-        switch (column.type) {
-          case "text":
-            return String(props.value).slice(-column.digits);
-          case "number":
-            return Number(props.value).toFixed(column.digits);
-          case "date":
-            return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
-          default:
-            return props.value;
-        }
-      },
-      width: Math.max(70, 11 * column.title.length),
-      generalVisible: column.generalVisible
-    }));
+    const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => {
+      const header = Number(individualColumnHeaders[index + 2]).toFixed(column.digits);
+
+      return {
+        Headers: [header, column.title],
+        accessor: row => row.extra[index],
+        Cell: props => {
+          switch (column.type) {
+            case "text":
+              return String(props.value).slice(-column.digits);
+            case "number":
+              return Number(props.value).toFixed(column.digits);
+            case "date":
+              return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
+            default:
+              return props.value;
+          }
+        },
+        width: Math.max(80, 11 * column.title.length),
+        generalVisible: column.generalVisible
+      };
+    });
 
     const generalTableColumns = [
       {
@@ -232,6 +236,8 @@ class SelfLearningModal extends Component {
       );
     }
 
+    const exitOptions = this.props.config.selfLearning.exitOptions;
+
     individualTableColumns.push({
       Headers: [
         "",
@@ -245,8 +251,22 @@ class SelfLearningModal extends Component {
           <b> Delete </b>{" "}
         </button>
       ],
-      Cell: props => {
-        return (
+      Cell: props =>
+        exitOptions.length ? (
+          <select
+            value=""
+            onChange={event => {
+              if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
+                this.props.deleteIndividualSL(props.original.key, event.target.value);
+              }
+            }}
+          >
+            <option value="">Delete</option>
+            {exitOptions.map(({ key, value }) => (
+              <option value={key}>{value}</option>
+            ))}
+          </select>
+        ) : (
           <button
             onClick={() => {
               if (window.confirm(`Are you sure you want to delete the entry for ${props.original.key}?`)) {
@@ -254,13 +274,15 @@ class SelfLearningModal extends Component {
               }
             }}
           >
-            {" "}
-            Delete{" "}
+            Delete
           </button>
-        );
-      },
+        ),
       width: 70
     });
+
+    const tableStyle = {
+      textAlign: "center"
+    };
 
     return (
       <>
@@ -281,24 +303,12 @@ class SelfLearningModal extends Component {
         {this.state.showIndividualTable ? (
           <>
             <div className="selfLearning--modal--title"> UN - list </div>{" "}
-            <ReactTable
-              data={individualEntries}
-              columns={individualTableColumns}
-              style={{
-                textAlign: "center"
-              }}
-            />{" "}
+            <ReactTable data={individualEntries} columns={individualTableColumns} style={tableStyle} />{" "}
           </>
         ) : (
           <>
             <div className="selfLearning--modal--title"> SL - list </div>{" "}
-            <ReactTable
-              style={{
-                textAlign: "center"
-              }}
-              data={generalEntries}
-              columns={generalTableColumns}
-            />{" "}
+            <ReactTable style={tableStyle} data={generalEntries} columns={generalTableColumns} />{" "}
           </>
         )}{" "}
       </>

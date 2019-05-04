@@ -112,26 +112,13 @@ function mapStateToProps(state) {
     return { loaded: false };
   }
 
-  const showTable =
-    state.static.exposeUpload &&
-    (!configLocked ||
-      state.config.table.cells.reduce((acc, cur) => {
-        return acc || cur.name;
-      }, false));
+  const showTable = state.static.exposeUpload && (!configLocked || state.config.table.cells.some(cell => cell.visible));
 
   const showInputs =
-    state.static.exposeUpload &&
-    (!configLocked ||
-      state.config.input.ports.reduce((acc, cur) => {
-        return acc || cur.name;
-      }, false));
+    state.static.exposeUpload && (!configLocked || state.config.input.ports.some(port => port.visible));
 
   const showOutputs =
-    state.static.exposeUpload &&
-    (!configLocked ||
-      state.config.output.ports.reduce((acc, cur) => {
-        return acc || cur.name;
-      }, false));
+    state.static.exposeUpload && (!configLocked || state.config.output.ports.some(port => port.visible));
 
   const showSelfLearning =
     state.static.enabledModules.selfLearning && (!configLocked || state.internal.selfLearning.enabled);

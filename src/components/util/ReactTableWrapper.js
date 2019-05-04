@@ -1,24 +1,23 @@
 import React from "react";
 import ReactTable from "react-table";
 
+import "../../styles/reactTable.scss";
+
 let id = 0;
 
 export default function ReactTableWrapper(props) {
   const columns = props.columns.map(column => {
     id++;
+    console.log({ ...column.style, ...props.style });
     return {
       id,
-      style: { ...props.style, ...column.style },
+      style: { ...column.style, ...props.style },
       Header: (
-        <b>
-          {column.Headers.reduce((acc, cur) => (
-            <>
-              {acc}
-              <br />
-              {cur}
-            </>
+        <div className="reactTable--header">
+          {column.Headers.map(element => (
+            <div className="reactTable--header--child">{element || " "}</div>
           ))}
-        </b>
+        </div>
       ),
       ...column
     };

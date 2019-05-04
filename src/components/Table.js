@@ -18,6 +18,10 @@ const configurationValues = {
           name: "Name of cell",
           type: "text"
         },
+        visible: {
+          name: "Visible",
+          type: "checkbox"
+        },
         type: {
           name: "Type of content",
           type: "select",
@@ -98,7 +102,7 @@ class Table extends Component {
         ...cell,
         ...this.props.cellConfig[index]
       }))
-      .filter(cell => !this.props.configLocked || cell.formula || cell.name);
+      .filter(cell => !this.props.configLocked || cell.visible);
 
     return (
       <>
