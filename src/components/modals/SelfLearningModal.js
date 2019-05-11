@@ -36,13 +36,15 @@ class SelfLearningModal extends Component {
 
     const keyName = comConfigs[1 - comIndex].name;
     const valueName = comConfigs[comIndex].name;
-    const keyRounding = comConfigs[1 - comIndex].digits;
     const valueRounding = comConfigs[comIndex].digits;
+
+    const firstTopDigits = this.props.firstTopDigits;
+    const secondTopDigits = this.props.secondTopDigits;
 
     const individualEntries = [];
     const generalEntries = [];
     const individualColumnHeaders = this.props.individualColumnHeaders;
-    const headerRoundings = [valueRounding, keyRounding, ...extraColumnConfigs.map(column => column.digits)];
+    const headerRoundings = [firstTopDigits, secondTopDigits, ...extraColumnConfigs.map(column => column.digits)];
     const formattedHeaders = individualColumnHeaders.map((header, index) =>
       header ? Number(header).toFixed(headerRoundings[index]) : ""
     );

@@ -241,9 +241,21 @@ class SelfLearning extends Component {
               name: "#1 Top Formula",
               type: "text"
             },
+            firstTopDigits: {
+              name: "#1 Top Digits",
+              type: "number",
+              min: 0,
+              step: 1
+            },
             secondTopFormula: {
               name: "#2 Top Formula",
               type: "text"
+            },
+            secondTopDigits: {
+              name: "#1 Top Digits",
+              type: "number",
+              min: 0,
+              step: 1
             },
             extraColumns: {
               name: "Additional columns",
