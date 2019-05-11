@@ -8,8 +8,8 @@ let id = 0;
 export default function ReactTableWrapper(props) {
   const columns = props.columns.map(column => {
     id++;
-    console.log({ ...column.style, ...props.style });
     return {
+      ...column,
       id,
       style: { ...column.style, ...props.style },
       Header: (
@@ -18,10 +18,10 @@ export default function ReactTableWrapper(props) {
             <div className="reactTable--header--child">{element || " "}</div>
           ))}
         </div>
-      ),
-      ...column
+      )
     };
   });
 
+  console.log(columns);
   return <ReactTable data={props.data} columns={columns} />;
 }

@@ -9,7 +9,7 @@ class LogModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterType: "none"
+      filterType: "full"
     };
   }
 
@@ -19,10 +19,10 @@ class LogModal extends Component {
 
   filterTypes = [
     {
-      id: "none",
-      name: "Show all",
-      title: "Normal Log",
-      filter: entry => true
+      id: "full",
+      name: "Show only complete",
+      title: "Complete Log",
+      filter: entry => entry.full
     }
   ];
 
@@ -43,13 +43,13 @@ class LogModal extends Component {
         title: "Activity Log",
         filter: entry => entry.TA
       });
-      this.filterTypes.push({
-        id: "full",
-        name: "Show only complete",
-        title: "Complete Log",
-        filter: entry => entry.full
-      });
     }
+    this.filterTypes.push({
+      id: "none",
+      name: "Show all",
+      title: "Normal Log",
+      filter: entry => true
+    });
   }
 
   render() {

@@ -112,12 +112,12 @@ const TableCell = props => {
       })}
     >
       <div className="tableCell--title" onClick={props.openModal}>
-        <FitText compressor={1.3}>
+        <FitText>
           <div className="center">{cell.name}</div>
         </FitText>
       </div>
       <div className="tableCell--content" style={{ backgroundColor: !props.notFound && cell.color }}>
-        <FitText compressor={0.7}>
+        <FitText compressor={0.6}>
           <div className="center">{content}</div>
         </FitText>
       </div>

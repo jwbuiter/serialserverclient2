@@ -30,13 +30,22 @@ class SelfLearningModal extends Component {
   };
 
   getSLModalContent = () => {
-    const keyName = this.props.config.serial.coms[1 - this.props.comIndex].name;
-    const valueName = this.props.config.serial.coms[this.props.comIndex].name;
-    const rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    const comConfigs = this.props.config.serial.coms;
+    const comIndex = this.props.comIndex;
+    const extraColumnConfigs = this.props.config.selfLearning.extraColumns;
+
+    const keyName = comConfigs[1 - comIndex].name;
+    const valueName = comConfigs[comIndex].name;
+    const keyRounding = comConfigs[1 - comIndex].digits;
+    const valueRounding = comConfigs[comIndex].digits;
 
     const individualEntries = [];
     const generalEntries = [];
     const individualColumnHeaders = this.props.individualColumnHeaders;
+    const headerRoundings = [valueRounding, keyRounding, ...extraColumnConfigs.map(column => column.digits)];
+    const formattedHeaders = individualColumnHeaders.map((header, index) =>
+      header ? Number(header).toFixed(headerRoundings[index]) : ""
+    );
 
     for (let key in this.props.generalEntries) {
       generalEntries.push({
@@ -52,10 +61,8 @@ class SelfLearningModal extends Component {
     }
 
     const extraColumns = this.props.config.selfLearning.extraColumns.map((column, index) => {
-      const header = Number(individualColumnHeaders[index + 2]).toFixed(column.digits);
-
       return {
-        Headers: [header, column.title],
+        Headers: [formattedHeaders[index + 2], column.title],
         accessor: row => row.extra[index],
         Cell: props => {
           switch (column.type) {
@@ -78,31 +85,31 @@ class SelfLearningModal extends Component {
       {
         Headers: ["", valueName],
         accessor: row => row.entries[0],
-        Cell: props => props.value.toFixed(rounding),
+        Cell: props => (props.value ? props.value.toFixed(valueRounding) : ""),
         width: 70
       },
       {
         Headers: ["", "-1"],
         accessor: row => row.entries[1] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        Cell: props => (props.value ? props.value.toFixed(valueRounding) : ""),
         width: 70
       },
       {
         Headers: ["", "-2"],
         accessor: row => row.entries[2] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        Cell: props => (props.value ? props.value.toFixed(valueRounding) : ""),
         width: 70
       },
       {
         Headers: ["", "-3"],
         accessor: row => row.entries[3] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        Cell: props => (props.value ? props.value.toFixed(valueRounding) : ""),
         width: 70
       },
       {
         Headers: ["", "-4"],
         accessor: row => row.entries[4] || "",
-        Cell: props => (props.value ? props.value.toFixed(rounding) : ""),
+        Cell: props => (props.value ? props.value.toFixed(valueRounding) : ""),
         width: 70
       },
       {
@@ -141,15 +148,49 @@ class SelfLearningModal extends Component {
       }
     ];
 
+    if (this.props.activityCounter) {
+      generalTableColumns.push(
+        {
+          Headers: [sum(generalEntries.map(entry => entry.activity)), "TA"],
+          accessor: "activity",
+          width: 50
+        },
+        {
+          Headers: [sum(generalEntries.map(entry => entry.activityHistory[0])), "-1"],
+          accessor: row => row.activityHistory[0] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        },
+        {
+          Headers: [sum(generalEntries.map(entry => entry.activityHistory[1])), "-2"],
+          accessor: row => row.activityHistory[1] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        },
+        {
+          Headers: [sum(generalEntries.map(entry => entry.activityHistory[2])), "-3"],
+          accessor: row => row.activityHistory[2] || "",
+          width: 50,
+          style: {
+            backgroundColor: "#ddd"
+          }
+        }
+      );
+    }
+
     const individualTableColumns = [
       {
-        Headers: [individualColumnHeaders[0], valueName],
+        Headers: [formattedHeaders[0], valueName],
         accessor: "calibration",
         width: 70,
-        Cell: props => props.value.toFixed(rounding)
+        Cell: props => props.value.toFixed(valueRounding)
       },
       {
-        Headers: [individualColumnHeaders[1], keyName],
+        Headers: [formattedHeaders[1], keyName],
         accessor: "key",
         width: 200
       },
@@ -280,9 +321,7 @@ class SelfLearningModal extends Component {
       width: 70
     });
 
-    const tableStyle = {
-      textAlign: "center"
-    };
+    const tableStyle = { textAlign: "center" };
 
     return (
       <>
