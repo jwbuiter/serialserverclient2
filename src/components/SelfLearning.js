@@ -322,10 +322,10 @@ class SelfLearning extends Component {
       const activity =
         Object.values(this.props.individualEntries)
           .map(entry => entry.activity)
-          .reduce((acc, cur) => acc + cur) +
+          .reduce((acc, cur) => acc + cur, 0) +
         Object.values(this.props.generalEntries)
           .map(entry => entry.activity)
-          .reduce((acc, cur) => acc + cur);
+          .reduce((acc, cur) => acc + cur, 0);
 
       cells.push(activity);
     }
