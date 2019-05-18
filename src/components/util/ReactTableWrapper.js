@@ -22,6 +22,5 @@ export default function ReactTableWrapper(props) {
     };
   });
 
-  console.log(columns);
   return <ReactTable data={props.data} columns={columns} />;
 }

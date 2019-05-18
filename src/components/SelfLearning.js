@@ -317,6 +317,18 @@ class SelfLearning extends Component {
     if (!this.props.individual && this.props.success) {
       cells.push(Math.round((this.props.tolerance || 0 - this.props.matchedTolerance || 0) * 1000) / 10 + "%");
     }
+
+    if (this.props.individual && this.props.activityCounter) {
+      const activity =
+        Object.values(this.props.individualEntries)
+          .map(entry => entry.activity)
+          .reduce((acc, cur) => acc + cur) +
+        Object.values(this.props.generalEntries)
+          .map(entry => entry.activity)
+          .reduce((acc, cur) => acc + cur);
+
+      cells.push(activity);
+    }
     return (
       <>
         <Modal
@@ -358,13 +370,15 @@ function mapStateToProps(state) {
   const config = state.config;
   const individual = state.internal.selfLearning.individual;
   const tableExtraColumnTitle = state.config.selfLearning.tableExtraColumnTitle;
+  const activityCounter = state.config.selfLearning.activityCounter;
 
   return {
     ...state.internal.selfLearning,
     configLocked,
     config,
     individual,
-    tableExtraColumnTitle
+    tableExtraColumnTitle,
+    activityCounter
   };
 }
 
