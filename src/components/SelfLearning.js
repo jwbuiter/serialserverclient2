@@ -229,7 +229,7 @@ class SelfLearning extends Component {
               name: "Activity counter"
             },
             uploadExcelTemplate: {
-              name: "Upload Excel Template",
+              name: "Import Excel Template",
               type: "button",
               onClick: uploadExcelTemplate
             },
