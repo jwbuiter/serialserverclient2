@@ -38,8 +38,8 @@ class SelfLearningModal extends Component {
     const valueName = comConfigs[comIndex].name;
     const valueRounding = comConfigs[comIndex].digits;
 
-    const firstTopDigits = this.props.firstTopDigits;
-    const secondTopDigits = this.props.secondTopDigits;
+    const firstTopDigits = this.props.config.selfLearning.firstTopDigits;
+    const secondTopDigits = this.props.config.selfLearning.secondTopDigits;
 
     const individualEntries = [];
     const generalEntries = [];
@@ -69,11 +69,13 @@ class SelfLearningModal extends Component {
         Cell: props => {
           switch (column.type) {
             case "text":
-              return String(props.value).slice(-column.digits);
+              return props.value ? String(props.value).slice(-column.digits) : "";
             case "number":
               return Number(props.value).toFixed(column.digits);
             case "date":
-              return dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy");
+              return Number(props.value) > 0
+                ? dateFormat(daysToDate(Number(props.value)), "dd-mm-yyyy")
+                : "Invalid date";
             default:
               return props.value;
           }

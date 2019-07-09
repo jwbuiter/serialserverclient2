@@ -237,12 +237,12 @@ class Infobar extends Component {
         </Modal>
 
         <div className="infobar" onClick={this.props.configLocked ? null : this.openConfigModal}>
-          <FitText compressor={0.8}>
+          <FitText compressor={1}>
             <div className="infobar--item">
               <div className="center">{this.props.name}</div>
             </div>
           </FitText>
-          <FitText compressor={0.8}>
+          <FitText compressor={1}>
             <div className="infobar--item">
               <div className="center">{this.props.ip}</div>
             </div>
