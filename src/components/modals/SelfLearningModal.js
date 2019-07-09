@@ -122,7 +122,6 @@ class SelfLearningModal extends Component {
       ...extraColumns.filter(column => column.generalVisible),
       {
         Headers: [
-          "",
           <button
             onClick={() => {
               if (window.confirm(`Are you sure you want to delete all general entries?`)) {
@@ -131,7 +130,8 @@ class SelfLearningModal extends Component {
             }}
           >
             <b> Delete </b>
-          </button>
+          </button>,
+          ""
         ],
         Cell: props => {
           return (
@@ -283,7 +283,6 @@ class SelfLearningModal extends Component {
 
     individualTableColumns.push({
       Headers: [
-        "",
         <button
           onClick={() => {
             if (window.confirm(`Are you sure you want to delete all individual entries?`)) {
@@ -292,7 +291,8 @@ class SelfLearningModal extends Component {
           }}
         >
           <b> Delete </b>{" "}
-        </button>
+        </button>,
+        ""
       ],
       Cell: props =>
         exitOptions.length ? (
@@ -323,14 +323,18 @@ class SelfLearningModal extends Component {
       width: 70
     });
 
+    const downloadTable = () => {
+      window.alert("Not Implemented Yet");
+    };
+
     const tableStyle = { textAlign: "center" };
 
     return (
       <>
         <span>
-          <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />{" "}
-          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}{" "}
-        </span>{" "}
+          <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />
+          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
+        </span>
         <span className="selfLearning--modal--buttons">
           <button
             onClick={() => {
@@ -338,20 +342,23 @@ class SelfLearningModal extends Component {
                 this.props.resetIndividualSL();
             }}
           >
-            <b> Reset </b>{" "}
-          </button>{" "}
-        </span>{" "}
+            <b> Reset </b>
+          </button>
+          <button onClick={downloadTable}>
+            <b> Download </b>
+          </button>
+        </span>
         {this.state.showIndividualTable ? (
           <>
-            <div className="selfLearning--modal--title"> UN - list </div>{" "}
-            <ReactTable data={individualEntries} columns={individualTableColumns} style={tableStyle} />{" "}
+            <div className="selfLearning--modal--title"> UN - list </div>
+            <ReactTable data={individualEntries} columns={individualTableColumns} style={tableStyle} />
           </>
         ) : (
           <>
-            <div className="selfLearning--modal--title"> SL - list </div>{" "}
-            <ReactTable style={tableStyle} data={generalEntries} columns={generalTableColumns} />{" "}
+            <div className="selfLearning--modal--title"> SL - list </div>
+            <ReactTable style={tableStyle} data={generalEntries} columns={generalTableColumns} />
           </>
-        )}{" "}
+        )}
       </>
     );
   };
