@@ -3,7 +3,9 @@ export const deleteGeneralSL = key => (dispatch, getState, { emit }) => {
 };
 
 export const deleteIndividualSL = (key, message) => (dispatch, getState, { emit }) => {
-  emit("deleteIndividualSL", { key, message });
+  emit("deleteIndividualSL", { key, message }, totalNumber =>
+    window.alert(`Total SL number has been lowered from ${totalNumber + 1} to ${totalNumber}`)
+  );
 };
 
 export const resetIndividualSL = () => (dispatch, getState, { emit }) => {

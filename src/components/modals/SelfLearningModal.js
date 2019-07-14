@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import ReactTable from "../util/ReactTableWrapper";
 import Toggle from "react-toggle";
 import dateFormat from "dateformat";
+import XLSX from "xlsx";
 
 import { daysToDate } from "../../helpers";
 import { deleteGeneralSL, deleteIndividualSL, resetIndividualSL } from "../../actions/selfLearningActions";
@@ -338,6 +339,9 @@ class SelfLearningModal extends Component {
           {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
         </span>
         <span className="selfLearning--modal--buttons">
+          <button style={{ marginRight: "20px" }} onClick={downloadTable}>
+            <b> Download </b>
+          </button>
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
@@ -345,9 +349,6 @@ class SelfLearningModal extends Component {
             }}
           >
             <b> Reset </b>
-          </button>
-          <button onClick={downloadTable}>
-            <b> Download </b>
           </button>
         </span>
         {this.state.showIndividualTable ? (
