@@ -19,6 +19,10 @@ function sum(list) {
 class SelfLearningModal extends Component {
   constructor(props) {
     super(props);
+
+    this.UNTable = React.createRef();
+    this.SLTable = React.createRef();
+
     this.state = {
       showIndividualTable: true
     };
@@ -30,7 +34,7 @@ class SelfLearningModal extends Component {
     });
   };
 
-  getSLModalContent = () => {
+  render() {
     const comConfigs = this.props.config.serial.coms;
     const comIndex = this.props.comIndex;
     const extraColumnConfigs = this.props.config.selfLearning.extraColumns;
@@ -326,47 +330,40 @@ class SelfLearningModal extends Component {
       width: 70
     });
 
-    const downloadTable = () => {
-      window.alert("Not Implemented Yet");
-    };
-
     const tableStyle = { textAlign: "center" };
 
-    return (
-      <>
-        <span>
-          <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />
-          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
-        </span>
-        <span className="selfLearning--modal--buttons">
-          <button style={{ marginRight: "20px" }} onClick={downloadTable}>
-            <b> Download </b>
-          </button>
-          <button
-            onClick={() => {
-              if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
-                this.props.resetIndividualSL();
-            }}
-          >
-            <b> Reset </b>
-          </button>
-        </span>
-        {this.state.showIndividualTable ? (
-          <>
-            <div className="selfLearning--modal--title"> UN - list </div>
-            <ReactTable data={individualEntries} columns={individualTableColumns} style={tableStyle} />
-          </>
-        ) : (
-          <>
-            <div className="selfLearning--modal--title"> SL - list </div>
-            <ReactTable style={tableStyle} data={generalEntries} columns={generalTableColumns} />
-          </>
-        )}
-      </>
-    );
-  };
+    const downloadTable = () => {
+      const table = [];
+      let cols, tableRef, sheetName;
 
-  render() {
+      if (this.state.showIndividualTable) {
+        cols = individualTableColumns.slice(0, -1);
+        tableRef = this.UNTable;
+        sheetName = "UN List";
+      } else {
+        cols = generalTableColumns;
+        cols.splice(8, 1);
+        tableRef = this.SLTable;
+        sheetName = "SL List";
+      }
+
+      table[0] = cols.map(col => col.Headers[0]);
+      table[1] = cols.map(col => col.Headers[1]);
+
+      for (let row of tableRef.current.getResolvedState().sortedData) {
+        row = Object.values(row);
+        const newRow = [];
+        for (let i = 0; i < cols.length; i++) newRow.push(row[i]);
+        table.push(newRow);
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(table);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+      XLSX.writeFile(wb, "table.xlsx");
+    };
+
     return (
       <Modal
         isOpen={this.props.isOpen}
@@ -375,7 +372,48 @@ class SelfLearningModal extends Component {
         className="modalContent"
         contentLabel="SelfLearning Modal"
       >
-        {this.props.isOpen && this.getSLModalContent()}{" "}
+        {this.props.isOpen && (
+          <>
+            <span>
+              <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />
+              {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
+            </span>
+            <span className="selfLearning--modal--buttons">
+              <button style={{ marginRight: "20px" }} onClick={downloadTable}>
+                <b> Download </b>
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
+                    this.props.resetIndividualSL();
+                }}
+              >
+                <b> Reset </b>
+              </button>
+            </span>
+            {this.state.showIndividualTable ? (
+              <>
+                <div className="selfLearning--modal--title"> UN - list </div>
+                <ReactTable
+                  forwardRef={this.UNTable}
+                  data={individualEntries}
+                  columns={individualTableColumns}
+                  style={tableStyle}
+                />
+              </>
+            ) : (
+              <>
+                <div className="selfLearning--modal--title"> SL - list </div>
+                <ReactTable
+                  forwardRef={this.SLTable}
+                  style={tableStyle}
+                  data={generalEntries}
+                  columns={generalTableColumns}
+                />
+              </>
+            )}
+          </>
+        )}
       </Modal>
     );
   }
