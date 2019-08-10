@@ -34,7 +34,7 @@ class SelfLearningModal extends Component {
     });
   };
 
-  render() {
+  getSLModalContent() {
     const comConfigs = this.props.config.serial.coms;
     const comIndex = this.props.comIndex;
     const extraColumnConfigs = this.props.config.selfLearning.extraColumns;
@@ -365,6 +365,51 @@ class SelfLearningModal extends Component {
     };
 
     return (
+      <>
+        <span>
+          <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />
+          {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
+        </span>
+        <span className="selfLearning--modal--buttons">
+          <button style={{ marginRight: "20px" }} onClick={downloadTable}>
+            <b> Download </b>
+          </button>
+          <button
+            onClick={() => {
+              if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
+                this.props.resetIndividualSL();
+            }}
+          >
+            <b> Reset </b>
+          </button>
+        </span>
+        {this.state.showIndividualTable ? (
+          <>
+            <div className="selfLearning--modal--title"> UN - list </div>
+            <ReactTable
+              forwardRef={this.UNTable}
+              data={individualEntries}
+              columns={individualTableColumns}
+              style={tableStyle}
+            />
+          </>
+        ) : (
+          <>
+            <div className="selfLearning--modal--title"> SL - list </div>
+            <ReactTable
+              forwardRef={this.SLTable}
+              style={tableStyle}
+              data={generalEntries}
+              columns={generalTableColumns}
+            />
+          </>
+        )}
+      </>
+    );
+  }
+
+  render() {
+    return (
       <Modal
         isOpen={this.props.isOpen}
         onRequestClose={this.props.onClose}
@@ -372,48 +417,7 @@ class SelfLearningModal extends Component {
         className="modalContent"
         contentLabel="SelfLearning Modal"
       >
-        {this.props.isOpen && (
-          <>
-            <span>
-              <Toggle checked={this.state.showIndividualTable} onChange={this.toggleIndividualTable} />
-              {this.state.showIndividualTable ? " Show SL-list" : " Show UN-list"}
-            </span>
-            <span className="selfLearning--modal--buttons">
-              <button style={{ marginRight: "20px" }} onClick={downloadTable}>
-                <b> Download </b>
-              </button>
-              <button
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to reset the data of the individual selfLearning?"))
-                    this.props.resetIndividualSL();
-                }}
-              >
-                <b> Reset </b>
-              </button>
-            </span>
-            {this.state.showIndividualTable ? (
-              <>
-                <div className="selfLearning--modal--title"> UN - list </div>
-                <ReactTable
-                  forwardRef={this.UNTable}
-                  data={individualEntries}
-                  columns={individualTableColumns}
-                  style={tableStyle}
-                />
-              </>
-            ) : (
-              <>
-                <div className="selfLearning--modal--title"> SL - list </div>
-                <ReactTable
-                  forwardRef={this.SLTable}
-                  style={tableStyle}
-                  data={generalEntries}
-                  columns={generalTableColumns}
-                />
-              </>
-            )}
-          </>
-        )}
+        {this.props.isOpen && this.getSLModalContent()}
       </Modal>
     );
   }
