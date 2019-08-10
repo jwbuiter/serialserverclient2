@@ -29,3 +29,7 @@ export const forceOutput = index => (dispatch, getState, { emit }) => {
 export const tableManual = (index, value) => (dispatch, getState, { emit }) => {
   emit("manual", { index, value });
 };
+
+export const setDateTime = date => (dispatch, getState, { emit }) => {
+  emit("setDateTime", date);
+};

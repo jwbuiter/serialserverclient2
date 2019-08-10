@@ -14,6 +14,7 @@ import {
   getConfigList,
   uploadConfig
 } from "../actions/configActions";
+import { setDateTime } from "../actions/internalActions";
 import { makeForm } from "../helpers";
 
 import "../styles/infobar.scss";
@@ -24,7 +25,11 @@ class Infobar extends Component {
   constructor(props) {
     super(props);
     this.uploadRef = React.createRef();
-    this.state = { configModalIsOpen: false, listModalIsOpen: false };
+    this.state = {
+      configModalIsOpen: false,
+      listModalIsOpen: false,
+      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm")
+    };
   }
 
   openConfigModal = () => {
@@ -231,6 +236,24 @@ class Infobar extends Component {
                   }}
                 />
               </div>
+              <h3>Date and Time</h3>
+              <br />
+              <form
+                onSubmit={event => {
+                  event.preventDefault();
+                  this.props.setDateTime(this.state.newDate);
+                }}
+              >
+                Change internal time:
+                <input type="submit" value="Save" />
+                <input
+                  type="datetime-local"
+                  name="newDate"
+                  value={this.state.newDate}
+                  onChange={event => this.setState({ newDate: event.target.value })}
+                />
+              </form>
+
               {makeForm(configurationValues, this.props.config, this.props.changeConfig)}
             </form>
           )}
@@ -287,5 +310,15 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { changeConfig, deleteConfig, loadConfig, downloadConfig, configExists, saveConfig, getConfigList, uploadConfig }
+  {
+    changeConfig,
+    deleteConfig,
+    loadConfig,
+    downloadConfig,
+    configExists,
+    saveConfig,
+    getConfigList,
+    uploadConfig,
+    setDateTime
+  }
 )(Infobar);
