@@ -130,6 +130,35 @@ const configurationValues = {
           name: "Suffix",
           type: "text",
           condition: (config, index) => config.serial.coms[index].mode === "serial"
+        },
+        autoCommandEnabled: {
+          name: "AutoCommand",
+          type: "checkbox",
+          condition: (config, index) => config.serial.coms[index].mode === "serial"
+        },
+        autoCommandMin: {
+          name: "Min Value",
+          type: "number",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial" && config.serial.coms[index].autoCommandEnabled
+        },
+        autoCommandMax: {
+          name: "Max Value",
+          type: "number",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial" && config.serial.coms[index].autoCommandEnabled
+        },
+        autoCommandTime: {
+          name: "Time (sec)",
+          type: "number",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial" && config.serial.coms[index].autoCommandEnabled
+        },
+        autoCommandText: {
+          name: "Command",
+          type: "text",
+          condition: (config, index) =>
+            config.serial.coms[index].mode === "serial" && config.serial.coms[index].autoCommandEnabled
         }
       }
     ]
