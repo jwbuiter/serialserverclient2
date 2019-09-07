@@ -18,6 +18,24 @@ const configurationValues = {
           name: "Name of output",
           type: "text"
         },
+        hardwareInput: {
+          name: "Hardware output",
+          type: "select",
+          numeric: true,
+          options: {
+            "-1": "None",
+            "0": "HW Output 1",
+            "1": "HW Output 2",
+            "2": "HW Output 3",
+            "3": "HW Output 4",
+            "4": "HW Output 5",
+            "5": "HW Output 6",
+            "6": "HW Output 7",
+            "7": "HW Output 8",
+            "8": "HW Output 9",
+            "9": "HW Output 10"
+          }
+        },
         visible: {
           name: "Visible",
           type: "checkbox"
@@ -34,7 +52,8 @@ const configurationValues = {
           name: "Timeout in seconds",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
+          condition: (config, index) => config.output.ports[index].execute
         },
         manualConfirmation: {
           name: "Manual requires confirmation",

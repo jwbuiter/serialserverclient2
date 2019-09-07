@@ -361,7 +361,9 @@ class SelfLearningModal extends Component {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, sheetName);
 
-      XLSX.writeFile(wb, "table.xlsx");
+      const date = dateFormat(new Date(), "yyyy-mm-dd_HH-MM-ss");
+
+      XLSX.writeFile(wb, `${this.props.name}_${this.props.config.logger.logID}_${date}.xlsx`);
     };
 
     return (
@@ -424,6 +426,7 @@ class SelfLearningModal extends Component {
 }
 
 function mapStateToProps(state) {
+  const name = state.static.name;
   const configLocked = state.config.locked;
   const config = state.config;
   const individual = state.internal.selfLearning.individual;
@@ -436,7 +439,8 @@ function mapStateToProps(state) {
     config,
     individual,
     tableExtraColumnTitle,
-    activityCounter
+    activityCounter,
+    name
   };
 }
 

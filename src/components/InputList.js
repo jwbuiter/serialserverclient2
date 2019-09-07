@@ -18,6 +18,19 @@ const configurationValues = {
           name: "Name of cell",
           type: "text"
         },
+        hardwareInput: {
+          name: "Hardware input",
+          type: "select",
+          numeric: true,
+          options: {
+            "-1": "None",
+            "0": "HW Input 1",
+            "1": "HW Input 2",
+            "2": "HW Input 3",
+            "3": "HW Input 4",
+            "4": "HW Input 5"
+          }
+        },
         visible: {
           name: "Visible",
           type: "checkbox"
