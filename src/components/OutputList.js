@@ -18,7 +18,7 @@ const configurationValues = {
           name: "Name of output",
           type: "text"
         },
-        hardwareInput: {
+        hardwareOutput: {
           name: "Hardware output",
           type: "select",
           numeric: true,
