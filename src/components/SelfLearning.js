@@ -175,6 +175,13 @@ class SelfLearning extends Component {
               step: 1,
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
+            individualToleranceShift: {
+              name: "Individual tolerance shift %",
+              type: "number",
+              min: 0,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
             individualCorrectionIncrement: {
               name: "Correction %",
               type: "number",
