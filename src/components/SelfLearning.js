@@ -156,7 +156,7 @@ class SelfLearning extends Component {
               step: 1
             },
             tolerance: {
-              name: "Tolerance %",
+              name: "SL Tolerance %",
               type: "number",
               min: 0,
               step: 1
@@ -259,7 +259,7 @@ class SelfLearning extends Component {
               type: "text"
             },
             secondTopDigits: {
-              name: "#1 Top Digits",
+              name: "#2 Top Digits",
               type: "number",
               min: 0,
               step: 1

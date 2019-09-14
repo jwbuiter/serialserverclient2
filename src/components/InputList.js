@@ -42,6 +42,7 @@ const configurationValues = {
             "": "",
             exe: "Execute",
             exebl: "Execute Block",
+            reset: "Reset Table",
             teach: "SL Teach",
             restart: "Restart",
             shutdown: "Shutdown",
