@@ -22,6 +22,10 @@ const configurationValues = {
           name: "Visible",
           type: "checkbox"
         },
+        showInLog: {
+          name: "Show in log",
+          type: "checkbox"
+        },
         type: {
           name: "Type of content",
           type: "select",

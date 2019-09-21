@@ -35,16 +35,10 @@ $inputsize: 80%;
       font-size: $inputsize;
       text-align: center;
 
-      &--numeric {
-        width: 70%;
-      }
-
-      &--text {
-        width: 70%;
-      }
-
+      &--numeric,
+      &--text,
       &--select {
-        width: 70%;
+        width: 65%;
       }
     }
 

@@ -26,7 +26,8 @@ const initialState = {
     entries: [],
     legend: [],
     accessors: [],
-    digits: []
+    digits: [],
+    visible: []
   },
   tableNotFound: false
 };

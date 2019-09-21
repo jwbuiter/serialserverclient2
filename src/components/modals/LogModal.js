@@ -55,7 +55,7 @@ class LogModal extends Component {
   render() {
     const currentFilter = this.filterTypes.find(filter => filter.id === this.state.filterType);
 
-    const { entries, accessors, legend, digits } = this.props.loggerState;
+    const { entries, accessors, legend, digits, visible } = this.props.loggerState;
     const columns = legend
       .map((name, index) => ({
         Header: () => <b>{name}</b>,
@@ -70,7 +70,7 @@ class LogModal extends Component {
         },
         name
       }))
-      .filter((column, index) => index >= 2)
+      .filter((_, index) => visible[index])
       .filter(column => this.props.uniqueLogEnabled || column.name !== "TU")
       .filter(column => this.props.activityCounter || column.name !== "TA");
 
