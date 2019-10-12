@@ -208,11 +208,12 @@ class SelfLearningModal extends Component {
         Headers: ["", "Tol"],
         accessor: "tolerance",
         Cell: props => {
+          const incrementIndex = Math.floor(Math.min(4, props.original.increments));
           return (
             <div
               style={{
-                backgroundColor: individualColors[Math.min(4, props.original.increments)],
-                color: textColors[Math.min(4, props.original.increments)]
+                backgroundColor: individualColors[incrementIndex],
+                color: textColors[incrementIndex]
               }}
             >
               {props.value.toFixed(1)}{" "}

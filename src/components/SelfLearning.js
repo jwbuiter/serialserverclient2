@@ -190,9 +190,17 @@ class SelfLearning extends Component {
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
             individualCorrectionLimit: {
-              name: "Correction limit (max 9)",
+              name: "Correction limit (1-9)",
               type: "number",
-              min: 0,
+              min: 1,
+              max: 9,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            individualAverageNumber: {
+              name: "Average calibration number (1-9)",
+              type: "number",
+              min: 1,
               max: 9,
               step: 1,
               condition: config => config.selfLearning.enabled.endsWith("ind")

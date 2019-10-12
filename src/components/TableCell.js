@@ -100,7 +100,11 @@ const TableCell = props => {
       break;
     }
     default: {
-      content = cell.value;
+      if (cell.numeric) {
+        content = cell.value.toFixed(cell.digits);
+      } else {
+        content = cell.value;
+      }
       break;
     }
   }
