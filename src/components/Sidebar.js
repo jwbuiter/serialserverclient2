@@ -6,15 +6,23 @@ import Modal from "react-modal";
 
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
 import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
-import { saveConfig } from "../actions/configActions";
+import { saveConfig, changeConfig } from "../actions/configActions";
 import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, shutdown } from "../actions/menuActions";
+import { setDateTime } from "../actions/internalActions";
 
+import { makeForm } from "../helpers";
+import { isUndefined } from "util";
 import "../styles/sidebar.scss";
 
 class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = { uploadModalIsOpen: false, logModalIsOpen: false };
+    this.state = {
+      uploadModalIsOpen: false,
+      logModalIsOpen: false,
+      dateTimeModalIsOpen: false,
+      newCycleModalIsOpen: false
+    };
   }
 
   toggleConfigLock = () => {
@@ -45,6 +53,26 @@ class Sidebar extends Component {
     this.setState({ logModalIsOpen: false });
   };
 
+  openDateTimeModal = () => {
+    this.setState({ dateTimeModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeDateTimeModal = () => {
+    this.setState({ dateTimeModalIsOpen: false });
+  };
+
+  openNewCycleModal = () => {
+    this.props.unlockConfig();
+    this.setState({ newCycleModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeNewCycleModal = () => {
+    this.props.saveConfig();
+    this.setState({ newCycleModalIsOpen: false });
+  };
+
   uploadLog = (log, index) => {
     if (window.confirm("Do you really want to upload " + log + "?")) {
       this.props.uploadLog(log, index);
@@ -71,6 +99,50 @@ class Sidebar extends Component {
 
   render() {
     const closeMenu = this.props.closeMenu;
+
+    let rounding = 0;
+    if (!isUndefined(this.props.comIndex)) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+
+    const newCycleValues = {
+      selfLearning: {
+        downloadExcel: {
+          name: "Download Excel file",
+          type: "button",
+          onClick: () => {
+            this.props.downloadExcel();
+          }
+        },
+        resetSL: {
+          name: "Reset Self Learning Data",
+          type: "button",
+          onClick: () => {
+            this.props.resetSLData();
+          }
+        },
+        logID: {
+          type: "external",
+          location: "logger.logID",
+          configuration: {
+            name: "LogID",
+            type: "text"
+          }
+        },
+        startCalibration: {
+          name: "Calibration",
+          type: "number",
+          min: 0,
+          step: 1,
+          rounding
+        },
+        totalNumber: {
+          name: "Total number",
+          type: "number",
+          min: 0,
+          step: 1
+        }
+      }
+    };
+
     return (
       <>
         <Modal
@@ -131,6 +203,43 @@ class Sidebar extends Component {
             />
           </form>
         </Modal>
+        <Modal
+          isOpen={this.state.dateTimeModalIsOpen}
+          onRequestClose={this.closeDateTimeModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="Date Time Modal"
+        >
+          <h3>Date and Time</h3>
+          <br />
+          <form
+            onSubmit={event => {
+              event.preventDefault();
+              this.props.setDateTime(this.state.newDate);
+            }}
+          >
+            Change internal time:
+            <input type="submit" value="Save" />
+            <input
+              type="datetime-local"
+              name="newDate"
+              value={this.state.newDate}
+              onChange={event => this.setState({ newDate: event.target.value })}
+            />
+          </form>
+        </Modal>
+        <Modal
+          isOpen={this.state.newCycleModalIsOpen}
+          onRequestClose={this.closeNewCycleModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="New SL Cycle Modal"
+        >
+          <form>
+            <h2>Start new cycle</h2>
+            {this.state.newCycleModalIsOpen && makeForm(newCycleValues, this.props.config, this.props.changeConfig)}
+          </form>
+        </Modal>
         <Menu
           right
           customBurgerIcon={false}
@@ -140,23 +249,35 @@ class Sidebar extends Component {
           onStateChange={newState => !newState.isOpen && closeMenu()}
           width={450}
         >
-          <span className="menu-item menu-item--clickable">
+          {this.props.exposeSettings && (
+            <span className="menu-item menu-item--clickable">
+              <span
+                onClick={() => {
+                  closeMenu();
+                  this.toggleConfigLock();
+                }}
+              >
+                Unlock settings
+              </span>{" "}
+              <Toggle
+                checked={!this.props.configLocked}
+                onChange={() => {
+                  closeMenu();
+                  this.toggleConfigLock();
+                }}
+              />
+            </span>
+          )}
+          {this.props.selfLearningEnabled.endsWith("ind") && (
             <span
+              className="menu-item menu-item--clickable"
               onClick={() => {
-                closeMenu();
-                this.toggleConfigLock();
+                this.openNewCycleModal();
               }}
             >
-              Unlock settings
-            </span>{" "}
-            <Toggle
-              checked={!this.props.configLocked}
-              onChange={() => {
-                closeMenu();
-                this.toggleConfigLock();
-              }}
-            />
-          </span>
+              Start new cycle
+            </span>
+          )}
           {this.props.writeLogs && this.props.exposeUpload && (
             <span
               className="menu-item menu-item--clickable"
@@ -214,6 +335,14 @@ class Sidebar extends Component {
               Shutdown unit
             </span>
           )}
+          <span
+            className="menu-item menu-item--clickable"
+            onClick={() => {
+              this.openDateTimeModal();
+            }}
+          >
+            Set date and time
+          </span>
           <span className="menu-item">QS code: {this.props.QS}</span>
         </Menu>
       </>
@@ -230,37 +359,40 @@ function mapStateToProps(state) {
       writeLogs: false,
       exposeUpload: false,
       exposeShutdown: false,
-      logList: []
+      logList: [],
+      selfLearningEnabled: ""
     };
   }
   return {
     configLocked: state.config.locked,
+    config: state.config,
     isMenuOpen: state.misc.isMenuOpen,
     QS: state.static.QS,
     writeLogs: state.config.logger.writeToFile,
     exposeUpload: state.static.exposeUpload,
     exposeShutdown: state.static.exposeShutdown,
+    exposeSettings: state.static.exposeSettings,
     logList: state.misc.logList,
-    ftpTargets: state.config.FTP.targets
+    ftpTargets: state.config.FTP.targets,
+    selfLearningEnabled: state.config.selfLearning.enabled
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    downloadExcel,
-    downloadAllLogs,
-    deleteLog,
-    deleteAllLogs,
-    downloadLog,
-    getLogList,
-    unlockConfig,
-    toggleMenu,
-    openMenu,
-    closeMenu,
-    saveConfig,
-    reboot,
-    shutdown,
-    uploadLog
-  }
-)(Sidebar);
+export default connect(mapStateToProps, {
+  downloadExcel,
+  downloadAllLogs,
+  deleteLog,
+  deleteAllLogs,
+  downloadLog,
+  getLogList,
+  unlockConfig,
+  toggleMenu,
+  openMenu,
+  closeMenu,
+  saveConfig,
+  reboot,
+  shutdown,
+  uploadLog,
+  setDateTime,
+  changeConfig
+})(Sidebar);

@@ -100,6 +100,11 @@ class Infobar extends Component {
             name: "Write log to file",
             type: "checkbox"
           },
+          csvSeparator: {
+            name: "CSV separator",
+            type: "select",
+            options: { ",": ",", ";": ";" }
+          },
           logID: {
             name: "LogID",
             type: "text"
@@ -308,17 +313,14 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    changeConfig,
-    deleteConfig,
-    loadConfig,
-    downloadConfig,
-    configExists,
-    saveConfig,
-    getConfigList,
-    uploadConfig,
-    setDateTime
-  }
-)(Infobar);
+export default connect(mapStateToProps, {
+  changeConfig,
+  deleteConfig,
+  loadConfig,
+  downloadConfig,
+  configExists,
+  saveConfig,
+  getConfigList,
+  uploadConfig,
+  setDateTime
+})(Infobar);

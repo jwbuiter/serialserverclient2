@@ -112,18 +112,18 @@ class SelfLearning extends Component {
             important: {
               type: "emphasis",
               contents: {
-                resetSL: {
-                  name: "Reset Self Learning Data",
-                  type: "button",
-                  onClick: () => {
-                    this.props.resetSLData();
-                  }
-                },
                 downloadExcel: {
                   name: "Download Excel file",
                   type: "button",
                   onClick: () => {
                     this.props.downloadExcel();
+                  }
+                },
+                resetSL: {
+                  name: "Reset Self Learning Data",
+                  type: "button",
+                  onClick: () => {
+                    this.props.resetSLData();
                   }
                 },
                 logID: {
@@ -397,7 +397,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { resetSLData, downloadExcel, changeConfig }
-)(SelfLearning);
+export default connect(mapStateToProps, { resetSLData, downloadExcel, changeConfig })(SelfLearning);
