@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { slide as Menu } from "react-burger-menu";
 import Toggle from "react-toggle";
 import Modal from "react-modal";
+import moment from "moment";
 
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
 import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
@@ -22,7 +23,8 @@ class Sidebar extends Component {
       uploadModalIsOpen: false,
       logModalIsOpen: false,
       dateTimeModalIsOpen: false,
-      newCycleModalIsOpen: false
+      newCycleModalIsOpen: false,
+      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm")
     };
   }
 
@@ -208,7 +210,7 @@ class Sidebar extends Component {
           isOpen={this.state.dateTimeModalIsOpen}
           onRequestClose={this.closeDateTimeModal}
           overlayClassName="modalOverlay"
-          className="modalContent"
+          className="modalContent dateTime"
           contentLabel="Date Time Modal"
         >
           <h3>Date and Time</h3>
@@ -375,7 +377,8 @@ function mapStateToProps(state) {
     exposeSettings: state.static.exposeSettings,
     logList: state.misc.logList,
     ftpTargets: state.config.FTP.targets,
-    selfLearningEnabled: state.config.selfLearning.enabled
+    selfLearningEnabled: state.config.selfLearning.enabled,
+    time: state.misc.time
   };
 }
 
