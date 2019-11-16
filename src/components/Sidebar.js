@@ -9,6 +9,7 @@ import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, upl
 import { saveConfig, changeConfig } from "../actions/configActions";
 import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, shutdown } from "../actions/menuActions";
 import { setDateTime } from "../actions/internalActions";
+import { resetSLData } from "../actions/selfLearningActions";
 
 import { makeForm } from "../helpers";
 import { isUndefined } from "util";
@@ -394,5 +395,6 @@ export default connect(mapStateToProps, {
   shutdown,
   uploadLog,
   setDateTime,
-  changeConfig
+  changeConfig,
+  resetSLData
 })(Sidebar);
