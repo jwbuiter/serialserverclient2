@@ -17,6 +17,10 @@ export const resetSLData = () => (dispatch, getState, { emit }) => {
     return;
   }
   if (window.confirm("Are you sure you want to clear all SL data?")) {
-    emit("deleteSLData");
+    emit("deleteSLData", {}, success => {
+      if (success) {
+        window.alert("Successfully started new cycle");
+      }
+    });
   }
 };

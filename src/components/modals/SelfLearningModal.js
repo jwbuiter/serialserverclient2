@@ -203,8 +203,11 @@ class SelfLearningModal extends Component {
         accessor: "key",
         width: 200
       },
-      ...extraColumns,
-      {
+      ...extraColumns
+    ];
+
+    if (this.props.showTolerance) {
+      individualTableColumns.push({
         Headers: ["", "Tol"],
         accessor: "tolerance",
         Cell: props => {
@@ -221,7 +224,10 @@ class SelfLearningModal extends Component {
           );
         },
         width: 50
-      },
+      });
+    }
+
+    individualTableColumns.push(
       {
         Headers: [sum(individualEntries.map(entry => entry.numUpdates)), "Num"],
         accessor: "numUpdates",
@@ -251,7 +257,7 @@ class SelfLearningModal extends Component {
           backgroundColor: "#ddd"
         }
       }
-    ];
+    );
 
     if (this.props.activityCounter) {
       individualTableColumns.push(
@@ -430,6 +436,7 @@ function mapStateToProps(state) {
   const name = state.static.name;
   const configLocked = state.config.locked;
   const config = state.config;
+  const showTolerance = state.static.showTolerance;
   const individual = state.internal.selfLearning.individual;
   const tableExtraColumnTitle = state.config.selfLearning.tableExtraColumnTitle;
   const { activityCounter } = state.config.selfLearning;
@@ -438,6 +445,7 @@ function mapStateToProps(state) {
     ...state.internal.selfLearning,
     configLocked,
     config,
+    showTolerance,
     individual,
     tableExtraColumnTitle,
     activityCounter,
@@ -445,7 +453,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { deleteGeneralSL, deleteIndividualSL, resetIndividualSL }
-)(SelfLearningModal);
+export default connect(mapStateToProps, { deleteGeneralSL, deleteIndividualSL, resetIndividualSL })(SelfLearningModal);

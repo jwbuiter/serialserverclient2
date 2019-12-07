@@ -7,7 +7,7 @@ import moment from "moment";
 
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
 import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
-import { saveConfig, changeConfig } from "../actions/configActions";
+import { saveConfig, changeConfig, confirmPassword } from "../actions/configActions";
 import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, shutdown } from "../actions/menuActions";
 import { setDateTime } from "../actions/internalActions";
 import { resetSLData } from "../actions/selfLearningActions";
@@ -24,7 +24,8 @@ class Sidebar extends Component {
       logModalIsOpen: false,
       dateTimeModalIsOpen: false,
       newCycleModalIsOpen: false,
-      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm")
+      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
+      qsClickedTimes: 0
     };
   }
 
@@ -97,6 +98,22 @@ class Sidebar extends Component {
   deleteAllLogs = () => {
     if (window.confirm("Do you really want to delete all logs?")) {
       this.props.deleteAllLogs();
+    }
+  };
+
+  handleQSClicked = () => {
+    if (this.state.qsClickedTimes < 5) {
+      this.setState({ qsClickedTimes: this.state.qsClickedTimes + 1 });
+      return;
+    }
+
+    if (this.props.configLocked) {
+      this.props.confirmPassword(window.prompt("Enter password", ""), correct => {
+        if (correct) this.props.unlockConfig();
+        else window.alert("Password incorrect");
+      });
+    } else {
+      this.props.saveConfig();
     }
   };
 
@@ -297,23 +314,23 @@ class Sidebar extends Component {
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
-                uploadExcel();
-                //this.openUploadModal();
-                //closeMenu();
+                this.props.downloadExcel();
+                closeMenu();
               }}
             >
-              Import Excel
+              Download Excel
             </span>
           )}
           {this.props.exposeUpload && (
             <span
               className="menu-item menu-item--clickable"
               onClick={() => {
-                this.props.downloadExcel();
-                closeMenu();
+                uploadExcel();
+                //this.openUploadModal();
+                //closeMenu();
               }}
             >
-              Download Excel
+              Import Excel
             </span>
           )}
           <span
@@ -346,7 +363,14 @@ class Sidebar extends Component {
           >
             Set date and time
           </span>
-          <span className="menu-item">QS code: {this.props.QS}</span>
+          <span
+            className="menu-item"
+            onClick={() => {
+              this.handleQSClicked();
+            }}
+          >
+            QS code: {this.props.QS}
+          </span>
         </Menu>
       </>
     );
@@ -399,5 +423,6 @@ export default connect(mapStateToProps, {
   uploadLog,
   setDateTime,
   changeConfig,
-  resetSLData
+  resetSLData,
+  confirmPassword
 })(Sidebar);

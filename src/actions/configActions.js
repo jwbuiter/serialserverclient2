@@ -128,3 +128,7 @@ export const uploadConfig = currentVersion => dispatch => {
   input.onchange = uploadFunction;
   input.click();
 };
+
+export const confirmPassword = (password, callback) => (dispatch, getState, { emit }) => {
+  emit("confirmPassword", password, callback);
+};
