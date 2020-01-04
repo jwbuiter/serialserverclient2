@@ -16,14 +16,55 @@ import { makeForm } from "../helpers";
 import { isUndefined } from "util";
 import "../styles/sidebar.scss";
 
+const ftpTargetsValues = {
+  FTP: {
+    resetTime: {
+      name: "Reset time",
+      type: "time",
+      condition: config => config.logger.resetMode === "time"
+    },
+    resetInterval: {
+      name: "Interval (min)",
+      type: "number",
+      min: 0,
+      step: 1,
+      condition: config => config.logger.resetMode === "interval"
+    },
+    targets: [1, 2].map(index => ({
+      title: {
+        name: "Target " + index,
+        type: "subtitle"
+      },
+      address: {
+        name: "Address",
+        type: "text"
+      },
+      folder: {
+        name: "Folder",
+        type: "text"
+      },
+      username: {
+        name: "Username",
+        type: "text"
+      },
+      password: {
+        name: "Password",
+        type: "text"
+      }
+    }))
+  }
+};
+
 class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      uploadModalIsOpen: false,
       logModalIsOpen: false,
       dateTimeModalIsOpen: false,
       newCycleModalIsOpen: false,
+      passwordPromptIsOpen: false,
+      password: "",
+      ftpTargetsModalIsOpen: false,
       newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
       qsClickedTimes: 0
     };
@@ -37,15 +78,6 @@ class Sidebar extends Component {
     } else {
       this.props.saveConfig();
     }
-  };
-
-  openUploadModal = () => {
-    this.setState({ uploadModalIsOpen: true });
-    this.props.closeMenu();
-  };
-
-  closeUploadModal = () => {
-    this.setState({ uploadModalIsOpen: false });
   };
 
   openLogModal = () => {
@@ -75,6 +107,26 @@ class Sidebar extends Component {
   closeNewCycleModal = () => {
     this.props.saveConfig();
     this.setState({ newCycleModalIsOpen: false });
+  };
+
+  openPasswordPrompt = () => {
+    this.setState({ passwordPromptIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closePasswordPrompt = () => {
+    this.setState({ passwordPromptIsOpen: false });
+  };
+
+  openFtpTargetsModal = () => {
+    this.props.unlockConfig();
+    this.setState({ ftpTargetsModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeFtpTargetsModal = () => {
+    this.props.saveConfig();
+    this.setState({ ftpTargetsModalIsOpen: false });
   };
 
   uploadLog = (log, index) => {
@@ -108,13 +160,21 @@ class Sidebar extends Component {
     }
 
     if (this.props.configLocked) {
-      this.props.confirmPassword(window.prompt("Enter password", ""), correct => {
-        if (correct) this.props.unlockConfig();
-        else window.alert("Password incorrect");
-      });
+      this.openPasswordPrompt();
     } else {
       this.props.saveConfig();
     }
+  };
+
+  handlePasswordSubmitted = e => {
+    e.preventDefault();
+    this.props.confirmPassword(this.state.password, correct => {
+      if (correct) {
+        this.props.unlockConfig();
+      } else {
+        window.alert("Password incorrect");
+      }
+    });
   };
 
   render() {
@@ -260,6 +320,36 @@ class Sidebar extends Component {
             {this.state.newCycleModalIsOpen && makeForm(newCycleValues, this.props.config, this.props.changeConfig)}
           </form>
         </Modal>
+        <Modal
+          isOpen={this.state.passwordPromptIsOpen}
+          onRequestClose={this.closePasswordPrompt}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="Config Password Prompt"
+        >
+          <form onSubmit={this.handlePasswordSubmitted}>
+            <h2>Enter password</h2>
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={e => this.setState({ password: e.target.value })}
+            />
+            <br />
+            <input type="submit" />
+          </form>
+        </Modal>
+        <Modal
+          isOpen={this.state.ftpTargetsModalIsOpen}
+          onRequestClose={this.closeFtpTargetsModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="FTP Targets Modal"
+        >
+          <form>
+            <h2>FTP Targets</h2>
+            {this.state.ftpTargetsModalIsOpen && makeForm(ftpTargetsValues, this.props.config, this.props.changeConfig)}
+          </form>
+        </Modal>
         <Menu
           right
           customBurgerIcon={false}
@@ -289,12 +379,7 @@ class Sidebar extends Component {
             </span>
           )}
           {this.props.selfLearningEnabled.endsWith("ind") && (
-            <span
-              className="menu-item menu-item--clickable"
-              onClick={() => {
-                this.openNewCycleModal();
-              }}
-            >
+            <span className="menu-item menu-item--clickable" onClick={this.openNewCycleModal}>
               Start new cycle
             </span>
           )}
@@ -322,15 +407,13 @@ class Sidebar extends Component {
             </span>
           )}
           {this.props.exposeUpload && (
-            <span
-              className="menu-item menu-item--clickable"
-              onClick={() => {
-                uploadExcel();
-                //this.openUploadModal();
-                //closeMenu();
-              }}
-            >
+            <span className="menu-item menu-item--clickable" onClick={uploadExcel}>
               Import Excel
+            </span>
+          )}
+          {this.props.exposeUpload && (
+            <span className="menu-item menu-item--clickable" onClick={this.openFtpTargetsModal}>
+              FTP Targets
             </span>
           )}
           <span
@@ -355,20 +438,10 @@ class Sidebar extends Component {
               Shutdown unit
             </span>
           )}
-          <span
-            className="menu-item menu-item--clickable"
-            onClick={() => {
-              this.openDateTimeModal();
-            }}
-          >
+          <span className="menu-item menu-item--clickable" onClick={this.openDateTimeModal}>
             Set date and time
           </span>
-          <span
-            className="menu-item"
-            onClick={() => {
-              this.handleQSClicked();
-            }}
-          >
+          <span className="menu-item" onClick={this.handleQSClicked}>
             QS code: {this.props.QS}
           </span>
         </Menu>

@@ -1,0 +1,34 @@
+self.__precacheManifest = (self.__precacheManifest || []).concat([
+  {
+    "revision": "a2be8c6f40699c59d43a8bc87586d4b3",
+    "url": "/index.html"
+  },
+  {
+    "revision": "d79a5356c44ef49cd088",
+    "url": "/static/css/2.ce2b4188.chunk.css"
+  },
+  {
+    "revision": "b6f00d236ee22d113e4b",
+    "url": "/static/css/main.42a055ce.chunk.css"
+  },
+  {
+    "revision": "d79a5356c44ef49cd088",
+    "url": "/static/js/2.2207fa3e.chunk.js"
+  },
+  {
+    "revision": "3b5b37bd216891d59bba7227b2cbe917",
+    "url": "/static/js/2.2207fa3e.chunk.js.LICENSE"
+  },
+  {
+    "revision": "b6f00d236ee22d113e4b",
+    "url": "/static/js/main.6aa691fe.chunk.js"
+  },
+  {
+    "revision": "7152b86e4f2b855fcb31",
+    "url": "/static/js/runtime-main.0d082a5f.js"
+  },
+  {
+    "revision": "645b454957c764fce54b602ac3dac76f",
+    "url": "/static/media/Logo-MBDC.645b4549.jpg"
+  }
+]);
