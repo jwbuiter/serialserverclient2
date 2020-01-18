@@ -17,7 +17,7 @@ import { isUndefined } from "util";
 import "../styles/sidebar.scss";
 
 const ftpTargetsValues = {
-  FTP: {
+  logger: {
     resetTime: {
       name: "Reset time",
       type: "time",
@@ -29,7 +29,9 @@ const ftpTargetsValues = {
       min: 0,
       step: 1,
       condition: config => config.logger.resetMode === "interval"
-    },
+    }
+  },
+  FTP: {
     targets: [1, 2].map(index => ({
       title: {
         name: "Target " + index,
@@ -175,6 +177,7 @@ class Sidebar extends Component {
         window.alert("Password incorrect");
       }
     });
+    this.closePasswordPrompt();
   };
 
   render() {
