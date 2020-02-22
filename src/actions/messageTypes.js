@@ -8,7 +8,8 @@ import {
   RECEIVE_IP,
   RECEIVE_TIME,
   TABLE_FOUND_STATE,
-  SERIAL_CLEAR
+  SERIAL_CLEAR,
+  SET_WARNING
 } from "./types";
 
 export default {
@@ -21,5 +22,6 @@ export default {
   ip: RECEIVE_IP,
   time: RECEIVE_TIME,
   notfound: TABLE_FOUND_STATE,
-  clearSerial: SERIAL_CLEAR
+  clearSerial: SERIAL_CLEAR,
+  setWarning: SET_WARNING
 };

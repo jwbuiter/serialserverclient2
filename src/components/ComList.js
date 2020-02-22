@@ -242,7 +242,8 @@ class ComList extends Component {
             </div>
             <div
               className={classNames("comElement--content", {
-                "comElement--content--testMode": com.mode === "test"
+                "comElement--content--testMode": com.mode === "test",
+                "comElement--content--warning": this.props.warning
               })}
             >
               {this.state.showHistory[com.index] && com.history ? (
@@ -275,14 +276,14 @@ function mapStateToProps(state) {
     ...state.internal.coms[index]
   }));
 
+  const warning = state.internal.warning;
+
   return {
     coms,
     configLocked: state.config.locked,
-    config: state.config
+    config: state.config,
+    warning
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { changeConfig }
-)(ComList);
+export default connect(mapStateToProps, { changeConfig })(ComList);

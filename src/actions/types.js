@@ -27,7 +27,8 @@ const actionTypes = [
   "TABLE_FOUND_STATE",
   "SERIAL_CLEAR",
   "RECEIVE_CONFIG_LIST",
-  "RECEIVE_LOG_LIST"
+  "RECEIVE_LOG_LIST",
+  "SET_WARNING"
 ];
 
 module.exports = stringMapFromArray(actionTypes);

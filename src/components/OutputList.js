@@ -58,6 +58,16 @@ const configurationValues = {
         manualConfirmation: {
           name: "Manual requires confirmation",
           type: "checkbox"
+        },
+        warning: {
+          name: "Use as warning",
+          type: "checkbox"
+        },
+        warningPeriod: {
+          name: "Warning period",
+          type: "number",
+          min: 0,
+          condition: (config, index) => config.output.ports[index].warning
         }
       }
     ]
@@ -163,7 +173,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { forceOutput, changeConfig }
-)(OutputList);
+export default connect(mapStateToProps, { forceOutput, changeConfig })(OutputList);

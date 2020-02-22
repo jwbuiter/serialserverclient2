@@ -238,7 +238,7 @@ function makeForm(value, config, changeConfig, index, name = "") {
               max={value.max}
               step={value.step}
               checked={get(config, name)}
-              value={value.rounding != undefined ? round(get(config, name), value.rounding) : get(config, name)}
+              value={value.rounding !== undefined ? round(get(config, name), value.rounding) : get(config, name)}
               onChange={event => {
                 if (event.target.type === "checkbox") {
                   changeConfig(name, event.target.checked);

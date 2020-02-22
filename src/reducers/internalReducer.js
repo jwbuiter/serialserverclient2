@@ -9,7 +9,8 @@ const {
   SELFLEARNING_STATE,
   LOGGER_STATE,
   TABLE_FOUND_STATE,
-  SERIAL_CLEAR
+  SERIAL_CLEAR,
+  SET_WARNING
 } = require("../actions/types");
 
 const initialState = {
@@ -29,7 +30,8 @@ const initialState = {
     digits: [],
     visible: []
   },
-  tableNotFound: false
+  tableNotFound: false,
+  warning: false
 };
 
 export default function(fullState = initialState, action) {
@@ -119,6 +121,12 @@ export default function(fullState = initialState, action) {
       return {
         ...fullState,
         logger: action.payload
+      };
+    }
+    case SET_WARNING: {
+      return {
+        ...fullState,
+        warning: action.payload
       };
     }
     default:
