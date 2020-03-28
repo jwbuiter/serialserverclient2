@@ -1,5 +1,5 @@
 export const deleteGeneralSL = key => (dispatch, getState, { emit }) => {
-  emit("deleteGeneralSL", key);
+  emit("deleteGeneralSL", { key });
 };
 
 export const deleteIndividualSL = (key, message) => (dispatch, getState, { emit }) => {
