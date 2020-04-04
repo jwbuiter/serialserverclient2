@@ -1,9 +1,9 @@
-export const deleteGeneralSL = key => (dispatch, getState, { emit }) => {
+export const deleteGeneralSL = (key) => (dispatch, getState, { emit }) => {
   emit("deleteGeneralSL", { key });
 };
 
 export const deleteIndividualSL = (key, message) => (dispatch, getState, { emit }) => {
-  emit("deleteIndividualSL", { key, message }, totalNumber =>
+  emit("deleteIndividualSL", { key, message }, (totalNumber) =>
     window.alert(`Total SL number has been lowered from ${totalNumber + 1} to ${totalNumber}`)
   );
 };
@@ -17,9 +17,16 @@ export const resetSLData = () => (dispatch, getState, { emit }) => {
     return;
   }
   if (window.confirm("Are you sure you want to clear all SL data?")) {
-    emit("deleteSLData", {}, success => {
+    emit("deleteSLData", {}, (success) => {
       if (success) {
-        window.alert("Successfully started new cycle");
+        const hardReset = getState().static.newCycleResetHard;
+        const message = hardReset
+          ? "Successfully started new cycle, device will now reboot"
+          : "Successfully started new cycle";
+
+        window.alert(message);
+
+        if (hardReset) emit("hardReset");
       }
     });
   }
