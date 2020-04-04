@@ -19,14 +19,14 @@ export const resetSLData = () => (dispatch, getState, { emit }) => {
   if (window.confirm("Are you sure you want to clear all SL data?")) {
     emit("deleteSLData", {}, (success) => {
       if (success) {
-        const hardReset = getState().static.newCycleResetHard;
-        const message = hardReset
+        const hardReboot = getState().static.newCycleResetHard;
+        const message = hardReboot
           ? "Successfully started new cycle, device will now reboot"
           : "Successfully started new cycle";
 
         window.alert(message);
 
-        if (hardReset) emit("hardReset");
+        if (hardReboot) emit("hardReboot");
       }
     });
   }
