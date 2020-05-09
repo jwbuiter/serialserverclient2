@@ -16,7 +16,7 @@ const configurationValues = {
       {
         name: {
           name: "Name of cell",
-          type: "text"
+          type: "text",
         },
         hardwareInput: {
           name: "Hardware input",
@@ -28,12 +28,12 @@ const configurationValues = {
             "1": "HW Input 2",
             "2": "HW Input 3",
             "3": "HW Input 4",
-            "4": "HW Input 5"
-          }
+            "4": "HW Input 5",
+          },
         },
         visible: {
           name: "Visible",
-          type: "checkbox"
+          type: "checkbox",
         },
         formula: {
           name: "Command for input",
@@ -46,26 +46,26 @@ const configurationValues = {
             teach: "SL Teach",
             restart: "Restart",
             shutdown: "Shutdown",
-            command: "COM command"
-          }
+            command: "COM command",
+          },
         },
         commandCom: {
           name: "COM to send command",
           type: "select",
           options: {
             com0: "COM 0",
-            com1: "COM 1"
+            com1: "COM 1",
           },
-          condition: (config, index) => config.input.ports[index].formula === "command"
+          condition: (config, index) => config.input.ports[index].formula === "command",
         },
         commandValue: {
           name: "Value to send on COM",
           type: "text",
-          condition: (config, index) => config.input.ports[index].formula === "command"
+          condition: (config, index) => config.input.ports[index].formula === "command",
         },
         invert: {
           name: "Invert follow",
-          type: "checkbox"
+          type: "checkbox",
         },
         follow: {
           name: "Follow output",
@@ -82,28 +82,28 @@ const configurationValues = {
             "6": "Follow ouput 7",
             "7": "Follow ouput 8",
             "8": "Follow ouput 9",
-            "9": "Follow ouput 10"
-          }
+            "9": "Follow ouput 10",
+          },
         },
         timeout: {
           name: "Debounce timeout (ms)",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
         },
         manualTimeout: {
           name: "Manual timeout (s)",
           type: "number",
           min: 0,
-          step: 1
+          step: 1,
         },
         manualConfirmation: {
           name: "Manual requires confirmation",
-          type: "checkbox"
-        }
-      }
-    ]
-  }
+          type: "checkbox",
+        },
+      },
+    ],
+  },
 };
 
 class InputList extends Component {
@@ -112,7 +112,7 @@ class InputList extends Component {
     this.state = { configModalIsOpen: false, configPortIndex: -1 };
   }
 
-  openConfigModal = index => {
+  openConfigModal = (index) => {
     this.setState({ configModalIsOpen: true, configPortIndex: index });
   };
 
@@ -148,11 +148,16 @@ class InputList extends Component {
           {this.props.inputs
             .map((port, index) => ({ ...port, index }))
             .filter((port, index) => this.props.portsEnabled[index] || !this.props.configLocked)
-            .map(port => {
+            .map((port) => {
               let indicator = "buttonList--list--indicator--input";
-              if (port.isForced) indicator += "Forced";
 
-              indicator += port.state ? "On" : "Off";
+              if (port.formula === "exe" && this.props.inputs.reduce((acc, cur) => acc || cur.blocking, false)) {
+                indicator += "Blocked";
+              } else {
+                if (port.isForced) indicator += "Forced";
+
+                indicator += port.state ? "On" : "Off";
+              }
 
               return (
                 <div
@@ -183,23 +188,21 @@ class InputList extends Component {
 function mapStateToProps(state) {
   const inputs = state.internal.inputs.map((input, index) => ({
     ...input,
-    name: state.config.input.ports[index].name
+    name: state.config.input.ports[index].name,
+    formula: state.config.input.ports[index].formula,
   }));
 
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.input.ports.map(port => port.visible);
+  const portsEnabled = state.config.input.ports.map((port) => port.visible);
 
   return {
     inputs,
     configLocked,
     config,
-    portsEnabled
+    portsEnabled,
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { forceInput, changeConfig }
-)(InputList);
+export default connect(mapStateToProps, { forceInput, changeConfig })(InputList);

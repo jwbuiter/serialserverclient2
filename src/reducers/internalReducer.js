@@ -10,7 +10,7 @@ const {
   LOGGER_STATE,
   TABLE_FOUND_STATE,
   SERIAL_CLEAR,
-  SET_WARNING
+  SET_WARNING,
 } = require("../actions/types");
 
 const initialState = {
@@ -21,26 +21,26 @@ const initialState = {
   selfLearning: {
     enabled: false,
     formula: "",
-    formulaResults: []
+    formulaResults: [],
   },
   logger: {
     entries: [],
     legend: [],
     accessors: [],
     digits: [],
-    visible: []
+    visible: [],
   },
   tableNotFound: false,
-  warning: false
+  warning: false,
 };
 
-export default function(fullState = initialState, action) {
+export default function (fullState = initialState, action) {
   switch (action.type) {
     case INPUT_PORT_STATE: {
-      const { index, state, isForced } = action.payload;
+      const { index, state, isForced, blocking } = action.payload;
 
       const newInputs = Array.from(fullState.inputs);
-      newInputs[index] = { state, isForced };
+      newInputs[index] = { state, isForced, blocking };
 
       return { ...fullState, inputs: newInputs };
     }
@@ -66,25 +66,25 @@ export default function(fullState = initialState, action) {
           {
             entry,
             entryTime,
-            timeString: dateformat(new Date(entryTime), "HH:MM:ss")
+            timeString: dateformat(new Date(entryTime), "HH:MM:ss"),
           },
-          ...fullState.coms[index].history
+          ...fullState.coms[index].history,
         ];
       }
 
       newComs[index] = {
         entry,
         entryTime,
-        history: newHistory
+        history: newHistory,
       };
 
       return { ...fullState, coms: newComs };
     }
     case SERIAL_CLEAR: {
-      const newComs = fullState.coms.map(com => ({
+      const newComs = fullState.coms.map((com) => ({
         entry: "",
         entryTime: new Date(),
-        history: com.history
+        history: com.history,
       }));
 
       return { ...fullState, coms: newComs };
@@ -108,25 +108,25 @@ export default function(fullState = initialState, action) {
     case SELFLEARNING_STATE: {
       return {
         ...fullState,
-        selfLearning: { enabled: true, ...action.payload }
+        selfLearning: { enabled: true, ...action.payload },
       };
     }
     case TABLE_FOUND_STATE: {
       return {
         ...fullState,
-        tableNotFound: action.payload
+        tableNotFound: action.payload,
       };
     }
     case LOGGER_STATE: {
       return {
         ...fullState,
-        logger: action.payload
+        logger: action.payload,
       };
     }
     case SET_WARNING: {
       return {
         ...fullState,
-        warning: action.payload
+        warning: action.payload,
       };
     }
     default:
