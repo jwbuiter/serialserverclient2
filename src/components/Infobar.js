@@ -12,7 +12,7 @@ import {
   configExists,
   saveConfig,
   getConfigList,
-  uploadConfig
+  uploadConfig,
 } from "../actions/configActions";
 import { setDateTime } from "../actions/internalActions";
 import { makeForm } from "../helpers";
@@ -28,7 +28,7 @@ class Infobar extends Component {
     this.state = {
       configModalIsOpen: false,
       listModalIsOpen: false,
-      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm")
+      newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
     };
   }
 
@@ -53,14 +53,14 @@ class Infobar extends Component {
       serial: {
         title: {
           name: "Serial",
-          type: "title"
+          type: "title",
         },
         resetTrigger: {
           name: "Reset on zero",
           type: "select",
-          options: { off: "Off", on: "On", com0: "Com 0", com1: "Com 1" }
-        }
-      }
+          options: { off: "Off", on: "On", com0: "Com 0", com1: "Com 1" },
+        },
+      },
     };
 
     if (this.props.exposeUpload) {
@@ -69,12 +69,12 @@ class Infobar extends Component {
         table: {
           title: {
             name: "Table",
-            type: "title"
+            type: "title",
           },
           trigger: {
             name: "Trigger",
             type: "select",
-            options: ["Com 0", "Com 1"]
+            options: ["Com 0", "Com 1"],
           },
           useFile: { name: "Use imported file", type: "checkbox" },
           waitForOther: { name: "Wait for other com", type: "checkbox" },
@@ -82,9 +82,9 @@ class Infobar extends Component {
             name: "Column to search in",
             type: "select",
             numeric: true,
-            options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
-          }
-        }
+            options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
+          },
+        },
       };
     }
 
@@ -94,25 +94,25 @@ class Infobar extends Component {
         logger: {
           title: {
             name: "Logger",
-            type: "title"
+            type: "title",
           },
           writeToFile: {
             name: "Write log to file",
-            type: "checkbox"
+            type: "checkbox",
           },
           csvSeparator: {
             name: "CSV separator",
             type: "select",
-            options: { ",": ",", ";": ";" }
+            options: { ",": ",", ";": ";" },
           },
           logID: {
             name: "LogID",
-            type: "text"
+            type: "text",
           },
           unique: {
             name: "Unique log type",
             type: "select",
-            options: { off: "Off", com0: "Com 0", com1: "Com 1" }
+            options: { off: "Off", com0: "Com 0", com1: "Com 1" },
           },
           resetMode: {
             name: "Reset mode",
@@ -120,22 +120,22 @@ class Infobar extends Component {
             options: {
               off: "Off",
               time: "Time of day",
-              interval: "Time interval"
-            }
+              interval: "Time interval",
+            },
           },
           resetTime: {
             name: "Reset time",
             type: "time",
-            condition: config => config.logger.resetMode === "time"
+            condition: (config) => config.logger.resetMode === "time",
           },
           resetInterval: {
             name: "Interval (min)",
             type: "number",
             min: 0,
             step: 1,
-            condition: config => config.logger.resetMode === "interval"
-          }
-        }
+            condition: (config) => config.logger.resetMode === "interval",
+          },
+        },
       };
     }
 
@@ -145,39 +145,39 @@ class Infobar extends Component {
         FTP: {
           title: {
             name: "FTP",
-            type: "title"
+            type: "title",
           },
           automatic: {
             name: "Automatically upload log on FTP",
-            type: "checkbox"
+            type: "checkbox",
           },
           uploadExcel: {
             name: "Include Excel with upload",
-            type: "checkbox"
+            type: "checkbox",
           },
-          targets: [1, 2].map(index => ({
+          targets: [1, 2].map((index) => ({
             title: {
               name: "Target " + index,
-              type: "subtitle"
+              type: "subtitle",
             },
             address: {
               name: "Address",
-              type: "text"
+              type: "text",
             },
             folder: {
               name: "Folder",
-              type: "text"
+              type: "text",
             },
             username: {
               name: "Username",
-              type: "text"
+              type: "text",
             },
             password: {
               name: "Password",
-              type: "text"
-            }
-          }))
-        }
+              type: "text",
+            },
+          })),
+        },
       };
     }
     return (
@@ -191,7 +191,7 @@ class Infobar extends Component {
         >
           <h2>List of saved configurations</h2>
           <form>
-            {this.props.configList.map(config => {
+            {this.props.configList.map((config) => {
               return (
                 <>
                   {config}
@@ -244,7 +244,7 @@ class Infobar extends Component {
               <h3>Date and Time</h3>
               <br />
               <form
-                onSubmit={event => {
+                onSubmit={(event) => {
                   event.preventDefault();
                   this.props.setDateTime(this.state.newDate);
                 }}
@@ -255,7 +255,7 @@ class Infobar extends Component {
                   type="datetime-local"
                   name="newDate"
                   value={this.state.newDate}
-                  onChange={event => this.setState({ newDate: event.target.value })}
+                  onChange={(event) => this.setState({ newDate: event.target.value })}
                 />
               </form>
 
@@ -267,7 +267,10 @@ class Infobar extends Component {
         <div className="infobar" onClick={this.props.configLocked ? null : this.openConfigModal}>
           <FitText compressor={1}>
             <div className="infobar--item">
-              <div className="center">{this.props.name}</div>
+              <div className="center">
+                {this.props.name}
+                {this.props.logID === "" ? "" : ` - ${this.props.logID}`}
+              </div>
             </div>
           </FitText>
           <FitText compressor={1}>
@@ -293,6 +296,7 @@ class Infobar extends Component {
 
 function mapStateToProps(state) {
   const name = state.static.name;
+  const logID = state.config.logger.logID;
   const ip = state.misc.ip;
   const time = state.misc.time;
   const version = state.static.version;
@@ -305,13 +309,14 @@ function mapStateToProps(state) {
 
   return {
     name,
+    logID,
     ip,
     time,
     version,
     configLocked,
     config,
     configList,
-    exposeUpload
+    exposeUpload,
   };
 }
 
@@ -324,5 +329,5 @@ export default connect(mapStateToProps, {
   saveConfig,
   getConfigList,
   uploadConfig,
-  setDateTime
+  setDateTime,
 })(Infobar);

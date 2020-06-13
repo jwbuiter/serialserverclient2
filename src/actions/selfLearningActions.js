@@ -16,8 +16,25 @@ export const resetSLData = () => (dispatch, getState, { emit }) => {
   if (window.confirm("This will clear the Excel file. Do you want to download it first?")) {
     return;
   }
+
+  const config = getState().config;
+  let { logID } = config.logger;
+  let { startCalibration, totalNumber } = config.selfLearning;
+
+  logID = window.prompt("Enter new LogID", logID);
+
+  do {
+    startCalibration = window.prompt("Enter starting calibration:", startCalibration);
+    startCalibration = Number(startCalibration);
+  } while (isNaN(startCalibration));
+
+  do {
+    totalNumber = window.prompt("Enter total number:", totalNumber);
+    totalNumber = Number(totalNumber);
+  } while (isNaN(totalNumber));
+
   if (window.confirm("Are you sure you want to clear all SL data?")) {
-    emit("deleteSLData", {}, (success) => {
+    emit("deleteSLData", { logID, startCalibration, totalNumber }, (success) => {
       if (success) {
         const hardReboot = getState().static.newCycleResetHard;
         const message = hardReboot

@@ -8,7 +8,7 @@ import moment from "moment";
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
 import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
 import { saveConfig, changeConfig, confirmPassword } from "../actions/configActions";
-import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, shutdown } from "../actions/menuActions";
+import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, hardReboot, shutdown } from "../actions/menuActions";
 import { setDateTime } from "../actions/internalActions";
 import { resetSLData } from "../actions/selfLearningActions";
 
@@ -21,40 +21,40 @@ const ftpTargetsValues = {
     resetTime: {
       name: "Reset time",
       type: "time",
-      condition: config => config.logger.resetMode === "time"
+      condition: (config) => config.logger.resetMode === "time",
     },
     resetInterval: {
       name: "Interval (min)",
       type: "number",
       min: 0,
       step: 1,
-      condition: config => config.logger.resetMode === "interval"
-    }
+      condition: (config) => config.logger.resetMode === "interval",
+    },
   },
   FTP: {
-    targets: [1, 2].map(index => ({
+    targets: [1, 2].map((index) => ({
       title: {
         name: "Target " + index,
-        type: "subtitle"
+        type: "subtitle",
       },
       address: {
         name: "Address",
-        type: "text"
+        type: "text",
       },
       folder: {
         name: "Folder",
-        type: "text"
+        type: "text",
       },
       username: {
         name: "Username",
-        type: "text"
+        type: "text",
       },
       password: {
         name: "Password",
-        type: "text"
-      }
-    }))
-  }
+        type: "text",
+      },
+    })),
+  },
 };
 
 class Sidebar extends Component {
@@ -68,7 +68,7 @@ class Sidebar extends Component {
       password: "",
       ftpTargetsModalIsOpen: false,
       newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
-      qsClickedTimes: 0
+      qsClickedTimes: 0,
     };
   }
 
@@ -137,7 +137,7 @@ class Sidebar extends Component {
     }
   };
 
-  deleteLog = log => {
+  deleteLog = (log) => {
     if (window.confirm("Do you really want to delete " + log + "?")) {
       this.props.deleteLog(log);
     }
@@ -168,9 +168,9 @@ class Sidebar extends Component {
     }
   };
 
-  handlePasswordSubmitted = e => {
+  handlePasswordSubmitted = (e) => {
     e.preventDefault();
-    this.props.confirmPassword(this.state.password, correct => {
+    this.props.confirmPassword(this.state.password, (correct) => {
       if (correct) {
         this.props.unlockConfig();
       } else {
@@ -193,37 +193,37 @@ class Sidebar extends Component {
           type: "button",
           onClick: () => {
             this.props.downloadExcel();
-          }
+          },
         },
         resetSL: {
           name: "Reset Self Learning Data",
           type: "button",
           onClick: () => {
             this.props.resetSLData();
-          }
+          },
         },
         logID: {
           type: "external",
           location: "logger.logID",
           configuration: {
             name: "LogID",
-            type: "text"
-          }
+            type: "text",
+          },
         },
         startCalibration: {
           name: "Calibration",
           type: "number",
           min: 0,
           step: 1,
-          rounding
+          rounding,
         },
         totalNumber: {
           name: "Total number",
           type: "number",
           min: 0,
-          step: 1
-        }
-      }
+          step: 1,
+        },
+      },
     };
 
     return (
@@ -237,7 +237,7 @@ class Sidebar extends Component {
         >
           <h2>Upload and download log files</h2>
           <form className="logForm">
-            {this.props.logList.map(log => (
+            {this.props.logList.map((log) => (
               <>
                 {log}
                 <input
@@ -296,7 +296,7 @@ class Sidebar extends Component {
           <h3>Date and Time</h3>
           <br />
           <form
-            onSubmit={event => {
+            onSubmit={(event) => {
               event.preventDefault();
               this.props.setDateTime(this.state.newDate);
             }}
@@ -307,7 +307,7 @@ class Sidebar extends Component {
               type="datetime-local"
               name="newDate"
               value={this.state.newDate}
-              onChange={event => this.setState({ newDate: event.target.value })}
+              onChange={(event) => this.setState({ newDate: event.target.value })}
             />
           </form>
         </Modal>
@@ -335,7 +335,7 @@ class Sidebar extends Component {
             <input
               type="password"
               value={this.state.password}
-              onChange={e => this.setState({ password: e.target.value })}
+              onChange={(e) => this.setState({ password: e.target.value })}
             />
             <br />
             <input type="submit" />
@@ -359,7 +359,7 @@ class Sidebar extends Component {
           pageWrapId="page-wrap"
           outerContainerId="outer-container"
           isOpen={this.props.isMenuOpen}
-          onStateChange={newState => !newState.isOpen && closeMenu()}
+          onStateChange={(newState) => !newState.isOpen && closeMenu()}
           width={450}
         >
           {this.props.exposeSettings && (
@@ -423,7 +423,8 @@ class Sidebar extends Component {
             className="menu-item menu-item--clickable"
             onClick={() => {
               if (window.confirm("Are you sure you want to reboot?")) {
-                this.props.reboot();
+                if (this.props.manualResetHard) this.props.hardReboot();
+                else this.props.reboot();
               }
               closeMenu();
             }}
@@ -463,7 +464,7 @@ function mapStateToProps(state) {
       exposeUpload: false,
       exposeShutdown: false,
       logList: [],
-      selfLearningEnabled: ""
+      selfLearningEnabled: "",
     };
   }
   return {
@@ -478,7 +479,8 @@ function mapStateToProps(state) {
     logList: state.misc.logList,
     ftpTargets: state.config.FTP.targets,
     selfLearningEnabled: state.config.selfLearning.enabled,
-    time: state.misc.time
+    time: state.misc.time,
+    manualResetHard: state.static.manualResetHard,
   };
 }
 
@@ -495,10 +497,11 @@ export default connect(mapStateToProps, {
   closeMenu,
   saveConfig,
   reboot,
+  hardReboot,
   shutdown,
   uploadLog,
   setDateTime,
   changeConfig,
   resetSLData,
-  confirmPassword
+  confirmPassword,
 })(Sidebar);
