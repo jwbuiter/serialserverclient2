@@ -22,16 +22,21 @@ export const resetSLData = () => (dispatch, getState, { emit }) => {
   let { startCalibration, totalNumber } = config.selfLearning;
 
   logID = window.prompt("Enter new LogID", logID);
+  if (logID === null) return;
 
   do {
     startCalibration = window.prompt("Enter starting calibration:", startCalibration);
+    if (startCalibration === null) return;
+
     startCalibration = Number(startCalibration);
-  } while (isNaN(startCalibration));
+  } while (isNaN(startCalibration) && startCalibration);
 
   do {
     totalNumber = window.prompt("Enter total number:", totalNumber);
+    if (totalNumber === null) return;
+
     totalNumber = Number(totalNumber);
-  } while (isNaN(totalNumber));
+  } while (isNaN(totalNumber) && totalNumber);
 
   if (window.confirm("Are you sure you want to clear all SL data?")) {
     emit("deleteSLData", { logID, startCalibration, totalNumber }, (success) => {
