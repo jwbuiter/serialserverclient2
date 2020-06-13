@@ -16,15 +16,15 @@ const configurationValues = {
       {
         name: {
           name: "Name of cell",
-          type: "text"
+          type: "text",
         },
         visible: {
           name: "Visible",
-          type: "checkbox"
+          type: "checkbox",
         },
         showInLog: {
           name: "Show in log",
-          type: "checkbox"
+          type: "checkbox",
         },
         type: {
           name: "Type of content",
@@ -34,42 +34,41 @@ const configurationValues = {
             date: "Date",
             manual: "Input",
             menu: "Menu",
-            reader: "Reader"
-          }
+            reader: "Reader",
+          },
         },
         readerPort: {
           name: "Reader port",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) => config.table.cells[index].type === "reader"
+          condition: (config, index) => config.table.cells[index].type === "reader",
         },
         numeric: {
           name: "Treat value as a number",
           type: "checkbox",
-          condition: (config, index) => config.table.cells[index].type !== "date"
+          condition: (config, index) => config.table.cells[index].type !== "date",
         },
         formula: {
           name: "Formula for cell value",
           type: "text",
-          condition: (config, index) =>
-            ["normal", "date"].includes(config.table.cells[index].type) && !config.table.cells[index].readerPort
+          condition: (config, index) => ["normal", "date"].includes(config.table.cells[index].type),
         },
         menuOptions: {
           name: "Options and values for menu",
           type: "keyValue",
-          condition: (config, index) => config.table.cells[index].type === "menu"
+          condition: (config, index) => config.table.cells[index].type === "menu",
         },
         digits: {
           name: "Number of digits",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) => ["normal", "reader"].includes(config.table.cells[index].type)
+          condition: (config, index) => ["normal", "reader"].includes(config.table.cells[index].type),
         },
         resetOnExe: {
           name: "Reset value after execute",
-          type: "checkbox"
+          type: "checkbox",
         },
         colorConditions: {
           name: "Conditions for cell colors",
@@ -77,12 +76,12 @@ const configurationValues = {
           options: {
             "#3fd35d": "Green",
             yellow: "Yellow",
-            "#ffc000": "Orange"
-          }
-        }
-      }
-    ]
-  }
+            "#ffc000": "Orange",
+          },
+        },
+      },
+    ],
+  },
 };
 
 class Table extends Component {
@@ -91,7 +90,7 @@ class Table extends Component {
     this.state = { configModalIsOpen: false, configCellIndex: -1 };
   }
 
-  openConfigModal = index => {
+  openConfigModal = (index) => {
     this.setState({ configModalIsOpen: true, configCellIndex: index });
   };
 
@@ -104,9 +103,9 @@ class Table extends Component {
       .map((cell, index) => ({
         index,
         ...cell,
-        ...this.props.cellConfig[index]
+        ...this.props.cellConfig[index],
       }))
-      .filter(cell => !this.props.configLocked || cell.visible);
+      .filter((cell) => !this.props.configLocked || cell.visible);
 
     return (
       <>
@@ -128,7 +127,7 @@ class Table extends Component {
           )}
         </Modal>
         <div className={`table--grid table--grid--${cells.length}`}>
-          {cells.map(cell => (
+          {cells.map((cell) => (
             <TableCell
               key={cell.index}
               cell={cell}
@@ -147,7 +146,7 @@ class Table extends Component {
 function mapStateToProps(state) {
   const cells = state.internal.cells.map((cell, index) => ({
     ...cell,
-    name: state.config.table.cells[index].name
+    name: state.config.table.cells[index].name,
   }));
 
   return {
@@ -155,11 +154,8 @@ function mapStateToProps(state) {
     configLocked: state.config.locked,
     config: state.config,
     cellConfig: state.config.table.cells,
-    notFound: state.internal.tableNotFound
+    notFound: state.internal.tableNotFound,
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { tableManual, changeConfig }
-)(Table);
+export default connect(mapStateToProps, { tableManual, changeConfig })(Table);
