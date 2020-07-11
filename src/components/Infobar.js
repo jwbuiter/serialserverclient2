@@ -202,7 +202,7 @@ class Infobar extends Component {
                 </>
               );
             })}
-            <input type="button" value="Upload" onClick={() => this.props.uploadConfig(this.props.config.version)} />
+            <input type="button" value="Upload" onClick={() => this.props.uploadConfig(this.props.version)} />
             <input
               type="button"
               value="Load default"

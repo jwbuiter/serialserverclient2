@@ -149,15 +149,16 @@ class InputList extends Component {
             .map((port, index) => ({ ...port, index }))
             .filter((port, index) => this.props.portsEnabled[index] || !this.props.configLocked)
             .map((port) => {
-              let indicator = "buttonList--list--indicator--input";
+              let state = port.state ? "On" : "Off";
+              if (port.isForced) state = "Forced" + state;
+              if (
+                state === "Off" &&
+                port.formula === "exe" &&
+                this.props.inputs.reduce((acc, cur) => acc || cur.blocking, false)
+              )
+                state = "Blocked";
 
-              if (port.formula === "exe" && this.props.inputs.reduce((acc, cur) => acc || cur.blocking, false)) {
-                indicator += "Blocked";
-              } else {
-                if (port.isForced) indicator += "Forced";
-
-                indicator += port.state ? "On" : "Off";
-              }
+              let indicator = "buttonList--list--indicator--input" + state;
 
               return (
                 <div
