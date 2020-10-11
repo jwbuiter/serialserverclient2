@@ -48,6 +48,11 @@ const configurationValues = {
           name: "Only on execute",
           type: "checkbox"
         },
+        holdOnExecute:{
+          name: "Hold on execute",
+          type: "checkbox",
+          condition: (config, index) => config.output.ports[index].execute
+        },
         seconds: {
           name: "Timeout in seconds",
           type: "number",
