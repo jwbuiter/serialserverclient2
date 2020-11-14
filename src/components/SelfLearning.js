@@ -190,10 +190,17 @@ class SelfLearning extends Component {
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
             individualCorrectionLimit: {
-              name: "Correction limit (1-9)",
+              name: "Correction limit (1-9, 0 = off)",
               type: "number",
-              min: 1,
+              min: 0,
               max: 9,
+              step: 1,
+              condition: config => config.selfLearning.enabled.endsWith("ind")
+            },
+            individualCycleLimit: {
+              name: "Cycle limit for UN list (days, 0 = off)",
+              type: "number",
+              min: 0,
               step: 1,
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
