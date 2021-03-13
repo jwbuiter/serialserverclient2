@@ -56,6 +56,7 @@ const configurationValues = {
             restart: "Restart",
             shutdown: "Shutdown",
             command: "COM command",
+            resetSerial: "COM reset",
           },
         },
         commandCom: {
@@ -65,7 +66,10 @@ const configurationValues = {
             com0: "COM 0",
             com1: "COM 1",
           },
-          condition: (config, index) => config.input.ports[index].formula === "command",
+          condition: (config, index) => {
+            const formula = config.input.ports[index].formula;
+            return formula === "command" || formula === "resetSerial";
+          },
         },
         commandValue: {
           name: "Value to send on COM",

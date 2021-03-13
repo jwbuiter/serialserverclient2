@@ -77,6 +77,11 @@ class Infobar extends Component {
             options: ["Com 0", "Com 1"],
           },
           useFile: { name: "Use imported file", type: "checkbox" },
+          fileExtension: {
+            name: "Exported Excel file extension",
+            type: "select",
+            options: { xls: ".xls", xlsx: ".xlsx" },
+          },
           waitForOther: { name: "Wait for other com", type: "checkbox" },
           searchColumn: {
             name: "Column to search in",

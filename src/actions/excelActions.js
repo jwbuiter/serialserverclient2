@@ -5,7 +5,7 @@ export const downloadExcel = () => {
 };
 
 export const uploadExcel = () => {
-  const uploadFunction = event => {
+  const uploadFunction = (event) => {
     const data = new FormData();
     data.append("excelFile", event.target.files[0]);
     axios
@@ -15,13 +15,13 @@ export const uploadExcel = () => {
   };
   const input = document.createElement("input");
   input.type = "file";
-  input.accept = ".xls";
+  input.accept = ".xls,.xlsx";
   input.onchange = uploadFunction;
   input.click();
 };
 
 export const uploadExcelTemplate = () => {
-  const uploadFunction = event => {
+  const uploadFunction = (event) => {
     const data = new FormData();
     data.append("templateFile", event.target.files[0]);
     axios
@@ -31,7 +31,7 @@ export const uploadExcelTemplate = () => {
   };
   const input = document.createElement("input");
   input.type = "file";
-  input.accept = ".xls";
+  input.accept = ".xls,.xlsx";
   input.onchange = uploadFunction;
   input.click();
 };
