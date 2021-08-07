@@ -154,7 +154,7 @@ class InputList extends Component {
           <div className="buttonList--title">
             <div className="center">
               <FitText>
-                <div>Inputs</div>
+                <div>Input</div>
               </FitText>
             </div>
           </div>

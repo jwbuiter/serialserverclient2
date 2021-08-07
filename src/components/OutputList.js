@@ -16,7 +16,7 @@ const configurationValues = {
       {
         name: {
           name: "Name of output",
-          type: "text"
+          type: "text",
         },
         hardwareOutput: {
           name: "Hardware output",
@@ -24,59 +24,58 @@ const configurationValues = {
           numeric: true,
           options: {
             "-1": "None",
-            "0": "HW Output 1",
-            "1": "HW Output 2",
-            "2": "HW Output 3",
-            "3": "HW Output 4",
-            "4": "HW Output 5",
-            "5": "HW Output 6",
-            "6": "HW Output 7",
-            "7": "HW Output 8",
-            "8": "HW Output 9",
-            "9": "HW Output 10"
-          }
+            0: "HW Output 1",
+            1: "HW Output 2",
+            2: "HW Output 3",
+            3: "HW Output 4",
+            4: "HW Output 5",
+            5: "HW Output 6",
+            6: "HW Output 7",
+            7: "HW Output 8",
+            8: "HW Output 9",
+            9: "HW Output 10",
+          },
         },
         visible: {
           name: "Visible",
-          type: "checkbox"
+          type: "checkbox",
         },
         formula: {
           name: "Formula for output",
-          type: "text"
+          type: "text",
         },
         execute: {
           name: "Only on execute",
-          type: "checkbox"
+          type: "checkbox",
         },
-        holdOnExecute:{
+        holdOnExecute: {
           name: "Hold on execute",
           type: "checkbox",
-          condition: (config, index) => config.output.ports[index].execute
+          condition: (config, index) => config.output.ports[index].execute,
         },
         seconds: {
           name: "Timeout in seconds",
           type: "number",
           min: 0,
           step: 1,
-          condition: (config, index) => config.output.ports[index].execute
         },
         manualConfirmation: {
           name: "Manual requires confirmation",
-          type: "checkbox"
+          type: "checkbox",
         },
         warning: {
           name: "Use as warning",
-          type: "checkbox"
+          type: "checkbox",
         },
         warningPeriod: {
           name: "Warning period",
           type: "number",
           min: 0,
-          condition: (config, index) => config.output.ports[index].warning
-        }
-      }
-    ]
-  }
+          condition: (config, index) => config.output.ports[index].warning,
+        },
+      },
+    ],
+  },
 };
 
 class OutputList extends Component {
@@ -85,7 +84,7 @@ class OutputList extends Component {
     this.state = { configModalIsOpen: false, configPortIndex: -1 };
   }
 
-  openConfigModal = index => {
+  openConfigModal = (index) => {
     this.setState({ configModalIsOpen: true, configPortIndex: index });
   };
 
@@ -114,14 +113,14 @@ class OutputList extends Component {
           <div className="buttonList--title">
             <div className="center">
               <FitText>
-                <div>Outputs</div>
+                <div>Output</div>
               </FitText>
             </div>
           </div>
           {this.props.outputs
             .map((port, index) => ({ ...port, index }))
             .filter((port, index) => this.props.portsEnabled[index] || !this.props.configLocked)
-            .map(port => {
+            .map((port) => {
               let indicator = "buttonList--list--indicator--output";
               if (port.isForced) indicator += "Forced";
 
@@ -162,19 +161,19 @@ class OutputList extends Component {
 function mapStateToProps(state) {
   const outputs = state.internal.outputs.map((output, index) => ({
     ...output,
-    name: state.config.output.ports[index].name
+    name: state.config.output.ports[index].name,
   }));
 
   const configLocked = state.config.locked;
   const config = state.config;
 
-  const portsEnabled = state.config.output.ports.map(port => port.visible);
+  const portsEnabled = state.config.output.ports.map((port) => port.visible);
 
   return {
     outputs,
     configLocked,
     config,
-    portsEnabled
+    portsEnabled,
   };
 }
 
