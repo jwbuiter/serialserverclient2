@@ -204,6 +204,12 @@ class SelfLearning extends Component {
               step: 1,
               condition: config => config.selfLearning.enabled.endsWith("ind")
             },
+            individualCycleLimitDateColumn:{
+              name: "Date column for cycle limit",
+              type: "select",
+              numeric: true,
+              options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
+            },
             individualAverageNumber: {
               name: "Average calibration number (1-9)",
               type: "number",
