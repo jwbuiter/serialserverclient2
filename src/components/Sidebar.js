@@ -66,6 +66,7 @@ class Sidebar extends Component {
       newCycleModalIsOpen: false,
       passwordPromptIsOpen: false,
       password: "",
+      importExcelModalIsOpen: false,
       ftpTargetsModalIsOpen: false,
       newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
       qsClickedTimes: 0,
@@ -118,6 +119,15 @@ class Sidebar extends Component {
 
   closePasswordPrompt = () => {
     this.setState({ passwordPromptIsOpen: false });
+  };
+
+  openImportExcelModal = () => {
+    this.setState({ importExcelModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeImportExcelModal = () => {
+    this.setState({ importExcelModalIsOpen: false });
   };
 
   openFtpTargetsModal = () => {
@@ -342,6 +352,32 @@ class Sidebar extends Component {
           </form>
         </Modal>
         <Modal
+          isOpen={this.state.importExcelModalIsOpen}
+          onRequestClose={this.closeImportExcelModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="Import Excel Modal"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const file = e.target[0].files[0];
+              const overwrite = e.target[1].value === "on";
+              uploadExcel(file, overwrite);
+              this.closeImportExcelModal();
+            }}
+          >
+            <h2>Import Excel</h2>
+            <label for="overwrite">File:</label>
+            <input type="file" name="excelFile" accept=".xls,.xlsx" />
+            <br />
+            <input type="checkbox" name="overwrite" />
+            <label for="overwrite">Overwrite:</label>
+            <br />
+            <input type="submit" value="Upload" />
+          </form>
+        </Modal>
+        <Modal
           isOpen={this.state.ftpTargetsModalIsOpen}
           onRequestClose={this.closeFtpTargetsModal}
           overlayClassName="modalOverlay"
@@ -410,7 +446,7 @@ class Sidebar extends Component {
             </span>
           )}
           {this.props.exposeUpload && (
-            <span className="menu-item menu-item--clickable" onClick={uploadExcel}>
+            <span className="menu-item menu-item--clickable" onClick={this.openImportExcelModal}>
               Import Excel
             </span>
           )}
