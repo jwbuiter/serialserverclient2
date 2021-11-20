@@ -56,7 +56,6 @@ const configurationValues = {
         seconds: {
           name: "Timeout in seconds",
           type: "number",
-          min: 0,
           step: 1,
         },
         manualConfirmation: {

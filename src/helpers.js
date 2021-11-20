@@ -47,7 +47,7 @@ function makeForm(value, config, changeConfig, index, name = "") {
         return (
           index >= 0 && (
             <div name={name}>
-              {Object.keys(value[0]).map(key =>
+              {Object.keys(value[0]).map((key) =>
                 makeForm(value[0][key], config, changeConfig, index, name + "[" + index + "]." + key)
               )}
             </div>
@@ -62,13 +62,13 @@ function makeForm(value, config, changeConfig, index, name = "") {
       return (
         <div key={name} name={name}>
           {Object.keys(value)
-            .filter(key => {
+            .filter((key) => {
               const { conditions } = value[key];
               if (!conditions) return true;
 
               return true;
             })
-            .map(key => makeForm(value[key], config, changeConfig, index, name + (name ? "." : "") + key))}
+            .map((key) => makeForm(value[key], config, changeConfig, index, name + (name ? "." : "") + key))}
         </div>
       );
     }
@@ -154,7 +154,7 @@ function makeForm(value, config, changeConfig, index, name = "") {
                 />
                 <input
                   type="text"
-                  onChange={e => {
+                  onChange={(e) => {
                     changeConfig(`${name}[${index}].value`, e.target.value);
                   }}
                   value={option.value}
@@ -162,22 +162,22 @@ function makeForm(value, config, changeConfig, index, name = "") {
                 {keyOptions ? (
                   <select
                     value={option.key}
-                    onChange={e => {
+                    onChange={(e) => {
                       changeConfig(`${name}[${index}].key`, e.target.value);
                     }}
                   >
                     {Object.entries(keyOptions)
                       .concat([["", ""]])
-                      .map(entry => (
+                      .map((entry) => (
                         <option value={entry[0]}>{entry[1]}</option>
                       ))}
                   </select>
                 ) : (
                   <input
                     type="number"
-                    onChange={e => {
+                    onChange={(e) => {
                       changeConfig(`${name}[${index}].key`, e.target.value, {
-                        numeric: true
+                        numeric: true,
                       });
                     }}
                     value={option.key}
@@ -212,9 +212,9 @@ function makeForm(value, config, changeConfig, index, name = "") {
             {value.name}:
             <select
               value={get(config, name)}
-              onChange={event => {
+              onChange={(event) => {
                 changeConfig(name, event.target.value, {
-                  numeric: value.numeric
+                  numeric: value.numeric,
                 });
               }}
             >
@@ -239,12 +239,13 @@ function makeForm(value, config, changeConfig, index, name = "") {
               step={value.step}
               checked={get(config, name)}
               value={value.rounding !== undefined ? round(get(config, name), value.rounding) : get(config, name)}
-              onChange={event => {
+              onChange={(event) => {
                 if (event.target.type === "checkbox") {
                   changeConfig(name, event.target.checked);
                 } else {
+                  console.log(event.target.value);
                   changeConfig(name, event.target.value, {
-                    numeric: value.type === "number"
+                    numeric: value.type === "number",
                   });
                 }
               }}
@@ -266,12 +267,12 @@ const getColumnWidth = (rows, accessor) => {
   const maxWidth = 400;
   const minWidth = 50;
   const magicSpacing = 11;
-  const cellLength = Math.max(...rows.map(row => (`${get(row, accessor)}` || "").length));
+  const cellLength = Math.max(...rows.map((row) => (`${get(row, accessor)}` || "").length));
 
   return Math.max(minWidth, Math.min(maxWidth, cellLength * magicSpacing));
 };
 
-const daysToDate = days => {
+const daysToDate = (days) => {
   return new Date((days - (25567 + 2)) * 86400 * 1000);
 };
 
