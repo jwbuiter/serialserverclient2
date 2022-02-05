@@ -9,11 +9,11 @@ class LogModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterType: "full"
+      filterType: "full",
     };
   }
 
-  changeFilterType = event => {
+  changeFilterType = (event) => {
     this.setState({ filterType: event.target.value });
   };
 
@@ -22,8 +22,8 @@ class LogModal extends Component {
       id: "full",
       name: "Show only complete",
       title: "Complete Log",
-      filter: entry => entry.full
-    }
+      filter: (entry) => entry.full,
+    },
   ];
 
   componentWillMount() {
@@ -32,7 +32,7 @@ class LogModal extends Component {
         id: "unique",
         name: "Show only unique",
         title: "Unique Log",
-        filter: entry => entry.TU
+        filter: (entry) => entry.TU,
       });
     }
 
@@ -41,19 +41,19 @@ class LogModal extends Component {
         id: "activity",
         name: "Show only activity",
         title: "Activity Log",
-        filter: entry => entry.TA
+        filter: (entry) => entry.TA,
       });
     }
     this.filterTypes.push({
       id: "none",
       name: "Show all",
       title: "Normal Log",
-      filter: entry => true
+      filter: (entry) => true,
     });
   }
 
   render() {
-    const currentFilter = this.filterTypes.find(filter => filter.id === this.state.filterType);
+    const currentFilter = this.filterTypes.find((filter) => filter.id === this.state.filterType);
 
     const { entries, accessors, legend, digits, visible } = this.props.loggerState;
     const columns = legend
@@ -62,17 +62,14 @@ class LogModal extends Component {
         accessor: accessors[index],
         width: getColumnWidth(entries, accessors[index]),
         style: { textAlign: "center" },
-        Cell: props => {
-          if (typeof props.value === "number") {
-            return props.value.toFixed(digits[index]);
-          }
+        Cell: (props) => {
           return props.value;
         },
-        name
+        name,
       }))
       .filter((_, index) => visible[index])
-      .filter(column => this.props.uniqueLogEnabled || column.name !== "TU")
-      .filter(column => this.props.activityCounter || column.name !== "TA");
+      .filter((column) => this.props.uniqueLogEnabled || column.name !== "TU")
+      .filter((column) => this.props.activityCounter || column.name !== "TA");
 
     const filteredEntries = entries.filter(currentFilter.filter);
 
@@ -87,7 +84,7 @@ class LogModal extends Component {
         {this.filterTypes.length > 1 && (
           <span>
             <select value={this.state.filterType} onChange={this.changeFilterType}>
-              {this.filterTypes.map(filter => (
+              {this.filterTypes.map((filter) => (
                 <option value={filter.id}>{filter.name}</option>
               ))}
             </select>
@@ -117,7 +114,7 @@ function mapStateToProps(state) {
   return {
     uniqueLogEnabled,
     activityCounter,
-    loggerState
+    loggerState,
   };
 }
 
