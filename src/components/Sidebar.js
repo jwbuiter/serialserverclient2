@@ -205,13 +205,6 @@ class Sidebar extends Component {
             this.props.downloadExcel();
           },
         },
-        resetSL: {
-          name: "Reset Self Learning Data",
-          type: "button",
-          onClick: () => {
-            this.props.resetSLData();
-          },
-        },
         logID: {
           type: "external",
           location: "logger.logID",
@@ -232,6 +225,13 @@ class Sidebar extends Component {
           type: "number",
           min: 0,
           step: 1,
+        },
+        resetSL: {
+          name: "Reset Self Learning Data",
+          type: "button",
+          onClick: () => {
+            this.props.resetSLData();
+          },
         },
       },
     };
@@ -362,7 +362,7 @@ class Sidebar extends Component {
             onSubmit={(e) => {
               e.preventDefault();
               const file = e.target[0].files[0];
-              const overwrite = e.target[1].value === "on";
+              const overwrite = e.target[1].checked;
               uploadExcel(file, overwrite);
               this.closeImportExcelModal();
             }}
