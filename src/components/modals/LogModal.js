@@ -93,7 +93,7 @@ class LogModal extends Component {
         )}
         {entries.length > 0 && (
           <span className="selfLearning--modal--buttons">
-            <button onClick={this.props.downloadLog}>
+            <button onClick={() => this.props.downloadLog()}>
               <b> Download </b>
             </button>
           </span>
