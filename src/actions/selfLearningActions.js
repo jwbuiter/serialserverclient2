@@ -40,6 +40,8 @@ export const resetSLData =
           window.alert(message);
 
           if (hardReboot) emit("hardReboot");
+
+          window.location.reload();
         }
       });
     }
