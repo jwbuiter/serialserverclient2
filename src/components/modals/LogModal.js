@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import ReactTable from "react-table";
 
+import { downloadLog } from "../../actions/logActions";
 import { getColumnWidth } from "../../helpers";
 
 class LogModal extends Component {
@@ -90,6 +91,13 @@ class LogModal extends Component {
             </select>
           </span>
         )}
+        {entries.length > 0 && (
+          <span className="selfLearning--modal--buttons">
+            <button onClick={this.props.downloadLog}>
+              <b> Download </b>
+            </button>
+          </span>
+        )}
 
         <div className="main--logModal">
           <div>
@@ -118,4 +126,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(LogModal);
+export default connect(mapStateToProps, { downloadLog })(LogModal);

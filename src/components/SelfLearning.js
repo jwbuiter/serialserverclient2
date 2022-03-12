@@ -22,7 +22,7 @@ class SelfLearning extends Component {
     this.state = {
       SLModalIsOpen: false,
       configModalIsOpen: false,
-      showIndividualTable: false
+      showIndividualTable: false,
     };
   }
 
@@ -56,12 +56,12 @@ class SelfLearning extends Component {
             com0: "Com 0",
             com1: "Com 1",
             com0ind: "Com 0 Individual",
-            com1ind: "Com 1 Individual"
-          }
+            com1ind: "Com 1 Individual",
+          },
         },
         normal: {
           type: "conditional",
-          condition: config => !config.selfLearning.enabled.endsWith("ind") && config.selfLearning.enabled !== "off",
+          condition: (config) => !config.selfLearning.enabled.endsWith("ind") && config.selfLearning.enabled !== "off",
           contents: {
             LogID: {
               name: "LogID",
@@ -69,45 +69,45 @@ class SelfLearning extends Component {
               location: "logger.logID",
               configuration: {
                 name: "LogID",
-                type: "text"
-              }
+                type: "text",
+              },
             },
             startCalibration: {
               name: "Calibration",
               type: "number",
               min: 0,
               step: 1,
-              rounding
+              rounding,
             },
             totalNumber: {
               name: "Total number",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             numberPercentage: {
               name: "SL number %",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             tolerance: {
               name: "Tolerance %",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             startTolerance: {
               name: "Extra tolerance during learning %",
               type: "number",
               min: 0,
-              step: 1
-            }
-          }
+              step: 1,
+            },
+          },
         },
         individual: {
           type: "conditional",
-          condition: config => config.selfLearning.enabled.endsWith("ind"),
+          condition: (config) => config.selfLearning.enabled.endsWith("ind"),
           contents: {
             important: {
               type: "emphasis",
@@ -117,77 +117,77 @@ class SelfLearning extends Component {
                   type: "button",
                   onClick: () => {
                     this.props.downloadExcel();
-                  }
+                  },
                 },
                 resetSL: {
                   name: "Reset Self Learning Data",
                   type: "button",
                   onClick: () => {
                     this.props.resetSLData();
-                  }
+                  },
                 },
                 logID: {
                   type: "external",
                   location: "logger.logID",
                   configuration: {
                     name: "LogID",
-                    type: "text"
-                  }
+                    type: "text",
+                  },
                 },
                 startCalibration: {
                   name: "Calibration",
                   type: "number",
                   min: 0,
                   step: 1,
-                  rounding
+                  rounding,
                 },
                 totalNumber: {
                   name: "Total number",
                   type: "number",
                   min: 0,
-                  step: 1
-                }
-              }
+                  step: 1,
+                },
+              },
             },
             numberPercentage: {
               name: "SL number %",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             tolerance: {
               name: "SL Tolerance %",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             individualToleranceAbs: {
               name: "Individual tolerance",
               type: "number",
               min: 0,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
             individualTolerance: {
               name: "Individual tolerance %",
               type: "number",
               min: 0,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
             individualToleranceShift: {
               name: "Individual tolerance shift %",
               type: "number",
               min: 0,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
             individualCorrectionIncrement: {
               name: "Correction %",
               type: "number",
               min: 0,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
             individualCorrectionLimit: {
               name: "Correction limit (1-9, 0 = off)",
@@ -195,20 +195,20 @@ class SelfLearning extends Component {
               min: 0,
               max: 9,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
             individualCycleLimit: {
               name: "Cycle limit for UN list (days, 0 = off)",
               type: "number",
               min: 0,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
-            individualCycleLimitDateColumn:{
+            individualCycleLimitDateColumn: {
               name: "Date column for cycle limit",
               type: "select",
               numeric: true,
-              options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
+              options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
             },
             individualAverageNumber: {
               name: "Average calibration number (1-9)",
@@ -216,17 +216,27 @@ class SelfLearning extends Component {
               min: 1,
               max: 9,
               step: 1,
-              condition: config => config.selfLearning.enabled.endsWith("ind")
+              condition: (config) => config.selfLearning.enabled.endsWith("ind"),
             },
-            excelIndividualColumn: {
+            excelCurrentCalibrationColumn: {
               type: "external",
-              location: "table.individualColumn",
+              location: "table.currentCalibrationColumn",
               configuration: {
-                name: "Excel column - Com Ind",
+                name: "Excel column - Current Cal",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
-              }
+                options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
+              },
+            },
+            excelStartingCalibrationColumn: {
+              type: "external",
+              location: "table.startingCalibrationColumn",
+              configuration: {
+                name: "Excel column - Start Cal",
+                type: "select",
+                numeric: true,
+                options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
+              },
             },
             excelDateColumn: {
               type: "external",
@@ -235,8 +245,8 @@ class SelfLearning extends Component {
                 name: "Excel column - Date",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
-              }
+                options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
+              },
             },
             excelExitColumn: {
               type: "external",
@@ -245,45 +255,45 @@ class SelfLearning extends Component {
                 name: "Excel column - Exit",
                 type: "select",
                 numeric: true,
-                options: [...Array(26).keys()].map(i => String.fromCharCode("A".charCodeAt(0) + i))
-              }
+                options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
+              },
             },
             exitOptions: {
               name: "Exit options",
-              type: "keyValue"
+              type: "keyValue",
             },
             activityCounter: {
               type: "checkbox",
-              name: "Activity counter"
+              name: "Activity counter",
             },
             uploadExcelTemplate: {
               name: "Import Excel Template",
               type: "button",
-              onClick: uploadExcelTemplate
+              onClick: uploadExcelTemplate,
             },
             title: {
               name: "List column configuration",
-              type: "title"
+              type: "title",
             },
             firstTopFormula: {
               name: "#1 Top Formula",
-              type: "text"
+              type: "text",
             },
             firstTopDigits: {
               name: "#1 Top Digits",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             secondTopFormula: {
               name: "#2 Top Formula",
-              type: "text"
+              type: "text",
             },
             secondTopDigits: {
               name: "#2 Top Digits",
               type: "number",
               min: 0,
-              step: 1
+              step: 1,
             },
             extraColumns: {
               name: "Additional columns",
@@ -291,15 +301,15 @@ class SelfLearning extends Component {
               structure: {
                 title: {
                   name: "Title",
-                  type: "text"
+                  type: "text",
                 },
                 topFormula: {
                   name: "Top formula",
-                  type: "text"
+                  type: "text",
                 },
                 formula: {
                   name: "Formula",
-                  type: "text"
+                  type: "text",
                 },
                 type: {
                   name: "Type of content",
@@ -307,31 +317,31 @@ class SelfLearning extends Component {
                   options: {
                     text: "Non-num",
                     number: "Numeric",
-                    date: "Date"
-                  }
+                    date: "Date",
+                  },
                 },
                 digits: {
                   name: "Digits",
                   type: "number",
                   min: 0,
-                  step: 1
+                  step: 1,
                 },
                 generalVisible: {
                   name: "Show in SL list",
-                  type: "checkbox"
-                }
+                  type: "checkbox",
+                },
               },
               defaults: {
                 title: "",
                 topFormula: "",
                 formula: "",
                 type: "text",
-                digits: 0
-              }
-            }
-          }
-        }
-      }
+                digits: 0,
+              },
+            },
+          },
+        },
+      },
     };
 
     const indicators = ["selfLearning--inProgress", "selfLearning--success", "selfLearning--warning"];
@@ -339,7 +349,7 @@ class SelfLearning extends Component {
     const cells = [
       "Self Learning",
       (this.props.calibration || 0).toFixed(this.props.config.serial.coms[this.props.comIndex || 0].digits) || 0,
-      Math.round((this.props.tolerance || 0) * 1000) / 10 + "%"
+      Math.round((this.props.tolerance || 0) * 1000) / 10 + "%",
     ];
 
     if (!this.props.individual && this.props.success) {
@@ -349,10 +359,10 @@ class SelfLearning extends Component {
     if (this.props.individual && this.props.activityCounter) {
       const activity =
         Object.values(this.props.individualEntries)
-          .map(entry => entry.activity)
+          .map((entry) => entry.activity)
           .reduce((acc, cur) => acc + cur, 0) +
         Object.values(this.props.generalEntries)
-          .map(entry => entry.activity)
+          .map((entry) => entry.activity)
           .reduce((acc, cur) => acc + cur, 0);
 
       cells.push(activity);
@@ -406,7 +416,7 @@ function mapStateToProps(state) {
     config,
     individual,
     tableExtraColumnTitle,
-    activityCounter
+    activityCounter,
   };
 }
 
