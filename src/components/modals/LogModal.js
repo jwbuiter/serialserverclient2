@@ -80,19 +80,21 @@ class LogModal extends Component {
       table[0] = columns.map((col) => col.name);
 
       for (let row of filteredEntries) {
-        row = Object.values(row);
         const newRow = [];
-        for (let i = 0; i < columns.length; i++) newRow.push(row[i]);
+        for (let col of columns) {
+          console.log(row, col);
+          newRow.push(eval("row." + col.accessor));
+        }
         table.push(newRow);
       }
 
       const ws = XLSX.utils.aoa_to_sheet(table);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "");
+      XLSX.utils.book_append_sheet(wb, ws, "data");
 
       const date = dateFormat(new Date(), "yyyy-mm-dd_HH-MM-ss");
 
-      XLSX.writeFile(wb, `${this.props.name}_${this.props.config.logger.logID}_${date}.csv`);
+      XLSX.writeFile(wb, `${this.props.name}_${this.props.config.logger.logID}_${date}.xlsx`);
     };
 
     return (
