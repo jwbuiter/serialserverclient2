@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 import ReactTable from "react-table";
+import dateFormat from "dateformat";
+import XLSX from "xlsx";
 
-import { downloadLog } from "../../actions/logActions";
 import { getColumnWidth } from "../../helpers";
 
 class LogModal extends Component {
@@ -56,7 +57,7 @@ class LogModal extends Component {
   render() {
     const currentFilter = this.filterTypes.find((filter) => filter.id === this.state.filterType);
 
-    const { entries, accessors, legend, digits, visible } = this.props.loggerState;
+    const { entries, accessors, legend, visible } = this.props.loggerState;
     const columns = legend
       .map((name, index) => ({
         Header: () => <b>{name}</b>,
@@ -73,6 +74,26 @@ class LogModal extends Component {
       .filter((column) => this.props.activityCounter || column.name !== "TA");
 
     const filteredEntries = entries.filter(currentFilter.filter);
+
+    const downloadLog = () => {
+      const table = [];
+      table[0] = columns.map((col) => col.name);
+
+      for (let row of filteredEntries) {
+        row = Object.values(row);
+        const newRow = [];
+        for (let i = 0; i < columns.length; i++) newRow.push(row[i]);
+        table.push(newRow);
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(table);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "");
+
+      const date = dateFormat(new Date(), "yyyy-mm-dd_HH-MM-ss");
+
+      XLSX.writeFile(wb, `${this.props.name}_${this.props.config.logger.logID}_${date}.csv`);
+    };
 
     return (
       <Modal
@@ -93,7 +114,7 @@ class LogModal extends Component {
         )}
         {entries.length > 0 && (
           <span className="selfLearning--modal--buttons">
-            <button onClick={() => this.props.downloadLog()}>
+            <button onClick={downloadLog}>
               <b> Download </b>
             </button>
           </span>
@@ -114,6 +135,8 @@ class LogModal extends Component {
 
 function mapStateToProps(state) {
   const uniqueLogEnabled = state.config.logger.unique !== "off";
+  const name = state.static.name;
+  const config = state.config;
 
   const { activityCounter } = state.config.selfLearning;
 
@@ -123,7 +146,9 @@ function mapStateToProps(state) {
     uniqueLogEnabled,
     activityCounter,
     loggerState,
+    name,
+    config,
   };
 }
 
-export default connect(mapStateToProps, { downloadLog })(LogModal);
+export default connect(mapStateToProps)(LogModal);
