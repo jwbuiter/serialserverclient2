@@ -119,6 +119,9 @@ class LogModal extends Component {
             <button onClick={downloadLog}>
               <b> Download </b>
             </button>
+            <button onClick={window.print}>
+              <b> Print </b>
+            </button>
           </span>
         )}
 
