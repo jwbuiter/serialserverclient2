@@ -5,7 +5,7 @@ import ReactTable from "react-table";
 import dateFormat from "dateformat";
 import XLSX from "xlsx";
 
-import { getColumnWidth } from "../../helpers";
+import { getColumnWidth, daysToDate } from "../../helpers";
 
 class LogModal extends Component {
   constructor(props) {
@@ -58,17 +58,37 @@ class LogModal extends Component {
     const currentFilter = this.filterTypes.find((filter) => filter.id === this.state.filterType);
 
     const { entries, accessors, legend, visible } = this.props.loggerState;
+    const { cells } = this.props.config.table;
+
+    const dateCells = new Set();
+    cells.forEach((cell, i) => {
+      if (cell.type == "date") dateCells.insert(`cells[${i}]`);
+    });
+
     const columns = legend
-      .map((name, index) => ({
-        Header: () => <b>{name}</b>,
-        accessor: accessors[index],
-        width: getColumnWidth(entries, accessors[index]),
-        style: { textAlign: "center" },
-        Cell: (props) => {
-          return props.value;
-        },
-        name,
-      }))
+      .map((name, index) => {
+        const column = {
+          Header: () => <b>{name}</b>,
+          accessor: accessors[index],
+          width: getColumnWidth(entries, accessors[index]),
+          style: { textAlign: "center" },
+          id: index,
+          Cell: (props) => {
+            return props.value;
+          },
+          name,
+        };
+
+        const accessor = column.accessor;
+        if (dateCells.has(accessor)) {
+          column.accessor = (row) => {
+            const excelDate = eval("row." + accessor);
+            return dateFormat(daysToDate(excelDate), "yyyy-mm-dd HH-MM-ss");
+          };
+        }
+
+        return column;
+      })
       .filter((_, index) => visible[index])
       .filter((column) => this.props.uniqueLogEnabled || column.name !== "TU")
       .filter((column) => this.props.activityCounter || column.name !== "TA");
@@ -82,8 +102,8 @@ class LogModal extends Component {
       for (let row of filteredEntries) {
         const newRow = [];
         for (let col of columns) {
-          console.log(row, col);
-          newRow.push(eval("row." + col.accessor));
+          const entry = typeof col.accessor == "function" ? col.accessor() : eval("row." + col.accessor);
+          newRow.push(entry);
         }
         table.push(newRow);
       }
