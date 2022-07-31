@@ -62,7 +62,7 @@ class LogModal extends Component {
 
     const dateCells = new Set();
     cells.forEach((cell, i) => {
-      if (cell.type == "date") dateCells.insert(`cells[${i}]`);
+      if (cell.type == "date") dateCells.add(`cells[${i}]`);
     });
 
     const columns = legend
