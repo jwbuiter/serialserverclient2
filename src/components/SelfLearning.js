@@ -266,6 +266,18 @@ class SelfLearning extends Component {
               type: "checkbox",
               name: "Activity counter",
             },
+            individualActivityUpdatesWindow: {
+              type: "number",
+              name: "Activity check window",
+              min: 0,
+              condition: (config) => config.selfLearning.activityCounter,
+            },
+            individualActivityUpdatesMinimum: {
+              type: "number",
+              name: "Activity check minimum updates",
+              min: 0,
+              condition: (config) => config.selfLearning.activityCounter,
+            },
             uploadExcelTemplate: {
               name: "Import Excel Template",
               type: "button",
