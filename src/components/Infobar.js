@@ -119,6 +119,15 @@ class Infobar extends Component {
             type: "select",
             options: { off: "Off", com0: "Com 0", com1: "Com 1" },
           },
+          activityCounter: {
+            type: "external",
+            location: "selfLearning.activityCounter",
+            configuration: {
+              type: "checkbox",
+              name: "Activity counter",
+            },
+            condition: (config) => config.logger.unique != "off",
+          },
           resetMode: {
             name: "Reset mode",
             type: "select",
