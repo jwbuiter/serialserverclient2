@@ -12,7 +12,6 @@ import { changeConfig } from "../actions/configActions";
 import { makeForm } from "../helpers";
 import "../styles/selfLearning.scss";
 import "react-table/react-table.css";
-import { isUndefined } from "util";
 
 Modal.setAppElement("#root");
 
@@ -44,7 +43,7 @@ class SelfLearning extends Component {
 
   render() {
     let rounding = 0;
-    if (!isUndefined(this.props.comIndex)) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    if (this.props.comIndex != undefined) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const configurationValues = {
       selfLearning: {

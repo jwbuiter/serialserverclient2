@@ -13,7 +13,6 @@ import { setDateTime } from "../actions/internalActions";
 import { resetSLData } from "../actions/selfLearningActions";
 
 import { makeForm } from "../helpers";
-import { isUndefined } from "util";
 import "../styles/sidebar.scss";
 
 const ftpTargetsValues = {
@@ -194,7 +193,7 @@ class Sidebar extends Component {
     const closeMenu = this.props.closeMenu;
 
     let rounding = 0;
-    if (!isUndefined(this.props.comIndex)) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
+    if (this.props.comIndex != undefined) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
 
     const newCycleValues = {
       selfLearning: {
