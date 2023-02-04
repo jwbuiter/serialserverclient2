@@ -44,7 +44,7 @@ class SelfLearning extends Component {
   render() {
     let rounding = 0;
     if (this.props.comIndex != undefined) rounding = this.props.config.serial.coms[this.props.comIndex].digits;
-
+    
     const configurationValues = {
       selfLearning: {
         enabled: {
@@ -264,6 +264,13 @@ class SelfLearning extends Component {
             activityCounter: {
               type: "checkbox",
               name: "Activity counter",
+            },
+            individualActivityUpdatesDays:{
+              type: "number",
+              name: "Activity check days (0-3, 0=off)",
+              min: 0,
+              max: 3,
+              condition: (config) => config.selfLearning.activityCounter,
             },
             individualActivityUpdatesWindow: {
               type: "number",
