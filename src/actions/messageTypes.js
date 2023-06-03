@@ -4,12 +4,13 @@ import {
   TABLE_CELL_STATE,
   TABLE_CELL_COLOR,
   SERIAL_COM_STATE,
+  SERIAL_AVERAGE,
   SELFLEARNING_STATE,
   RECEIVE_IP,
   RECEIVE_TIME,
   TABLE_FOUND_STATE,
   SERIAL_CLEAR,
-  SET_WARNING
+  SET_WARNING,
 } from "./types";
 
 export default {
@@ -23,5 +24,6 @@ export default {
   time: RECEIVE_TIME,
   notfound: TABLE_FOUND_STATE,
   clearSerial: SERIAL_CLEAR,
-  setWarning: SET_WARNING
+  setWarning: SET_WARNING,
+  average: SERIAL_AVERAGE,
 };

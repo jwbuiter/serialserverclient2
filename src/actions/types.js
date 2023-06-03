@@ -1,6 +1,6 @@
 function stringMapFromArray(array) {
   const result = {};
-  array.forEach(elem => {
+  array.forEach((elem) => {
     result[elem] = elem;
   });
   return result;
@@ -17,6 +17,7 @@ const actionTypes = [
   "INPUT_PORT_STATE",
   "OUTPUT_PORT_STATE",
   "SERIAL_COM_STATE",
+  "SERIAL_AVERAGE",
   "TABLE_CELL_STATE",
   "TABLE_CELL_COLOR",
   "SELFLEARNING_STATE",
@@ -28,7 +29,7 @@ const actionTypes = [
   "SERIAL_CLEAR",
   "RECEIVE_CONFIG_LIST",
   "RECEIVE_LOG_LIST",
-  "SET_WARNING"
+  "SET_WARNING",
 ];
 
 module.exports = stringMapFromArray(actionTypes);

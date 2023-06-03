@@ -483,6 +483,7 @@ class Sidebar extends Component {
           <span className="menu-item" onClick={this.handleQSClicked}>
             QS code: {this.props.QS}
           </span>
+          <span className="menu-item">{this.props.version}</span>
         </Menu>
       </>
     );
@@ -507,6 +508,7 @@ function mapStateToProps(state) {
     config: state.config,
     isMenuOpen: state.misc.isMenuOpen,
     QS: state.static.QS,
+    version: `V${state.static.version} - ${state.static.buildDate}`,
     writeLogs: state.config.logger.writeToFile,
     exposeUpload: state.static.exposeUpload,
     exposeShutdown: state.static.exposeShutdown,

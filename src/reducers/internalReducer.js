@@ -4,6 +4,7 @@ const {
   INPUT_PORT_STATE,
   OUTPUT_PORT_STATE,
   SERIAL_COM_STATE,
+  SERIAL_AVERAGE,
   TABLE_CELL_STATE,
   TABLE_CELL_COLOR,
   SELFLEARNING_STATE,
@@ -73,11 +74,18 @@ export default function (fullState = initialState, action) {
       }
 
       newComs[index] = {
+        ...newComs[index],
         entry,
         entryTime,
         history: newHistory,
       };
 
+      return { ...fullState, coms: newComs };
+    }
+    case SERIAL_AVERAGE: {
+      const { index, average } = action.payload;
+      const newComs = Array.from(fullState.coms);
+      newComs[index].average = average;
       return { ...fullState, coms: newComs };
     }
     case SERIAL_CLEAR: {

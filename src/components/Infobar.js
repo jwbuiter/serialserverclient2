@@ -63,7 +63,7 @@ class Infobar extends Component {
       },
     };
 
-    if (this.props.exposeUpload) {
+    if (this.props.constants.exposeUpload) {
       configurationValues = {
         ...configurationValues,
         table: {
@@ -90,12 +90,6 @@ class Infobar extends Component {
             options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
           },
         },
-      };
-    }
-
-    if (this.props.exposeUpload) {
-      configurationValues = {
-        ...configurationValues,
         logger: {
           title: {
             name: "Logger",
@@ -150,12 +144,6 @@ class Infobar extends Component {
             condition: (config) => config.logger.resetMode === "interval",
           },
         },
-      };
-    }
-
-    if (this.props.exposeUpload) {
-      configurationValues = {
-        ...configurationValues,
         FTP: {
           title: {
             name: "FTP",
@@ -194,6 +182,36 @@ class Infobar extends Component {
         },
       };
     }
+
+    if (this.props.constants.enabledModules.bluetooth) {
+      configurationValues = {
+        ...configurationValues,
+        bluetooth: {
+          title: {
+            name: "Bluetooth",
+            type: "title",
+          },
+          trigger: {
+            name: "Trigger",
+            type: "select",
+            options: { off: "Off", com0: "Com 0", com1: "Com 1", continuous: "Continuously", execute: "On execute" },
+          },
+          frequency: {
+            name: "Frequency",
+            type: "number",
+            max: 10,
+            condition: (config) => config.bluetooth.trigger === "continuous",
+          },
+          source: {
+            name: "Data source",
+            type: "select",
+            options: { com0: "Com 0", com1: "Com 1", log: "Log line" },
+            condition: (config) => config.bluetooth.trigger !== "off",
+          },
+        },
+      };
+    }
+
     return (
       <>
         <Modal
@@ -235,7 +253,10 @@ class Infobar extends Component {
         >
           {this.state.configModalIsOpen && (
             <form>
-              <h2>General configuration - V{this.props.version}</h2>
+              <h2>
+                General configuration
+                <br /> {this.props.version}
+              </h2>
               <div className="infobar--modalButtons">
                 <input
                   type="button"
@@ -313,11 +334,11 @@ function mapStateToProps(state) {
   const logID = state.config.logger.logID;
   const ip = state.misc.ip;
   const time = state.misc.time;
-  const version = state.static.version;
+  const version = `V${state.static.version} - ${state.static.buildDate}`;
 
   const configLocked = state.config.locked;
   const config = state.config;
-  const exposeUpload = state.static.exposeUpload;
+  const constants = state.static;
 
   const configList = state.misc.configList;
 
@@ -330,7 +351,7 @@ function mapStateToProps(state) {
     configLocked,
     config,
     configList,
-    exposeUpload,
+    constants,
   };
 }
 

@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.5964a12a.css",
-    "main.js": "/static/js/main.6f9ca6ba.js",
+    "main.js": "/static/js/main.483f9bc9.js",
     "static/media/Logo-MBDC.jpg": "/static/media/Logo-MBDC.d86ff062e4113e2cdde0.jpg",
     "index.html": "/index.html",
     "main.5964a12a.css.map": "/static/css/main.5964a12a.css.map",
-    "main.6f9ca6ba.js.map": "/static/js/main.6f9ca6ba.js.map"
+    "main.483f9bc9.js.map": "/static/js/main.483f9bc9.js.map"
   },
   "entrypoints": [
     "static/css/main.5964a12a.css",
-    "static/js/main.6f9ca6ba.js"
+    "static/js/main.483f9bc9.js"
   ]
 }
