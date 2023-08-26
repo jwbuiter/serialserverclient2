@@ -255,7 +255,7 @@ class Infobar extends Component {
             <form>
               <h2>
                 General configuration
-                <br /> {this.props.version}
+                <br /> V{this.props.version} - {this.props.buildDate}
               </h2>
               <div className="infobar--modalButtons">
                 <input
@@ -334,7 +334,6 @@ function mapStateToProps(state) {
   const logID = state.config.logger.logID;
   const ip = state.misc.ip;
   const time = state.misc.time;
-  const version = `V${state.static.version} - ${state.static.buildDate}`;
 
   const configLocked = state.config.locked;
   const config = state.config;
@@ -347,7 +346,8 @@ function mapStateToProps(state) {
     logID,
     ip,
     time,
-    version,
+    version: state.static.version,
+    buildDate: state.static.buildDate,
     configLocked,
     config,
     configList,
