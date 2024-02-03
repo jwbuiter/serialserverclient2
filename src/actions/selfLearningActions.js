@@ -1,3 +1,6 @@
+import io from "socket.io-client";
+import { transferExcel } from "./excelActions";
+
 export const deleteGeneralSL =
   (key) =>
   (dispatch, getState, { emit }) => {
@@ -19,9 +22,19 @@ export const resetIndividualSL =
   };
 
 export const resetSLData =
-  () =>
-  (dispatch, getState, { emit }) => {
-    if (window.confirm("This will clear the Excel file. Do you want to download it first?")) {
+  (target, name) =>
+  async (dispatch, getState, { emit }) => {
+    if (target != "") {
+      const socket = io(target);
+
+      await new Promise((r) => setTimeout(r, 1000));
+      if (!socket.connected) {
+        window.alert("Could not connect to " + name);
+        return;
+      }
+
+      emit = (msg, data, callback) => socket.emit(msg, data, callback);
+    } else if (window.confirm("This will clear the Excel file. Do you want to download it first?")) {
       return;
     }
 
@@ -29,20 +42,29 @@ export const resetSLData =
     let { logID } = config.logger;
     let { startCalibration, totalNumber } = config.selfLearning;
 
-    if (window.confirm("Are you sure you want to clear all SL data?")) {
-      emit("deleteSLData", { logID, startCalibration, totalNumber }, (success) => {
-        if (success) {
-          const hardReboot = getState().static.newCycleResetHard;
-          const message = hardReboot
-            ? "Successfully started new cycle, device will now reboot"
-            : "Successfully started new cycle";
-
-          window.alert(message);
-
-          if (hardReboot) emit("hardReboot");
-
-          window.location.reload();
+    if (window.confirm(`Are you sure you want to clear all SL data${target == "" ? "" : " on " + name}?`)) {
+      emit("deleteSLData", { logID, startCalibration, totalNumber }, async (success) => {
+        if (!success) {
+          window.alert("Failed to reset SL data");
+          return;
         }
+
+        if (target != "") {
+          await transferExcel(target);
+          // wait a few seconds to allow soft reboot to complete
+          await new Promise((r) => setTimeout(r, 5000));
+        }
+
+        const hardReboot = getState().static.newCycleResetHard;
+        const message = hardReboot
+          ? "Successfully started new cycle, device will now reboot"
+          : "Successfully started new cycle";
+
+        window.alert(message);
+
+        if (hardReboot) emit("hardReboot");
+
+        window.location.reload();
       });
     }
   };

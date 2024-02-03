@@ -89,6 +89,11 @@ class Infobar extends Component {
             numeric: true,
             options: [...Array(26).keys()].map((i) => String.fromCharCode("A".charCodeAt(0) + i)),
           },
+          transferTargets: {
+            name: "Transfer targets(address - name)",
+            type: "keyValue",
+            keyType: "text",
+          },
         },
         logger: {
           title: {

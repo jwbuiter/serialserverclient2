@@ -56,6 +56,16 @@ const ftpTargetsValues = {
   },
 };
 
+const transferTargetsValues = {
+  table: {
+    transferTargets: {
+      name: "Transfer targets(address - name)",
+      type: "keyValue",
+      keyType: "text",
+    },
+  },
+};
+
 class Sidebar extends Component {
   constructor(props) {
     super(props);
@@ -67,6 +77,7 @@ class Sidebar extends Component {
       password: "",
       importExcelModalIsOpen: false,
       ftpTargetsModalIsOpen: false,
+      transferTargetsModelIsOpen: false,
       newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
       qsClickedTimes: 0,
     };
@@ -138,6 +149,17 @@ class Sidebar extends Component {
   closeFtpTargetsModal = () => {
     this.props.saveConfig();
     this.setState({ ftpTargetsModalIsOpen: false });
+  };
+
+  openTransferTargetsModal = () => {
+    this.props.unlockConfig();
+    this.setState({ transferTargetsModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeTransferTargetsModal = () => {
+    this.props.saveConfig();
+    this.setState({ transferTargetsModalIsOpen: false });
   };
 
   uploadLog = (log, index) => {
@@ -224,13 +246,6 @@ class Sidebar extends Component {
           type: "number",
           min: 0,
           step: 1,
-        },
-        resetSL: {
-          name: "Reset Self Learning Data",
-          type: "button",
-          onClick: () => {
-            this.props.resetSLData();
-          },
         },
       },
     };
@@ -327,10 +342,28 @@ class Sidebar extends Component {
           className="modalContent"
           contentLabel="New SL Cycle Modal"
         >
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const hostElement = e.target.elements["host"];
+              const host = hostElement.value;
+              const name = hostElement.options[hostElement.selectedIndex].text;
+              this.props.resetSLData(host, name);
+            }}
+          >
             <h2>Start new cycle</h2>
             {this.state.newCycleModalIsOpen && makeForm(newCycleValues, this.props.config, this.props.changeConfig)}
+            <select name="host">
+              <option value="">Do not transfer</option>
+              {this.props.transferTargets.map((target) => (
+                <option value={target.key}>{target.value}</option>
+              ))}
+            </select>
+            <label htmlFor="host">Transfer target:</label>
+            <br />
+            <input type="submit" value="Reset" />
           </form>
+          <form></form>
         </Modal>
         <Modal
           isOpen={this.state.passwordPromptIsOpen}
@@ -386,6 +419,19 @@ class Sidebar extends Component {
           <form>
             <h2>FTP Targets</h2>
             {this.state.ftpTargetsModalIsOpen && makeForm(ftpTargetsValues, this.props.config, this.props.changeConfig)}
+          </form>
+        </Modal>
+        <Modal
+          isOpen={this.state.transferTargetsModalIsOpen}
+          onRequestClose={this.closeTransferTargetsModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="Transfer Targets Modal"
+        >
+          <form>
+            <h2>Transfer Targets</h2>
+            {this.state.transferTargetsModalIsOpen &&
+              makeForm(transferTargetsValues, this.props.config, this.props.changeConfig)}
           </form>
         </Modal>
         <Menu
@@ -450,6 +496,11 @@ class Sidebar extends Component {
             </span>
           )}
           {this.props.exposeUpload && (
+            <span className="menu-item menu-item--clickable" onClick={this.openTransferTargetsModal}>
+              Excel Transfer Targets
+            </span>
+          )}
+          {this.props.exposeUpload && (
             <span className="menu-item menu-item--clickable" onClick={this.openFtpTargetsModal}>
               FTP Targets
             </span>
@@ -501,6 +552,7 @@ function mapStateToProps(state) {
       exposeShutdown: false,
       logList: [],
       selfLearningEnabled: "",
+      transferTargets: [],
     };
   }
   return {
@@ -518,6 +570,7 @@ function mapStateToProps(state) {
     selfLearningEnabled: state.config.selfLearning.enabled,
     time: state.misc.time,
     manualResetHard: state.static.manualResetHard,
+    transferTargets: state.config.table.transferTargets,
   };
 }
 

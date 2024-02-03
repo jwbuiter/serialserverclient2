@@ -13,6 +13,34 @@ export const uploadExcel = (file, overwrite) => {
     .catch(() => window.alert("Error uploading Excel file."));
 };
 
+export const transferExcel = async (host) => {
+  let response;
+  try {
+    response = await axios({
+      method: "get",
+      responseType: "arraybuffer",
+      url: "/downloadExcel",
+    });
+  } catch (e) {
+    window.alert("Failed to download excel: " + e);
+    throw e;
+  }
+
+  const data = new FormData();
+  data.append("excelFile", new File([response.data], "downloaded.xls"));
+  try {
+    await axios({
+      method: "post",
+      url: "http://" + host + "/importExcel",
+      data,
+    });
+    window.alert("Successfully uploaded Excel file.");
+  } catch (e) {
+    window.alert("Failed to upload excel: " + e);
+    throw e;
+  }
+};
+
 export const uploadExcelTemplate = () => {
   const uploadFunction = (event) => {
     const data = new FormData();

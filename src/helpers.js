@@ -138,6 +138,7 @@ function makeForm(value, config, changeConfig, index, name = "") {
         const options = get(config, name) || [];
 
         const keyOptions = value.options;
+        const keyType = value.keyType || "number";
         return (
           <>
             {value.name}:
@@ -174,10 +175,10 @@ function makeForm(value, config, changeConfig, index, name = "") {
                   </select>
                 ) : (
                   <input
-                    type="number"
+                    type={keyType}
                     onChange={(e) => {
                       changeConfig(`${name}[${index}].key`, e.target.value, {
-                        numeric: true,
+                        numeric: keyType == "number",
                       });
                     }}
                     value={option.key}
