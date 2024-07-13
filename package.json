@@ -8,7 +8,6 @@
     "classnames": "^2.3.2",
     "dateformat": "^3.0.3",
     "moment": "^2.29.4",
-    "node-sass": "^8.0.0",
     "react": "^16.10.0",
     "react-burger-menu": "^2.5.4",
     "react-dom": "^16.10.0",
@@ -20,6 +19,7 @@
     "react-toggle": "^4.0.2",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "sass": "^1.77.8",
     "socket.io-client": "^2.1.1",
     "xlsx": "^0.14.3"
   },
@@ -37,5 +37,5 @@
     "not dead",
     "not op_mini all"
   ],
-  "proxy": "http://192.168.1.72"
+  "proxy": "http://192.168.1.71"
 }

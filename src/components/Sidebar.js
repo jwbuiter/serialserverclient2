@@ -73,6 +73,8 @@ class Sidebar extends Component {
       logModalIsOpen: false,
       dateTimeModalIsOpen: false,
       newCycleModalIsOpen: false,
+      newCycleTransferTarget: "",
+      cycleSettingsModalIsOpen: false,
       passwordPromptIsOpen: false,
       password: "",
       importExcelModalIsOpen: false,
@@ -120,6 +122,17 @@ class Sidebar extends Component {
   closeNewCycleModal = () => {
     this.props.saveConfig();
     this.setState({ newCycleModalIsOpen: false });
+  };
+
+  openCycleSettingsModal = () => {
+    this.props.unlockConfig();
+    this.setState({ cycleSettingsModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeCycleSettingsModal = () => {
+    this.props.saveConfig();
+    this.setState({ cycleSettingsModalIsOpen: false });
   };
 
   openPasswordPrompt = () => {
@@ -219,13 +232,6 @@ class Sidebar extends Component {
 
     const newCycleValues = {
       selfLearning: {
-        downloadExcel: {
-          name: "Download Excel file",
-          type: "button",
-          onClick: () => {
-            this.props.downloadExcel();
-          },
-        },
         logID: {
           type: "external",
           location: "logger.logID",
@@ -353,7 +359,11 @@ class Sidebar extends Component {
           >
             <h2>Start new cycle</h2>
             {this.state.newCycleModalIsOpen && makeForm(newCycleValues, this.props.config, this.props.changeConfig)}
-            <select name="host">
+            <select
+              name="host"
+              value={this.state.newCycleTransferTarget}
+              onChange={(change) => this.setState({ newCycleTransferTarget: change.target.value })}
+            >
               <option value="">Do not transfer</option>
               {this.props.transferTargets.map((target) => (
                 <option value={target.key}>{target.value}</option>
@@ -361,9 +371,22 @@ class Sidebar extends Component {
             </select>
             <label htmlFor="host">Transfer target:</label>
             <br />
-            <input type="submit" value="Reset" />
+            <input type="submit" value={this.state.newCycleTransferTarget == "" ? "Reset" : "Transfer"} />
           </form>
-          <form></form>
+        </Modal>
+        <Modal
+          isOpen={this.state.cycleSettingsModalIsOpen}
+          onRequestClose={this.closeCycleSettingsModal}
+          overlayClassName="modalOverlay"
+          className="modalContent"
+          contentLabel="SL Cycle Settings Modal"
+        >
+          <form>
+            <h2>Cycle settings</h2>
+            {this.state.cycleSettingsModalIsOpen &&
+              makeForm(newCycleValues, this.props.config, this.props.changeConfig)}
+            <input type="submit" value="Save" />
+          </form>
         </Modal>
         <Modal
           isOpen={this.state.passwordPromptIsOpen}
@@ -465,6 +488,11 @@ class Sidebar extends Component {
           {this.props.selfLearningEnabled.endsWith("ind") && (
             <span className="menu-item menu-item--clickable" onClick={this.openNewCycleModal}>
               Start new cycle
+            </span>
+          )}
+          {this.props.selfLearningEnabled.endsWith("ind") && (
+            <span className="menu-item menu-item--clickable" onClick={this.openCycleSettingsModal}>
+              Change cycle settings
             </span>
           )}
           {this.props.writeLogs && this.props.exposeUpload && (

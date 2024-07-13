@@ -34,8 +34,6 @@ export const resetSLData =
       }
 
       emit = (msg, data, callback) => socket.emit(msg, data, callback);
-    } else if (window.confirm("This will clear the Excel file. Do you want to download it first?")) {
-      return;
     }
 
     const config = getState().config;
@@ -56,9 +54,9 @@ export const resetSLData =
         }
 
         const hardReboot = getState().static.newCycleResetHard;
-        const message = hardReboot
-          ? "Successfully started new cycle, device will now reboot"
-          : "Successfully started new cycle";
+        let message = "Successfully started new cycle";
+        if (target != "") message += " on " + name;
+        if (hardReboot) message += ", " + (target == "" ? "device" : name) + " will now reboot";
 
         window.alert(message);
 
