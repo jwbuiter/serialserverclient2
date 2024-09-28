@@ -523,7 +523,7 @@ class Sidebar extends Component {
               Import Excel
             </span>
           )}
-          {this.props.exposeUpload && (
+          {this.props.exposeUpload && this.props.selfLearningEnabled !== "off" && (
             <span className="menu-item menu-item--clickable" onClick={this.openTransferTargetsModal}>
               Excel Transfer Targets
             </span>

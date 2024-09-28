@@ -93,6 +93,7 @@ class Infobar extends Component {
             name: "Transfer targets(address - name)",
             type: "keyValue",
             keyType: "text",
+            condition: (config) => config.selfLearning.enabled !== "off",
           },
         },
         logger: {
