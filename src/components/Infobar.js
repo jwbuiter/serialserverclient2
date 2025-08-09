@@ -14,7 +14,7 @@ import {
   getConfigList,
   uploadConfig,
 } from "../actions/configActions";
-import { setDateTime } from "../actions/internalActions";
+import { setDateTime, setNtpEnabled } from "../actions/internalActions";
 import { makeForm } from "../helpers";
 
 import "../styles/infobar.scss";
@@ -283,7 +283,23 @@ class Infobar extends Component {
                 />
               </div>
               <h3>Date and Time</h3>
-              <br />
+              <form>
+                Update time from network:
+                <input
+                  type="button"
+                  value="Enable"
+                  onClick={() => {
+                    this.props.setNtpEnabled(true);
+                  }}
+                />
+                <input
+                  type="button"
+                  value="Disable"
+                  onClick={() => {
+                    this.props.setNtpEnabled(false);
+                  }}
+                />
+              </form>
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
@@ -371,4 +387,5 @@ export default connect(mapStateToProps, {
   getConfigList,
   uploadConfig,
   setDateTime,
+  setNtpEnabled,
 })(Infobar);

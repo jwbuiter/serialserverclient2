@@ -9,7 +9,7 @@ import { downloadExcel, uploadExcel } from "../actions/excelActions";
 import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
 import { saveConfig, changeConfig, confirmPassword } from "../actions/configActions";
 import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, hardReboot, shutdown } from "../actions/menuActions";
-import { setDateTime } from "../actions/internalActions";
+import { setDateTime, setNtpEnabled } from "../actions/internalActions";
 import { resetSLData } from "../actions/selfLearningActions";
 
 import { makeForm } from "../helpers";
@@ -324,6 +324,23 @@ class Sidebar extends Component {
           contentLabel="Date Time Modal"
         >
           <h3>Date and Time</h3>
+          <form>
+            Update time from network:
+            <input
+              type="button"
+              value="Enable"
+              onClick={() => {
+                this.props.setNtpEnabled(true);
+              }}
+            />{" "}
+            <input
+              type="button"
+              value="Disable"
+              onClick={() => {
+                this.props.setNtpEnabled(false);
+              }}
+            />
+          </form>
           <br />
           <form
             onSubmit={(event) => {
@@ -619,6 +636,7 @@ export default connect(mapStateToProps, {
   shutdown,
   uploadLog,
   setDateTime,
+  setNtpEnabled,
   changeConfig,
   resetSLData,
   confirmPassword,

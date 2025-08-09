@@ -1,35 +1,49 @@
-export const forceInput = index => (dispatch, getState, { emit }) => {
-  const state = getState();
-  const port = {
-    ...state.config.input.ports[index],
-    ...state.internal.inputs[index]
+export const forceInput =
+  (index) =>
+  (dispatch, getState, { emit }) => {
+    const state = getState();
+    const port = {
+      ...state.config.input.ports[index],
+      ...state.internal.inputs[index],
+    };
+
+    const askForConfirmation = port.manualConfirmation && !port.isForced;
+
+    if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
+
+    emit("forceInput", index);
   };
 
-  const askForConfirmation = port.manualConfirmation && !port.isForced;
+export const forceOutput =
+  (index) =>
+  (dispatch, getState, { emit }) => {
+    const state = getState();
+    const port = {
+      ...state.config.output.ports[index],
+      ...state.internal.outputs[index],
+    };
 
-  if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
+    const askForConfirmation = port.manualConfirmation && !port.isForced;
 
-  emit("forceInput", index);
-};
+    if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
 
-export const forceOutput = index => (dispatch, getState, { emit }) => {
-  const state = getState();
-  const port = {
-    ...state.config.output.ports[index],
-    ...state.internal.outputs[index]
+    emit("forceOutput", index);
   };
 
-  const askForConfirmation = port.manualConfirmation && !port.isForced;
+export const tableManual =
+  (index, value) =>
+  (dispatch, getState, { emit }) => {
+    emit("manual", { index, value });
+  };
 
-  if (askForConfirmation && !window.confirm(`Are you sure you want to manually change ${port.name}?`)) return;
+export const setDateTime =
+  (date) =>
+  (dispatch, getState, { emit }) => {
+    emit("setDateTime", date);
+  };
 
-  emit("forceOutput", index);
-};
-
-export const tableManual = (index, value) => (dispatch, getState, { emit }) => {
-  emit("manual", { index, value });
-};
-
-export const setDateTime = date => (dispatch, getState, { emit }) => {
-  emit("setDateTime", date);
-};
+export const setNtpEnabled =
+  (enabled) =>
+  (dispatch, getState, { emit }) => {
+    emit("setNtpEnabled", enabled);
+  };
