@@ -1,0 +1,160 @@
+@import "constants";
+
+.wifi {
+  width: min(40em, 92vw);
+  padding: 1em 1.5em;
+  box-sizing: border-box;
+  font-size: 120%;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  input[type="button"],
+  input[type="submit"] {
+    font-size: 100%;
+    padding: 0.3em 0.8em;
+    margin-right: 0.5em;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    font-size: 100%;
+    padding: 0.3em;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.5em;
+  }
+}
+
+.wifi--status {
+  line-height: 1.6em;
+  margin-bottom: 0.8em;
+}
+
+.wifi--toolbar {
+  margin-bottom: 0.8em;
+}
+
+.wifi--note {
+  font-size: 85%;
+  color: #555;
+}
+
+.wifi--message {
+  background: lighten($secondary-color, 20%);
+  padding: 0.5em;
+}
+
+.wifi--error {
+  background: #fdd;
+  color: #900;
+  padding: 0.5em;
+}
+
+.wifi--list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #ddd;
+}
+
+.wifi--network {
+  border-bottom: 1px solid #ddd;
+
+  &.selected {
+    background: #f3f8fb;
+  }
+}
+
+.wifi--networkRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.5em 0.3em;
+  cursor: pointer;
+}
+
+.wifi--ssid {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wifi--tags {
+  font-size: 75%;
+  color: #666;
+  white-space: nowrap;
+}
+
+.wifi--tag {
+  background: $tertiary-color;
+  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  margin-right: 0.4em;
+  color: #333;
+
+  &.connected {
+    background: $primary-color;
+    color: white;
+  }
+}
+
+.wifi--signal {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 1.2em;
+  height: 1em;
+
+  span {
+    flex: 1;
+    background: #ccc;
+
+    &.on {
+      background: $primary-color;
+    }
+  }
+}
+
+.wifi--connectForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0 0.3em 0.6em;
+  text-align: left;
+
+  input[type="text"],
+  input[type="password"],
+  .wifi--openNote {
+    flex: 1 1 12em;
+    margin-bottom: 0;
+  }
+
+  input[type="button"],
+  input[type="submit"] {
+    margin-right: 0;
+  }
+}
+
+.wifi--openNote {
+  font-size: 85%;
+  color: #666;
+}
+
+.wifi--empty {
+  padding: 0.5em 0.3em;
+  color: #666;
+}
+
+.wifi--other {
+  margin-top: 0.8em;
+}
+
+.wifi--otherToggle {
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 0.5em;
+}

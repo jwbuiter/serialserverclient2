@@ -12,6 +12,7 @@ import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, hardReboot, shut
 import { setDateTime, setNtpEnabled } from "../actions/internalActions";
 import { resetSLData } from "../actions/selfLearningActions";
 
+import WifiModal from "./modals/WifiModal";
 import { makeForm } from "../helpers";
 import "../styles/sidebar.scss";
 
@@ -80,6 +81,8 @@ class Sidebar extends Component {
       importExcelModalIsOpen: false,
       ftpTargetsModalIsOpen: false,
       transferTargetsModelIsOpen: false,
+      // The captive portal redirects to /?wifi so the dialog opens straight away.
+      wifiModalIsOpen: new URLSearchParams(window.location.search).has("wifi"),
       newDate: moment(this.props.time).format("YYYY-MM-DDTHH:mm"),
       qsClickedTimes: 0,
     };
@@ -175,6 +178,15 @@ class Sidebar extends Component {
     this.setState({ transferTargetsModalIsOpen: false });
   };
 
+  openWifiModal = () => {
+    this.setState({ wifiModalIsOpen: true });
+    this.props.closeMenu();
+  };
+
+  closeWifiModal = () => {
+    this.setState({ wifiModalIsOpen: false });
+  };
+
   uploadLog = (log, index) => {
     if (window.confirm("Do you really want to upload " + log + "?")) {
       this.props.uploadLog(log, index);
@@ -200,7 +212,7 @@ class Sidebar extends Component {
   };
 
   handleQSClicked = () => {
-    if (this.state.qsClickedTimes < 5) {
+    if (this.state.qsClickedTimes < 4) {
       this.setState({ qsClickedTimes: this.state.qsClickedTimes + 1 });
       return;
     }
@@ -210,6 +222,15 @@ class Sidebar extends Component {
     } else {
       this.props.saveConfig();
     }
+  };
+
+  handleVersionClicked = () => {
+    if (this.state.qsClickedTimes < 4) {
+      this.setState({ qsClickedTimes: this.state.qsClickedTimes + 1 });
+      return;
+    }
+this.openWifiModal();
+    if (this.props.wifiEnabled) this.openWifiModal();
   };
 
   handlePasswordSubmitted = (e) => {
@@ -474,6 +495,10 @@ class Sidebar extends Component {
               makeForm(transferTargetsValues, this.props.config, this.props.changeConfig)}
           </form>
         </Modal>
+        <WifiModal isOpen={this.state.wifiModalIsOpen} onClose={this.closeWifiModal} />
+        {this.props.wifiEnabled && (
+          <WifiModal isOpen={this.state.wifiModalIsOpen} onClose={this.closeWifiModal} />
+        )}
         <Menu
           right
           customBurgerIcon={false}
@@ -579,7 +604,9 @@ class Sidebar extends Component {
           <span className="menu-item" onClick={this.handleQSClicked}>
             QS code: {this.props.QS}
           </span>
-          <span className="menu-item">{this.props.version}</span>
+          <span className="menu-item"  onClick={this.handleVersionClicked}>
+            {this.props.version}
+          </span>
         </Menu>
       </>
     );
@@ -610,6 +637,7 @@ function mapStateToProps(state) {
     exposeUpload: state.static.exposeUpload,
     exposeShutdown: state.static.exposeShutdown,
     exposeSettings: state.static.exposeSettings,
+    wifiEnabled: !!(state.static.enabledModules && state.static.enabledModules.wifi),
     logList: state.misc.logList,
     ftpTargets: state.config.FTP.targets,
     selfLearningEnabled: state.config.selfLearning.enabled,
