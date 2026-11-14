@@ -10,6 +10,16 @@
     margin-top: 0;
   }
 
+  // Undo the global "form input { float: right }" and fixed form width.
+  form {
+    width: auto;
+
+    input,
+    select {
+      float: none;
+    }
+  }
+
   input[type="button"],
   input[type="submit"] {
     font-size: 100%;
@@ -30,6 +40,87 @@
 .wifi--status {
   line-height: 1.6em;
   margin-bottom: 0.8em;
+}
+
+.wifi--statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3em 0.5em;
+  padding: 0.15em 0;
+
+  input[type="button"] {
+    font-size: 80%;
+    padding: 0.15em 0.6em;
+    margin-right: 0;
+  }
+}
+
+.wifi--ipEditor {
+  background: #f3f8fb;
+  padding: 0.6em;
+  margin: 0.2em 0 0.5em;
+}
+
+.wifi--ipButtons {
+  margin-top: 0.5em;
+}
+
+.wifi--ipSettings {
+  flex: 1 1 100%;
+  text-align: left;
+}
+
+.wifi--ipMethod {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 1.2em;
+  margin-bottom: 0.4em;
+
+  label {
+    cursor: pointer;
+  }
+
+  input {
+    margin-right: 0.3em;
+  }
+}
+
+.wifi--ipGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+  gap: 0 0.8em;
+
+  label {
+    font-size: 85%;
+    color: #555;
+  }
+
+  input[type="text"] {
+    display: block;
+    margin-top: 0.1em;
+    font-size: 118%;
+    color: initial;
+  }
+}
+
+.wifi--ipNote {
+  font-size: 85%;
+  color: #555;
+  margin-bottom: 0.4em;
+}
+
+.wifi--ipError {
+  font-size: 85%;
+  color: #900;
+}
+
+.wifi--ipToggle {
+  flex: 1 1 100%;
+  cursor: pointer;
+  font-size: 85%;
+  color: #555;
 }
 
 .wifi--toolbar {
@@ -147,6 +238,33 @@
 .wifi--empty {
   padding: 0.5em 0.3em;
   color: #666;
+}
+
+.wifi--saved {
+  margin-top: 1.2em;
+
+  h3 {
+    margin: 0 0 0.2em;
+  }
+}
+
+.wifi--savedRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.3em;
+  border-bottom: 1px solid #ddd;
+
+  input[type="button"] {
+    font-size: 80%;
+    padding: 0.15em 0.6em;
+    margin-right: 0;
+  }
+}
+
+.wifi--order {
+  color: #666;
+  min-width: 1.5em;
 }
 
 .wifi--other {

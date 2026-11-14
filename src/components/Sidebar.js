@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import moment from "moment";
 
 import { downloadExcel, uploadExcel } from "../actions/excelActions";
-import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog } from "../actions/logActions";
+import { downloadAllLogs, downloadLog, deleteLog, deleteAllLogs, getLogList, uploadLog, uploadLogAll } from "../actions/logActions";
 import { saveConfig, changeConfig, confirmPassword } from "../actions/configActions";
 import { unlockConfig, toggleMenu, openMenu, closeMenu, reboot, hardReboot, shutdown } from "../actions/menuActions";
 import { setDateTime, setNtpEnabled } from "../actions/internalActions";
@@ -193,6 +193,12 @@ class Sidebar extends Component {
     }
   };
 
+  uploadLogAll = (log) => {
+    if (window.confirm("Do you really want to upload " + log + " to all FTP targets?")) {
+      this.props.uploadLogAll(log);
+    }
+  };
+
   deleteLog = (log) => {
     if (window.confirm("Do you really want to delete " + log + "?")) {
       this.props.deleteLog(log);
@@ -305,6 +311,13 @@ this.openWifiModal();
                     this.props.downloadLog(log);
                   }}
                 />
+                <input
+                  type="button"
+                  value="FTP All"
+                  onClick={() => {
+                    this.uploadLogAll(log);
+                  }}
+                />
                 {this.props.ftpTargets.map((target, index) => {
                   if (target.address)
                     return (
@@ -318,6 +331,7 @@ this.openWifiModal();
                     );
                   return null;
                 })}
+                
                 <br />
               </>
             ))}
@@ -663,6 +677,7 @@ export default connect(mapStateToProps, {
   hardReboot,
   shutdown,
   uploadLog,
+  uploadLogAll,
   setDateTime,
   setNtpEnabled,
   changeConfig,

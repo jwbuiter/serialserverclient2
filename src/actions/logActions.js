@@ -24,6 +24,12 @@ export const uploadLog =
     emit("uploadLog", { name, index }, (msg) => window.alert(msg));
   };
 
+export const uploadLogAll =
+  (name) =>
+  (dispatch, getState, { emit }) => {
+    emit("uploadLogAll", name, (msg) => window.alert(msg));
+  };
+
 export const deleteAllLogs =
   () =>
   (dispatch, getState, { emit }) => {
